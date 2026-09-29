@@ -208,6 +208,7 @@ async function loadManagedChild(childId){
   db=childData;saveRaw(db);
 }
 async function loadOnline(){
+  if(!currentUser?.id)throw new Error("Kein gültiges Benutzerkonto gefunden.");
   const {data:profile,error:profileError}=await supabaseClient.from("gap_profiles").select("username,role").eq("user_id",currentUser.id).maybeSingle();
   if(profileError)throw profileError;
   userRole=profile?.role||"child";currentUsername=profile?.username||currentUsername;
@@ -215,8 +216,9 @@ async function loadOnline(){
   await ensureProfile("child");
   const {data,error}=await supabaseClient.from("galaktogon_data").select("data,username").eq("user_id",currentUser.id).maybeSingle();
   if(error)throw error;
-  if(data&&data.data){db=normalize(data.data);currentUsername=data.username||currentUsername;saveRaw(db)}
-  else {db=normalize(fresh());await saveNow()}
+  if(data&&data.data){db=normalize(data.data);currentUsername=data.username||currentUsername;saveRaw(db);return}
+  // Beim Anmelden niemals automatisch einen leeren Spielstand anlegen.
+  throw new Error("Für dieses Konto wurde kein Online-Spielstand gefunden. Es wurden keine vorhandenen Daten überschrieben.");
 }
 function el(id){return document.getElementById(id)}
 function checkForgotten(){
@@ -270,9 +272,21 @@ async function signIn(){
  const name=el("loginName").value.trim(),pw=el("loginPassword").value;
  if(!validUsername(name)){authMsg("Ungültiger Benutzername.",true);return}
  authMsg("Anmeldung …");
- const {data,error}=await supabaseClient.auth.signInWithPassword({email:usernameEmail(name),password:pw});
- if(error){authMsg("Anmeldung fehlgeschlagen. Benutzername oder Passwort prüfen.",true);return}
- currentUser=data.user;await loadOnline();enterApp();
+ try{
+  const {data,error}=await supabaseClient.auth.signInWithPassword({email:usernameEmail(name),password:pw});
+  if(error)throw error;
+  if(!data?.user)throw new Error("Supabase hat kein Benutzerkonto zurückgegeben.");
+  currentUser=data.user;
+  const {data:verified,error:verifyError}=await supabaseClient.auth.getUser();
+  if(verifyError)throw verifyError;
+  if(!verified?.user||verified.user.id!==currentUser.id)throw new Error("Das angemeldete Benutzerkonto konnte nicht verifiziert werden.");
+  await loadOnline();
+  enterApp();
+ }catch(e){
+  console.error("GAP Anmeldung:",e);
+  currentUser=null;
+  authMsg("Anmeldung fehlgeschlagen: "+(e?.message||"Unbekannter Fehler"),true);
+ }
 }
 function syncRoleUI(){
  document.querySelectorAll("[data-role]").forEach(x=>x.style.display=x.dataset.role===userRole?"":"none");
@@ -283,7 +297,19 @@ async function logout(){await saveNow().catch(()=>{});if(supabaseClient)await su
 async function bootAuth(){
  el("showSignup").onclick=()=>setAuthMode(true);el("showLogin").onclick=()=>setAuthMode(false);el("loginForm").addEventListener("submit",e=>{e.preventDefault();signIn()});el("signupForm").addEventListener("submit",e=>{e.preventDefault();signUp()});el("logoutBtn").onclick=logout;
  if(!supabaseConfigured){authMsg("Noch nicht eingerichtet.",true);return}
- const {data}=await supabaseClient.auth.getSession();if(data.session){currentUser=data.session.user;await loadOnline();enterApp()}
+ try{
+  const {data,error}=await supabaseClient.auth.getSession();
+  if(error)throw error;
+  if(data.session){
+   currentUser=data.session.user;
+   await loadOnline();
+   enterApp();
+  }
+ }catch(e){
+  console.error("GAP Session-Wiederherstellung:",e);
+  currentUser=null;
+  authMsg("Online-Anmeldung konnte nicht vollständig wiederhergestellt werden: "+(e?.message||"Unbekannter Fehler"),true);
+ }
 }
 function showPage(p){
  const parentPage=["parents","parentTutorial"].includes(p);
