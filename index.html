@@ -157,7 +157,6 @@ async function save(){
     try{
       if(userRole==="parent"){await saveChildNow();return}
       const {error}=await supabaseClient.from("galaktogon_data").upsert({user_id:currentUser.id,username:currentUsername,data:db,updated_at:new Date().toISOString()});
-      localStorage.setItem("gap_local_owner",currentUser.id);
       const now=new Date();const day=periodXP("day"),week=periodXP("week"),month=periodXP("month");
       await supabaseClient.from("gap_leaderboard_public").upsert({user_id:currentUser.id,username:currentUsername||"Unbekannt",xp:db.xp,day_xp:day,week_xp:week,month_xp:month,all_xp:db.xp,updated_at:now.toISOString()});
       if(error) console.error("Online-Speicher:",error);
@@ -180,7 +179,6 @@ async function saveNow(){
   if(userRole==="parent"){await saveChildNow();return}
   const {error}=await supabaseClient.from("galaktogon_data").upsert({user_id:currentUser.id,username:currentUsername,data:db,updated_at:new Date().toISOString()});
   if(error)throw error;
-  localStorage.setItem("gap_local_owner",currentUser.id);
 }
 async function ensureProfile(role){
   const {error}=await supabaseClient.from("gap_profiles").upsert({user_id:currentUser.id,username:currentUsername,role,updated_at:new Date().toISOString()});
@@ -217,23 +215,8 @@ async function loadOnline(){
   await ensureProfile("child");
   const {data,error}=await supabaseClient.from("galaktogon_data").select("data,username").eq("user_id",currentUser.id).maybeSingle();
   if(error)throw error;
-  if(data&&data.data){
-    db=normalize(data.data);
-    currentUsername=data.username||currentUsername;
-    saveRaw(db);
-    localStorage.setItem("gap_local_owner",currentUser.id);
-  }else{
-    // Niemals vorhandene lokale Daten blind überschreiben.
-    const localOwner=localStorage.getItem("gap_local_owner");
-    if(localOwner===currentUser.id){
-      db=normalize(db);
-      await saveNow();
-    }else{
-      db=normalize(fresh());
-      await saveNow();
-    }
-    localStorage.setItem("gap_local_owner",currentUser.id);
-  }
+  if(data&&data.data){db=normalize(data.data);currentUsername=data.username||currentUsername;saveRaw(db)}
+  else {db=normalize(fresh());await saveNow()}
 }
 function el(id){return document.getElementById(id)}
 function checkForgotten(){
