@@ -26,7 +26,7 @@
 <div id="authMessage" class="small" style="margin-top:10px"></div></div></div>
 
 <header>
-<div class="header-inner"><div><div class="logo">GALAKTOGON AUFGABENPROTOKOLL</div><div class="version">GAP // 2.5 beta</div></div><div class="xp-mini"><div id="headerRank">Kadett</div><div id="headerXP">0 XP</div><button class="btn small" id="logoutBtn" style="margin-top:6px">Abmelden</button></div></div>
+<div class="header-inner"><div><div class="logo">GALAKTOGON AUFGABENPROTOKOLL</div><div class="version">GAP // 2.5.1 beta</div></div><div class="xp-mini"><div id="headerRank">Kadett</div><div id="headerXP">0 XP</div><button class="btn small" id="logoutBtn" style="margin-top:6px">Abmelden</button></div></div>
 <nav>
 <button data-page="dashboard">Dashboard</button><button data-page="tutorial">Tutorial</button><button data-page="tasks">Sektoraufgaben</button><button data-page="exams">Sektorprüfungen</button><button data-page="quests">Quests</button><button data-page="recurring">Daueraufträge</button><button data-page="activities">Aktivitäten</button><button data-page="progress">Fortschritt</button><button data-page="ranks">Ränge</button><button data-page="leaderboard" data-role="child">Leaderboard</button><button data-page="parents" data-role="parent">Eltern-Dashboard</button><button data-page="parentTutorial" data-role="parent">Eltern-Tutorial</button>
 </nav>
@@ -82,7 +82,7 @@
 <div class="card"><h2>Eltern-Dashboard</h2><p class="muted">Hier verwalten Sie die verbundenen Kinder. Aufgaben, Prüfungen und die von Ihnen vergebenen Quests und Daueraufträge werden direkt mit dem Kinderaccount synchronisiert.</p>
 <div class="form-grid"><select id="activeChildSelect"></select><button class="btn primary" type="button" id="switchChildBtn">Kind verwalten</button></div>
 <div id="parentChildStatus" class="meta"></div></div>
-<div class="card"><h2>Meine Kinder</h2><div id="parentChildrenList"></div><hr><h3>Weiteres Kind verbinden</h3><form id="addChildForm"><select id="availableChildSelect"></select><button class="btn purple">Kind hinzufügen</button></form></div>
+<div class="card"><h2>Meine Kinder</h2><p class="muted">Ein Kinderaccount kann gleichzeitig mit mehreren Elternaccounts verbunden sein. So können z. B. zwei getrennte Elternaccounts dasselbe Kind gemeinsam verwalten. Änderungen werden immer mit demselben Kinderaccount synchronisiert.</p><div id="parentChildrenList"></div><hr><h3>Weiteres Kind verbinden</h3><form id="addChildForm"><select id="availableChildSelect"></select><button class="btn purple">Kind hinzufügen</button></form></div>
 <div class="card"><h2>Wochenbilanz</h2><div id="weeklyReview"></div></div>
 <div class="card"><h2>Sektoraufgaben</h2><div id="parentTaskList"></div></div>
 <div class="card"><h2>Sektorprüfungen</h2><div id="parentExamList"></div></div>
@@ -307,7 +307,7 @@ function renderParentDashboard(){
 }
 async function loadAvailableChildren(){const {data,error}=await supabaseClient.from("gap_profiles").select("user_id,username").eq("role","child").order("username");if(error)throw error;return data||[]}
 async function switchManagedChild(id){if(!id)return;await loadManagedChild(id);renderParentDashboard();showPage("parents")}
-async function addManagedChild(id){if(!id)return;const {error}=await supabaseClient.from("gap_parent_children").insert({parent_id:currentUser.id,child_id:id});if(error){authMsg("Kind konnte nicht verbunden werden: "+error.message,true);return}await loadParentChildren();renderParentDashboard();showPage("parents")}
+async function addManagedChild(id){if(!id)return;const {error}=await supabaseClient.from("gap_parent_children").insert({parent_id:currentUser.id,child_id:id});if(error){if(error.code==="23505"){authMsg("Dieses Kind ist bereits mit diesem Elternaccount verbunden.",true)}else{authMsg("Kind konnte nicht verbunden werden: "+error.message,true)}return}await loadParentChildren();renderParentDashboard();showPage("parents")}
 async function removeManagedChild(id){if(!confirm("Verbindung zu diesem Kind entfernen?"))return;const {error}=await supabaseClient.from("gap_parent_children").delete().eq("parent_id",currentUser.id).eq("child_id",id);if(error){authMsg("Verbindung konnte nicht entfernt werden.",true);return}await loadParentChildren();renderParentDashboard();showPage("parents")}
 function taskHTML(t,recurring=false){return `<div class="item"><div class="item-title">${esc(t.title)}</div><div class="meta">${esc(t.subject||"Kein Fach")} · +${recurring?t.xp:taskXP(t.type)} XP ${recurring?"· Dauerauftrag":"· "+(t.type==="large"?"Große Aufgabe":t.type==="presentation"?"Präsentation":"Aufgabe")}</div><div class="meta">${recurring?"Heute fällig":"Termin: "+dateText(t.due)}</div><div class="actions"><button class="btn success" data-act="complete-${recurring?"recurring":"task"}" data-id="${t.id}">Erledigt</button>${!recurring?`<button class="btn edit-btn" data-act="edit-task" data-id="${t.id}">Bearbeiten</button><button class="btn danger" data-act="delete-task" data-id="${t.id}">Löschen</button>`:""}</div></div>`}
 function questHTML(q){return `<div class="item"><div class="item-title">${esc(q.title)}</div><div class="meta">+${q.xp||0} XP · ${q.due?"Fällig: "+dateText(q.due):"Kein Termin"}</div>${q.note?`<div class="meta">${esc(q.note)}</div>`:""}<div class="actions"><button class="btn success" data-act="complete-quest" data-id="${q.id}">Erledigt</button><button class="btn edit-btn" data-act="edit-quest" data-id="${q.id}">Bearbeiten</button><button class="btn danger" data-act="delete-quest" data-id="${q.id}">Löschen</button></div></div>`}
@@ -405,10 +405,10 @@ const TOUR_STEPS=[
 {page:"leaderboard",selector:'nav button[data-page="leaderboard"]',title:"10 · Leaderboard",text:"Das Leaderboard vergleicht Accounts nach Tag, Woche, Monat oder insgesamt."}
 ];
 const PARENT_TOUR_STEPS=[
-{page:"parents",selector:"#parents .card:nth-child(1)",title:"1 · Eltern-Dashboard",text:"Im Elternaccount verwalten Sie die verbundenen Kinder. Ein Elternaccount kann mehrere Kinder verwalten."},
+{page:"parents",selector:"#parents .card:nth-child(1)",title:"1 · Eltern-Dashboard",text:"Im Elternaccount verwalten Sie die verbundenen Kinder. Ein Elternaccount kann mehrere Kinder verwalten, und ein Kinderaccount kann gleichzeitig mit mehreren Elternaccounts verbunden sein."},
 {page:"parents",selector:"#activeChildSelect",title:"2 · Kind auswählen",text:"Hier wechseln Sie jederzeit zwischen den bereits verbundenen Kindern."},
 {page:"parents",selector:"#parentChildrenList",title:"3 · Mehrere Kinder",text:"Alle verbundenen Kinder werden hier angezeigt. Die Verbindung kann später entfernt werden."},
-{page:"parents",selector:"#addChildForm",title:"4 · Kind verbinden",text:"Hier können Sie ein bereits vorhandenes Kinderkonto verbinden. Nach dem Erstellen des Elternaccounts ist dies der erste wichtige Schritt."},
+{page:"parents",selector:"#addChildForm",title:"4 · Kind verbinden",text:"Hier können Sie ein bereits vorhandenes Kinderkonto verbinden. Dasselbe Kinderkonto darf auch von einem zweiten Elternaccount verbunden werden."},
 {page:"parents",selector:"#parentTaskList",title:"5 · Sektoraufgaben ansehen",text:"Hier sehen Sie die offenen Sektoraufgaben des aktuell ausgewählten Kindes."},
 {page:"parents",selector:"#parentExamList",title:"6 · Sektorprüfungen ansehen",text:"Hier sehen Sie die beim Kind eingetragenen Sektorprüfungen."},
 {page:"parents",selector:"#parentQuestForm",title:"7 · Quests erstellen",text:"Eltern können eigene Quests für das ausgewählte Kind mit Termin, XP und Notiz erstellen."},
