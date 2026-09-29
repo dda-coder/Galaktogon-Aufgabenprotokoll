@@ -56,7 +56,7 @@
 </div>
 </section>
 <section id="tasks" class="page">
-<div class="card"><h2>Neue Sektoraufgabe</h2><form id="taskForm"><input id="taskTitle" placeholder="Aufgabe" required><div class="form-grid"><input id="taskSubject" placeholder="Fach"><input id="taskDue" type="date"><select id="taskType"><option value="normal">Normale Aufgabe (+10 XP)</option><option value="vocabulary">Vokabeln (+10 XP)</option><option value="large">Große Aufgabe (+20 XP)</option><option value="presentation">Präsentation (+30 XP)</option><option value="learning">Lernen (+10 XP)</option></select></div><textarea id="taskNote" placeholder="Notiz"></textarea><button class="btn primary">Sektoraufgabe hinzufügen</button></form></div>
+<div class="card"><h2>Neue Sektoraufgabe</h2><form id="taskForm"><input id="taskTitle" placeholder="Aufgabe" required><div class="form-grid"><input id="taskSubject" placeholder="Fach"><input id="taskDue" type="datetime-local"><select id="taskType"><option value="normal">Normale Aufgabe (+10 XP)</option><option value="vocabulary">Vokabeln (+10 XP)</option><option value="large">Große Aufgabe (+20 XP)</option><option value="presentation">Präsentation (+30 XP)</option><option value="learning">Lernen (+10 XP)</option></select></div><textarea id="taskNote" placeholder="Notiz"></textarea><button class="btn primary">Sektoraufgabe hinzufügen</button></form></div>
 <div class="card"><h2>Offene Sektoraufgaben</h2><div id="taskList"></div></div>
 </section>
 
@@ -66,7 +66,7 @@
 </section>
 
 <section id="quests" class="page">
-<div class="card"><h2>Neue Quest</h2><form id="questForm"><input id="questTitle" placeholder="Quest" required><div class="form-grid"><input id="questDue" type="date"><input id="questXP" type="number" min="0" value="0" placeholder="XP"></div><textarea id="questNote" placeholder="Notiz"></textarea><button class="btn purple">Quest hinzufügen</button></form></div>
+<div class="card"><h2>Neue Quest</h2><form id="questForm"><input id="questTitle" placeholder="Quest" required><div class="form-grid"><input id="questDue" type="datetime-local"><input id="questXP" type="number" min="0" value="0" placeholder="XP"></div><textarea id="questNote" placeholder="Notiz"></textarea><button class="btn purple">Quest hinzufügen</button></form></div>
 <div class="card"><h2>Offene Quests</h2><div id="questList"></div></div>
 </section>
 
@@ -299,9 +299,9 @@ function openEdit(kind,id){
  const sets={task:["Sektoraufgabe",db.tasks.find(x=>x.id===id)],exam:["Sektorprüfung",db.exams.find(x=>x.id===id)],quest:["Quest",db.quests.find(x=>x.id===id)],recurring:["Dauerauftrag",db.recurring.find(x=>x.id===id)],activity:["Aktivität",db.activities.find(x=>x.id===id)]};
  const item=sets[kind]?.[1]; if(!item)return;
  el("editTitle").textContent=sets[kind][0]+" bearbeiten"; let html="";
- if(kind==="task")html='<input id="editName" placeholder="Aufgabe" value="'+esc(item.title)+'" required><input id="editSubject" placeholder="Fach" value="'+esc(item.subject||"")+'"><input id="editDue" type="date" value="'+esc(item.due||"")+'"><select id="editType"><option value="normal">Normale Aufgabe (+10 XP)</option><option value="vocabulary">Vokabeln (+10 XP)</option><option value="large">Große Aufgabe (+20 XP)</option><option value="presentation">Präsentation (+30 XP)</option><option value="learning">Lernen (+10 XP)</option></select><textarea id="editNote" placeholder="Notiz">'+esc(item.note||"")+'</textarea>';
+ if(kind==="task")html='<input id="editName" placeholder="Aufgabe" value="'+esc(item.title)+'" required><input id="editSubject" placeholder="Fach" value="'+esc(item.subject||"")+'"><input id="editDue" type="datetime-local" value="'+esc(item.due||"")+'"><select id="editType"><option value="normal">Normale Aufgabe (+10 XP)</option><option value="vocabulary">Vokabeln (+10 XP)</option><option value="large">Große Aufgabe (+20 XP)</option><option value="presentation">Präsentation (+30 XP)</option><option value="learning">Lernen (+10 XP)</option></select><textarea id="editNote" placeholder="Notiz">'+esc(item.note||"")+'</textarea>';
  if(kind==="exam")html='<input id="editSubject" placeholder="Fach" value="'+esc(item.subject)+'" required><input id="editName" placeholder="Prüfung" value="'+esc(item.title)+'" required><input id="editDue" type="date" value="'+esc(item.date||"")+'"><select id="editSize"><option value="normal">Normale Prüfung (+30 XP)</option><option value="large">Große Prüfung (+50 XP)</option></select><select id="editTarget"><option value="1">Zielnote 1</option><option value="2">Zielnote 2</option><option value="3">Zielnote 3</option><option value="4">Zielnote 4</option><option value="5">Zielnote 5</option><option value="6">Zielnote 6</option></select>';
- if(kind==="quest")html='<input id="editName" placeholder="Quest" value="'+esc(item.title)+'" required><input id="editDue" type="date" value="'+esc(item.due||"")+'"><input id="editXP" type="number" min="0" value="'+Number(item.xp||0)+'" placeholder="XP"><textarea id="editNote" placeholder="Notiz">'+esc(item.note||"")+'</textarea>';
+ if(kind==="quest")html='<input id="editName" placeholder="Quest" value="'+esc(item.title)+'" required><input id="editDue" type="datetime-local" value="'+esc(item.due||"")+'"><input id="editXP" type="number" min="0" value="'+Number(item.xp||0)+'" placeholder="XP"><textarea id="editNote" placeholder="Notiz">'+esc(item.note||"")+'</textarea>';
  if(kind==="recurring")html='<input id="editName" placeholder="Dauerauftrag" value="'+esc(item.title)+'" required><input id="editSubject" placeholder="Fach" value="'+esc(item.subject||"")+'"><input id="editXP" type="number" min="0" value="'+Number(item.xp||0)+'" placeholder="XP">';
  if(kind==="activity")html='<input id="editName" placeholder="Aktivität" value="'+esc(item.title)+'" required><input id="editXP" type="number" min="0" value="'+Number(item.xp||0)+'" placeholder="XP">';
  el("editFields").innerHTML=html;
@@ -340,7 +340,7 @@ tasks:[
 {page:"tasks",selector:"#taskForm",title:"1 · Sektoraufgaben",text:"Hier legst du eine neue Sektoraufgabe an. Wir gehen jedes Feld einzeln durch."},
 {page:"tasks",selector:"#taskTitle",title:"2 · Aufgabe",text:"Hier kommt der Name der Schulaufgabe hinein."},
 {page:"tasks",selector:"#taskSubject",title:"3 · Fach",text:"Hier trägst du das Fach ein."},
-{page:"tasks",selector:"#taskDue",title:"4 · Fälligkeit",text:"Hier legst du den Termin fest."},
+{page:"tasks",selector:"#taskDue",title:"4 · Deadline",text:"Hier kannst du neben dem Datum auch eine genaue Uhrzeit für die Deadline festlegen."},
 {page:"tasks",selector:"#taskType",title:"5 · Aufgabentyp",text:"Hier bestimmst du den Aufgabentyp und damit die vorgesehene XP-Belohnung."},
 {page:"tasks",selector:"#taskNote",title:"6 · Notiz",text:"Hier kannst du zusätzliche Informationen speichern."},
 {page:"tasks",selector:'#taskForm button[type="submit"]',title:"7 · Hinzufügen",text:"Damit speicherst du die Sektoraufgabe."},
