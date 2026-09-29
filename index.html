@@ -28,10 +28,12 @@
 <header>
 <div class="header-inner"><div><div class="logo">GALAKTOGON AUFGABENPROTOKOLL</div><div class="version">GAP // 2.4 beta</div></div><div class="xp-mini"><div id="headerRank">Kadett</div><div id="headerXP">0 XP</div><button class="btn small" id="logoutBtn" style="margin-top:6px">Abmelden</button></div></div>
 <nav>
-<button data-page="dashboard">Dashboard</button><button data-page="tutorial">Tutorial</button><button data-page="tasks">Sektoraufgaben</button><button data-page="exams">Sektorprüfungen</button><button data-page="quests">Quests</button><button data-page="recurring">Daueraufträge</button><button data-page="activities">Aktivitäten</button><button data-page="progress">Fortschritt</button><button data-page="ranks">Ränge</button><button data-page="leaderboard">Leaderboard</button><button data-page="parents">Elternmodus</button>
+<button data-page="dashboard">Dashboard</button><button data-page="tutorial">Tutorial</button><button data-page="updates">Updates</button><button data-page="tasks">Sektoraufgaben</button><button data-page="exams">Sektorprüfungen</button><button data-page="quests">Quests</button><button data-page="recurring">Daueraufträge</button><button data-page="activities">Aktivitäten</button><button data-page="progress">Fortschritt</button><button data-page="ranks">Ränge</button><button data-page="leaderboard">Leaderboard</button><button data-page="parents">Elternmodus</button>
 </nav>
 </header>
 <main>
+<section id="updates" class="page"><div class="card"><h2>GAP-Updates</h2><p class="muted">Hier werden die bisher veröffentlichten und die geplanten Updates von GAP gesammelt. Entfernte oder zurückgerollte Funktionen werden nicht als aktuelle Updates aufgeführt.</p><h3>Bereits umgesetzt</h3><div id="updateListDone"></div></div><div class="card"><h2>Zukünftige Updates</h2><div id="updateListFuture"></div></div></section>
+
 <section id="dashboard" class="page active">
 <div class="grid"><div class="card"><div class="muted">RANG</div><div class="stat" id="dashRank">Kadett</div></div><div class="card"><div class="muted">XP</div><div class="stat" id="dashXP">0</div><div class="progress"><div id="dashBar" class="progress-bar"></div></div><div id="dashNext" class="meta"></div></div><div class="card"><div class="muted">XP-MODIFIKATOR</div><div class="stat" id="dashModifier">100%</div><div id="dashModifierInfo" class="meta"></div></div><div class="card"><div class="muted">OFFENE AUFGABEN HEUTE</div><div class="stat" id="dashToday">0</div></div></div>
 <div class="card"><h2>Aktive Buffs & Debuffs</h2><div id="dashboardEffects"></div></div>
@@ -470,6 +472,30 @@ el("tourNext").addEventListener("click",nextTour);el("tourBack").addEventListene
 el("tourOverlay").addEventListener("click",e=>{if(e.target===el("tourOverlay"))closeTutorialTour(false)});
 window.addEventListener("resize",()=>{if(el("tourOverlay").classList.contains("active"))positionTour()});
 
+const GAP_UPDATES_DONE=[
+["1 · GAP 2.0 beta","Grundversion des Aufgabenprotokolls mit Sektoraufgaben, Sektorprüfungen, Quests, Daueraufträgen, Aktivitäten, XP, Rängen und Elternmodus."],
+["2 · Elternmodus","Eltern-Debuffs, direkte Vertrauenswirkung auf XP und ein interaktives Eltern-Tutorial wurden ergänzt."],
+["3 · Favicon","Das neue GALAKTOGON-Favicon wurde eingebaut und anschließend technisch korrigiert."],
+["4 · GAP 2.1","Einträge können bearbeitet werden. Außerdem wurden mobile Aktivitäten und ein XP-Effekt ergänzt."],
+["5 · GAP 2.2","Eigenes Eltern-Tutorial und eine aufgeräumte Tutorial-Seite wurden ergänzt."],
+["6 · GAP 2.3","Das interaktive Haupt- und Eltern-Tutorial wurde erweitert und die Tutorial-Version aktualisiert."],
+["7 · GAP 2.4","Ränge, Leaderboard und Wochenbilanz wurden hinzugefügt."],
+["8 · Tutorial-Updates","Leaderboard und Wochenfunktionen wurden zusätzlich in das Tutorial aufgenommen."],
+["9 · Online-Sicherheit","Anmeldung und Online-Spielstand wurden abgesichert, der Cloudflare-Worker festgelegt und die Supabase-Session beim Login verifiziert."],
+["10 · Gesamttutorial","Ein Gesamttutorial mit Fortschrittsanzeige wurde ergänzt und später auf eine kompakte Fassung mit 10 Bereichen gebracht."],
+["11 · Fertigstellungszeit","Beim Erledigen von Aufgaben, Quests und Daueraufträgen kann die tatsächliche Fertigstellungszeit gespeichert werden."],
+["12 · Deadlines mit Uhrzeit","Sektoraufgaben und Quests unterstützen jetzt Deadlines mit Datum und Uhrzeit, inklusive korrekter Anzeige."],
+["13 · Daueraufträge: Uhrzeit","Daueraufträge verwenden eine optionale Uhrzeit statt einer Datumsdeadline. Das Datum ergibt sich aus dem Wochentag."],
+["14 · Verspätungs-Debuff","Sektoraufgaben und Quests können einen prozentualen XP-Abzug bei verspäteter Erledigung verwenden."],
+["15 · Feldüberschriften & Daueraufträge","Eingabefelder wurden mit sichtbaren Überschriften versehen. Daueraufträge erhielten ebenfalls den Verspätungs-Debuff."],
+["16 · Daueraufträge bearbeiten","Der Verspätungs-Debuff von Daueraufträgen kann im Bearbeiten-Dialog geändert werden."],
+["17 · Debuff-Beschriftung","Das Debuff-Feld im Bearbeiten-Dialog der Daueraufträge ist jetzt eindeutig mit „Verspätungs-Debuff (%)“ beschriftet."]
+];
+const GAP_UPDATES_FUTURE=[
+["1 · Nächstes Update","Platzhalter für die nächste geplante GAP-Funktion."],
+["2 · Weitere Verbesserungen","Neue Wünsche und Verbesserungen werden hier ergänzt, sobald sie festgelegt sind."]
+];
+function renderUpdates(){const done=el("updateListDone"),future=el("updateListFuture");if(done)done.innerHTML=GAP_UPDATES_DONE.map(x=>'<div class="item"><div class="item-title">'+esc(x[0])+'</div><div class="meta">'+esc(x[1])+'</div></div>').join("");if(future)future.innerHTML=GAP_UPDATES_FUTURE.map(x=>'<div class="item"><div class="item-title">'+esc(x[0])+'</div><div class="meta">'+esc(x[1])+'</div></div>').join("")}
 function setupForms(){
  el("taskForm").addEventListener("submit",e=>{e.preventDefault();db.tasks.push({id:uid(),title:el("taskTitle").value.trim(),subject:el("taskSubject").value.trim(),due:el("taskDue").value,latePenalty:Math.max(0,Math.min(100,Number(el("taskLatePenalty").value)||0)),type:el("taskType").value,note:el("taskNote").value.trim()});e.target.reset();save();renderAll()});
  el("examForm").addEventListener("submit",e=>{e.preventDefault();db.exams.push({id:uid(),subject:el("examSubject").value.trim(),title:el("examTitle").value.trim(),date:el("examDate").value,size:el("examSize").value,target:Number(el("examTarget").value)});e.target.reset();el("examTarget").value="2";save();renderAll()});
@@ -481,7 +507,7 @@ el("buffForm").addEventListener("submit",e=>{e.preventDefault();const kind=el("b
 el("recurringForm").addEventListener("submit",e=>{e.preventDefault();const days=[...document.querySelectorAll("#weekdayInputs input:checked")].map(x=>Number(x.value));if(!days.length){alert("Bitte mindestens einen Wochentag auswählen.");return}db.recurring.push({id:uid(),title:el("recurringTitle").value.trim(),subject:el("recurringSubject").value.trim(),due:el("recurringDue").value,latePenalty:Math.max(0,Math.min(100,Number(el("recurringLatePenalty").value)||0)),xp:Number(el("recurringXP").value)||0,days,doneDates:[],active:true});e.target.reset();renderAll()});
 }
 function setupDays(){document.getElementById("weekdayInputs").innerHTML=DAYS.map((d,i)=>`<label class="day"><input type="checkbox" value="${i}" ${i>0&&i<6?"checked":""}>${d}</label>`).join("")}
-setupDays();decorateFields();setupForms();bootAuth();
+setupDays();decorateFields();setupForms();renderUpdates();bootAuth();
 </script>
 </body>
 </html>
