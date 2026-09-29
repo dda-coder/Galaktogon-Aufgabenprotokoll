@@ -9,7 +9,7 @@
  
 <style>
 :root{--bg:#0f151c;--panel:#18222d;--panel2:#202c38;--line:#344455;--text:#f3f6f9;--muted:#aeb9c4;--accent:#69b8ff;--green:#68d69a;--yellow:#ffd166;--red:#ff7474;--purple:#b795ff}
-*{box-sizing:border-box}body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:var(--text)}button,input,select,textarea{font:inherit}button{cursor:pointer}header{position:sticky;top:0;z-index:10;background:#141c25;border-bottom:1px solid var(--line);padding:15px}.header-inner{max-width:1200px;margin:auto;display:flex;justify-content:space-between;gap:15px;align-items:center}.logo{font-size:22px;font-weight:700;letter-spacing:2px}.version{color:var(--muted);font-size:12px;margin-top:4px}.xp-mini{text-align:right;color:var(--accent);font-weight:700}nav{max-width:1200px;margin:12px auto 0;display:flex;gap:6px;flex-wrap:wrap}nav button{background:var(--panel2);color:var(--text);border:1px solid var(--line);border-radius:8px;padding:8px 11px}nav button.active{background:var(--accent);color:#07111c}main{max-width:1200px;margin:auto;padding:18px}.page{display:none}.page.active{display:block}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px}.card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px;margin-bottom:14px}.card h2{margin-top:0}.stat{font-size:28px;font-weight:700;margin-top:7px}.muted{color:var(--muted)}.progress{height:11px;background:#0b1016;border-radius:20px;overflow:hidden;margin-top:9px}.progress-bar{height:100%;background:var(--accent)}.item{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:12px;margin:9px 0}.item-title{font-weight:700}.meta{color:var(--muted);font-size:13px;margin-top:5px}.actions{display:flex;gap:6px;flex-wrap:wrap;margin-top:9px}.btn{border:0;border-radius:7px;padding:7px 10px;background:#344454;color:white}.btn.primary{background:var(--accent);color:#07111c}.btn.success{background:var(--green);color:#07130d}.btn.warning{background:var(--yellow);color:#171100}.btn.danger{background:var(--red);color:#210707}.btn.purple{background:var(--purple);color:#150b25}form{display:grid;gap:9px}input,select,textarea{width:100%;background:#0f151c;border:1px solid var(--line);border-radius:7px;color:white;padding:9px}textarea{min-height:70px;resize:vertical}.form-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:9px}.days{display:flex;gap:6px;flex-wrap:wrap}.day{display:flex;align-items:center;gap:4px;background:#111a23;border:1px solid var(--line);border-radius:7px;padding:7px}.day input{width:auto}.tag{display:inline-block;padding:3px 6px;border-radius:5px;background:#303d4b;font-size:11px;margin:2px}.tag.green{background:#234936;color:#8ff0b8}.tag.red{background:#4d2929;color:#ff9b9b}.tag.yellow{background:#4a3e20;color:#ffe29a}.tag.purple{background:#3b2b5a;color:#d7c3ff}.log{border-left:3px solid var(--accent);padding-left:9px;margin:8px 0}.deleted{border-left-color:var(--red)}.empty{color:var(--muted);padding:8px 0}.small{font-size:12px}.favorite-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:9px}.favorite-grid>div{min-width:0}.favorite-btn{width:100%;min-height:70px;border:1px solid var(--line);border-radius:10px;background:var(--panel2);color:var(--text);padding:12px;text-align:left}.favorite-btn strong{display:block}.favorite-btn span{display:block;color:var(--muted);font-size:12px;margin-top:5px}hr{border:0;border-top:1px solid var(--line);margin:16px 0}.edit-btn{background:#46586a}.xp-pop{position:fixed;z-index:2000;pointer-events:none;font-size:22px;font-weight:800;color:var(--green);text-shadow:0 2px 12px rgba(104,214,154,.55);animation:xpFloat 1.15s ease-out forwards}.xp-pop::before{content:"✦ "}.xp-pop-sub{font-size:12px;font-weight:600;color:var(--text);margin-left:5px}.xp-burst{animation:xpPulse .5s ease-out}@keyframes xpFloat{0%{opacity:0;transform:translateY(12px) scale(.8)}15%{opacity:1}100%{opacity:0;transform:translateY(-70px) scale(1.08)}}@keyframes xpPulse{0%{transform:scale(1)}45%{transform:scale(1.16)}100%{transform:scale(1)}}@media(max-width:600px){.favorite-grid{grid-template-columns:1fr;gap:8px}.favorite-grid>div{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:7px;align-items:stretch}.favorite-grid .favorite-btn{min-height:64px}.favorite-grid .btn{white-space:nowrap}.card{padding:13px}.actions .btn{min-height:36px}}@media(max-width:600px){main{padding:11px}.logo{font-size:18px}.header-inner{align-items:flex-start}}
+*{box-sizing:border-box}body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:var(--text)}button,input,select,textarea{font:inherit}button{cursor:pointer}header{position:sticky;top:0;z-index:10;background:#141c25;border-bottom:1px solid var(--line);padding:15px}.header-inner{max-width:1200px;margin:auto;display:flex;justify-content:space-between;gap:15px;align-items:center}.logo{font-size:22px;font-weight:700;letter-spacing:2px}.version{color:var(--muted);font-size:12px;margin-top:4px}.xp-mini{text-align:right;color:var(--accent);font-weight:700}nav{max-width:1200px;margin:12px auto 0;display:flex;gap:6px;flex-wrap:wrap}nav button{background:var(--panel2);color:var(--text);border:1px solid var(--line);border-radius:8px;padding:8px 11px}nav button.active{background:var(--accent);color:#07111c}main{max-width:1200px;margin:auto;padding:18px}.page{display:none}.page.active{display:block}.role-hidden{display:none!important}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px}.card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px;margin-bottom:14px}.card h2{margin-top:0}.stat{font-size:28px;font-weight:700;margin-top:7px}.muted{color:var(--muted)}.progress{height:11px;background:#0b1016;border-radius:20px;overflow:hidden;margin-top:9px}.progress-bar{height:100%;background:var(--accent)}.item{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:12px;margin:9px 0}.item-title{font-weight:700}.meta{color:var(--muted);font-size:13px;margin-top:5px}.actions{display:flex;gap:6px;flex-wrap:wrap;margin-top:9px}.btn{border:0;border-radius:7px;padding:7px 10px;background:#344454;color:white}.btn.primary{background:var(--accent);color:#07111c}.btn.success{background:var(--green);color:#07130d}.btn.warning{background:var(--yellow);color:#171100}.btn.danger{background:var(--red);color:#210707}.btn.purple{background:var(--purple);color:#150b25}form{display:grid;gap:9px}input,select,textarea{width:100%;background:#0f151c;border:1px solid var(--line);border-radius:7px;color:white;padding:9px}textarea{min-height:70px;resize:vertical}.form-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:9px}.days{display:flex;gap:6px;flex-wrap:wrap}.day{display:flex;align-items:center;gap:4px;background:#111a23;border:1px solid var(--line);border-radius:7px;padding:7px}.day input{width:auto}.tag{display:inline-block;padding:3px 6px;border-radius:5px;background:#303d4b;font-size:11px;margin:2px}.tag.green{background:#234936;color:#8ff0b8}.tag.red{background:#4d2929;color:#ff9b9b}.tag.yellow{background:#4a3e20;color:#ffe29a}.tag.purple{background:#3b2b5a;color:#d7c3ff}.log{border-left:3px solid var(--accent);padding-left:9px;margin:8px 0}.deleted{border-left-color:var(--red)}.empty{color:var(--muted);padding:8px 0}.small{font-size:12px}.favorite-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:9px}.favorite-grid>div{min-width:0}.favorite-btn{width:100%;min-height:70px;border:1px solid var(--line);border-radius:10px;background:var(--panel2);color:var(--text);padding:12px;text-align:left}.favorite-btn strong{display:block}.favorite-btn span{display:block;color:var(--muted);font-size:12px;margin-top:5px}hr{border:0;border-top:1px solid var(--line);margin:16px 0}.edit-btn{background:#46586a}.xp-pop{position:fixed;z-index:2000;pointer-events:none;font-size:22px;font-weight:800;color:var(--green);text-shadow:0 2px 12px rgba(104,214,154,.55);animation:xpFloat 1.15s ease-out forwards}.xp-pop::before{content:"✦ "}.xp-pop-sub{font-size:12px;font-weight:600;color:var(--text);margin-left:5px}.xp-burst{animation:xpPulse .5s ease-out}@keyframes xpFloat{0%{opacity:0;transform:translateY(12px) scale(.8)}15%{opacity:1}100%{opacity:0;transform:translateY(-70px) scale(1.08)}}@keyframes xpPulse{0%{transform:scale(1)}45%{transform:scale(1.16)}100%{transform:scale(1)}}@media(max-width:600px){.favorite-grid{grid-template-columns:1fr;gap:8px}.favorite-grid>div{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:7px;align-items:stretch}.favorite-grid .favorite-btn{min-height:64px}.favorite-grid .btn{white-space:nowrap}.card{padding:13px}.actions .btn{min-height:36px}}@media(max-width:600px){main{padding:11px}.logo{font-size:18px}.header-inner{align-items:flex-start}}
 
 .tour-overlay{position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:1000;display:none}
 .tour-overlay.active{display:block}
@@ -22,13 +22,13 @@
 <div id="authScreen" style="position:fixed;inset:0;background:#0f151c;color:#f3f6f9;z-index:999;display:flex;align-items:center;justify-content:center;padding:18px">
 <div class="card" style="width:min(440px,100%);margin:0"><div class="logo">GALAKTOGON</div><div class="version" style="margin-bottom:18px">ONLINE-KONTO // V9</div>
 <div id="authLogin"><h2>Anmelden</h2><p class="muted">Dein GALAKTOGON-Spielstand wird online gespeichert und ist auf Handy, iPad und Laptop verfügbar.</p><form id="loginForm"><input id="loginName" placeholder="Benutzername" autocomplete="username" required><input id="loginPassword" type="password" placeholder="Passwort" autocomplete="current-password" required><button class="btn primary">Anmelden</button></form><p class="small muted">Noch kein Konto? <button class="btn" type="button" id="showSignup">Konto erstellen</button></p></div>
-<div id="authSignup" style="display:none"><h2>Konto erstellen</h2><p class="muted">Du brauchst nur einen Benutzernamen und ein Passwort. Jeder Benutzer bekommt einen eigenen GALAKTOGON-Spielstand.</p><form id="signupForm"><input id="signupName" placeholder="Benutzername" autocomplete="username" minlength="3" maxlength="20" required><input id="signupPassword" type="password" placeholder="Passwort (mind. 6 Zeichen)" autocomplete="new-password" minlength="6" required><input id="signupPassword2" type="password" placeholder="Passwort wiederholen" autocomplete="new-password" minlength="6" required><button class="btn primary">Konto erstellen</button></form><p class="small muted">Bereits ein Konto? <button class="btn" type="button" id="showLogin">Zur Anmeldung</button></p></div>
+<div id="authSignup" style="display:none"><h2>Konto erstellen</h2><p class="muted">Wähle aus, ob du einen Kinder- oder Elternaccount erstellen möchtest.</p><form id="signupForm"><input id="signupName" placeholder="Benutzername" autocomplete="username" minlength="3" maxlength="20" required><input id="signupPassword" type="password" placeholder="Passwort (mind. 6 Zeichen)" autocomplete="new-password" minlength="6" required><input id="signupPassword2" type="password" placeholder="Passwort wiederholen" autocomplete="new-password" minlength="6" required><select id="signupRole"><option value="child">Kinderaccount</option><option value="parent">Elternaccount</option></select><button class="btn primary">Konto erstellen</button></form><p class="small muted">Bereits ein Konto? <button class="btn" type="button" id="showLogin">Zur Anmeldung</button></p></div>
 <div id="authMessage" class="small" style="margin-top:10px"></div></div></div>
 
 <header>
-<div class="header-inner"><div><div class="logo">GALAKTOGON AUFGABENPROTOKOLL</div><div class="version">GAP // 2.4 beta</div></div><div class="xp-mini"><div id="headerRank">Kadett</div><div id="headerXP">0 XP</div><button class="btn small" id="logoutBtn" style="margin-top:6px">Abmelden</button></div></div>
+<div class="header-inner"><div><div class="logo">GALAKTOGON AUFGABENPROTOKOLL</div><div class="version">GAP // 2.5 beta</div></div><div class="xp-mini"><div id="headerRank">Kadett</div><div id="headerXP">0 XP</div><button class="btn small" id="logoutBtn" style="margin-top:6px">Abmelden</button></div></div>
 <nav>
-<button data-page="dashboard">Dashboard</button><button data-page="tutorial">Tutorial</button><button data-page="tasks">Sektoraufgaben</button><button data-page="exams">Sektorprüfungen</button><button data-page="quests">Quests</button><button data-page="recurring">Daueraufträge</button><button data-page="activities">Aktivitäten</button><button data-page="progress">Fortschritt</button><button data-page="ranks">Ränge</button><button data-page="leaderboard">Leaderboard</button><button data-page="parents">Elternmodus</button>
+<button data-page="dashboard">Dashboard</button><button data-page="tutorial">Tutorial</button><button data-page="tasks">Sektoraufgaben</button><button data-page="exams">Sektorprüfungen</button><button data-page="quests">Quests</button><button data-page="recurring">Daueraufträge</button><button data-page="activities">Aktivitäten</button><button data-page="progress">Fortschritt</button><button data-page="ranks">Ränge</button><button data-page="leaderboard" data-role="child">Leaderboard</button><button data-page="parents" data-role="parent">Eltern-Dashboard</button><button data-page="parentTutorial" data-role="parent">Eltern-Tutorial</button>
 </nav>
 </header>
 <main>
@@ -42,7 +42,7 @@
 
 <section id="tutorial" class="page">
 <div class="card"><h2>GALAKTOGON-Tutorial</h2><p class="muted">Ein kompletter interaktiver Rundgang durch GAP. Du kannst jeden Schritt direkt ausprobieren und dich mit <strong>Weiter</strong> durch alle Funktionen führen lassen.</p><div class="actions"><button class="btn primary" data-act="open-tutorial">Gesamtes Tutorial starten</button></div></div>
-<div class="card"><h2>Eltern-Tutorial</h2><p class="muted">Ein eigener interaktiver Rundgang für Eltern: Elternmodus, Vertrauensstatus, Eltern-Quests, Buffs & Debuffs, Protokolle und die wichtigsten Regeln.</p><div class="actions"><button class="btn purple" data-act="open-parent-tutorial">Eltern-Tutorial starten</button></div></div>
+
 </section>
 <section id="tasks" class="page">
 <div class="card"><h2>Neue Sektoraufgabe</h2><form id="taskForm"><input id="taskTitle" placeholder="Aufgabe" required><div class="form-grid"><input id="taskSubject" placeholder="Fach"><input id="taskDue" type="date"><select id="taskType"><option value="normal">Normale Aufgabe (+10 XP)</option><option value="vocabulary">Vokabeln (+10 XP)</option><option value="large">Große Aufgabe (+20 XP)</option><option value="presentation">Präsentation (+30 XP)</option><option value="learning">Lernen (+10 XP)</option></select></div><textarea id="taskNote" placeholder="Notiz"></textarea><button class="btn primary">Sektoraufgabe hinzufügen</button></form></div>
@@ -79,18 +79,20 @@
 </section>
 
 <section id="parents" class="page">
-<div class="card"><h2>Eltern-Tutorial</h2>
-<p class="muted">Starten Sie den interaktiven Rundgang, wenn Sie GAP zum ersten Mal nutzen. Er erklärt die Elternseite Schritt für Schritt.</p>
-<div class="actions"><button class="btn purple" data-act="open-parent-tutorial">Eltern-Tutorial starten</button></div>
-<hr>
-<h3>Kurz erklärt</h3>
-<p><strong>Vertrauensstatus:</strong> A bis D beeinflusst den XP-Modifikator. <strong>Eltern-Quests:</strong> Aufgaben können mit eigener XP-Belohnung vergeben werden. <strong>Buffs & Debuffs:</strong> zeitlich begrenzte Veränderungen für zukünftige XP-Vergaben. <strong>Fortschritt:</strong> Protokolle machen Änderungen nachvollziehbar.</p>
-<p class="small muted">Die Regeln sollten gemeinsam vereinbart werden. GAP ist ein Protokoll- und Motivationssystem, kein Ersatz für Gespräche.</p>
-</div>
-<div class="card"><h2>Wochenbilanz</h2><div id="weeklyReview"></div></div><div class="card"><h2>Elternmodus</h2><p class="muted">Hier können Vertrauensstatus, Eltern-Quests sowie zeitlich begrenzte Buffs und Debuffs verwaltet werden.</p><form id="trustForm"><select id="trustStatus"><option value="A">A – Vereinbarungen zuverlässig eingehalten</option><option value="B">B – meistens eingehalten</option><option value="C">C – mehrere Probleme</option><option value="D">D – Vereinbarung funktioniert aktuell nicht</option></select><button class="btn primary">Vertrauensstatus speichern</button></form><div id="trustInfo"></div></div>
-<div class="card"><h2>Eltern-Quest mit XP</h2><form id="parentQuestForm"><input id="parentQuestTitle" placeholder="z. B. Zimmer bis Samstag ordentlich halten" required><div class="form-grid"><input id="parentQuestDue" type="date"><input id="parentQuestXP" type="number" min="0" value="20" placeholder="XP"></div><textarea id="parentQuestNote" placeholder="Was soll gemacht werden?"></textarea><button class="btn purple">Eltern-Quest vergeben</button></form></div>
-<div class="card"><h2>Buff / Debuff vergeben</h2><p class="muted">Eltern können einen zeitlich begrenzten Buff oder Debuff für zukünftige XP-Vergaben vergeben.</p><form id="buffForm"><input id="buffName" placeholder="z. B. Sehr gute Klassenarbeit" required><div class="form-grid"><select id="buffKind"><option value="buff">Buff (+)</option><option value="debuff">Debuff (−)</option></select><input id="buffPercent" type="number" min="1" max="100" value="20" placeholder="Stärke %"><input id="buffUses" type="number" min="1" value="3" placeholder="Anzahl XP-Vergaben"></div><button class="btn success">Effekt aktivieren</button></form></div>
-<div class="card"><h2>Aktive Effekte</h2><div id="parentEffects"></div></div>
+<div class="card"><h2>Eltern-Dashboard</h2><p class="muted">Hier verwalten Sie die verbundenen Kinder. Aufgaben, Prüfungen und die von Ihnen vergebenen Quests und Daueraufträge werden direkt mit dem Kinderaccount synchronisiert.</p>
+<div class="form-grid"><select id="activeChildSelect"></select><button class="btn primary" type="button" id="switchChildBtn">Kind verwalten</button></div>
+<div id="parentChildStatus" class="meta"></div></div>
+<div class="card"><h2>Meine Kinder</h2><div id="parentChildrenList"></div><hr><h3>Weiteres Kind verbinden</h3><form id="addChildForm"><select id="availableChildSelect"></select><button class="btn purple">Kind hinzufügen</button></form></div>
+<div class="card"><h2>Wochenbilanz</h2><div id="weeklyReview"></div></div>
+<div class="card"><h2>Sektoraufgaben</h2><div id="parentTaskList"></div></div>
+<div class="card"><h2>Sektorprüfungen</h2><div id="parentExamList"></div></div>
+<div class="card"><h2>Quest für das Kind erstellen</h2><form id="parentQuestForm"><input id="parentQuestTitle" placeholder="Quest" required><div class="form-grid"><input id="parentQuestDue" type="date"><input id="parentQuestXP" type="number" min="0" value="20" placeholder="XP"></div><textarea id="parentQuestNote" placeholder="Notiz"></textarea><button class="btn purple">Quest erstellen</button></form></div>
+<div class="card"><h2>Dauerauftrag für das Kind erstellen</h2><form id="parentRecurringForm"><input id="parentRecurringTitle" placeholder="Dauerauftrag" required><div class="form-grid"><input id="parentRecurringSubject" placeholder="Fach"><input id="parentRecurringXP" type="number" min="0" value="10" placeholder="XP"></div><div class="days" id="parentWeekdayInputs"></div><button class="btn primary">Dauerauftrag erstellen</button></form></div>
+<div class="card"><h2>Vertrauensstatus</h2><form id="trustForm"><select id="trustStatus"><option value="A">A – Vereinbarungen zuverlässig eingehalten</option><option value="B">B – meistens eingehalten</option><option value="C">C – mehrere Probleme</option><option value="D">D – Vereinbarung funktioniert aktuell nicht</option></select><button class="btn primary">Vertrauensstatus speichern</button></form><div id="trustInfo"></div></div>
+<div class="card"><h2>Buff / Debuff</h2><form id="buffForm"><input id="buffName" placeholder="Bezeichnung" required><div class="form-grid"><select id="buffKind"><option value="buff">Buff (+)</option><option value="debuff">Debuff (−)</option></select><input id="buffPercent" type="number" min="1" max="100" value="20"><input id="buffUses" type="number" min="1" value="3"></div><button class="btn success">Effekt aktivieren</button></form><div id="parentEffects"></div></div>
+</section>
+<section id="parentTutorial" class="page">
+<div class="card"><h2>Eltern-Tutorial</h2><p class="muted">Dieser Rundgang gehört ausschließlich zum Elternaccount. Er erklärt Verbindung, Kinderverwaltung, Synchronisierung, Aufgaben, Prüfungen, Quests, Daueraufträge, Wochenbilanz und die Verwaltungsfunktionen.</p><div class="actions"><button class="btn purple" data-act="open-parent-tutorial">Eltern-Tutorial starten</button></div></div>
 </section>
 <div id="editModal" class="tour-overlay" aria-hidden="true"><div id="editCard" class="tour-card" style="top:50%;left:50%;transform:translate(-50%,-50%);width:min(440px,calc(100vw - 24px))"><div class="tour-progress">EINTRAG BEARBEITEN</div><h2 id="editTitle">Eintrag bearbeiten</h2><form id="editForm"><div id="editFields"></div><div class="tour-actions"><button type="button" class="btn" id="editCancel">Abbrechen</button><button type="submit" class="btn primary">Speichern</button></div></form></div></div><div id="tourOverlay" class="tour-overlay" aria-hidden="true"><div id="tourCard" class="tour-card"><div id="tourProgress" class="tour-progress"></div><h2 id="tourTitle"></h2><p id="tourText"></p><div class="tour-actions"><button class="btn" id="tourSkip">Überspringen</button><div class="actions" style="margin:0"><button class="btn" id="tourBack">Zurück</button><button class="btn primary" id="tourNext">Weiter</button></div></div></div></div></main>
 <footer>GALAKTOGON // Haus-KI // V9</footer>
@@ -104,8 +106,8 @@ const SUPABASE_URL="https://tkbopzdurmejcwawtswa.supabase.co";
 const SUPABASE_KEY="sb_publishable_NaSGbCf_A8HrrPV6O9D0ig_0tiFPA6D";
 const supabaseConfigured=SUPABASE_URL.startsWith("https://")&&SUPABASE_KEY.length>20;
 const supabaseClient=supabaseConfigured?window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY,{auth:{persistSession:true,autoRefreshToken:true}}):null;
-const KEY="galaktogon_v9";
-const OLD_KEYS=["galaktogon_v6","galaktogon_v52","galaktogon_v51","galaktogon_v5"];
+const KEY="galaktogon_v10";
+const OLD_KEYS=["galaktogon_v9","galaktogon_v6","galaktogon_v52","galaktogon_v51","galaktogon_v5"];
 const DAYS=["So","Mo","Di","Mi","Do","Fr","Sa"];
 const RANKS=[{n:"Kadett",x:0},{n:"Operator",x:300},{n:"Spezialist",x:800},{n:"Sektorführer",x:1500},{n:"Kommandant",x:2400},{n:"Eliteoperator",x:3500},{n:"Meister",x:5000},{n:"Galaktogon-Veteran",x:7000},{n:"Galaktogon-Legende",x:9500}];
 
@@ -117,7 +119,7 @@ function taskXP(t){return t==="large"?20:t==="presentation"?30:10}
 function rank(){let r=RANKS[0];RANKS.forEach(v=>{if(db.xp>=v.x)r=v});return r}
 function nextRank(){return RANKS.find(v=>db.xp<v.x)||null}
 function defaultActivities(){return [{id:uid(),title:"Gitarre lernen",xp:10},{id:uid(),title:"Bewegen / draußen",xp:10},{id:uid(),title:"Lesen",xp:15},{id:uid(),title:"Zimmer aufräumen",xp:15},{id:uid(),title:"Ganzes Zimmer",xp:20}]}
-function fresh(){const d={xp:0,tasks:[],exams:[],quests:[],recurring:[],activities:defaultActivities(),activityLog:[],xpLog:[],completionLog:[],deleteLog:[],effects:[],trust:"A",trustWeekModifier:20,trustWeekKey:"",tutorialDone:false,fixed20:false};d.quests.push({id:uid(),title:"GALAKTOGON-Tutorial ansehen",due:"",xp:0,note:"Einmalige Einführung in Benutzeroberfläche, XP-System und Elternmodus.",tutorial:true});return d}
+function fresh(){const d={xp:0,tasks:[],exams:[],quests:[],recurring:[],activities:defaultActivities(),activityLog:[],xpLog:[],completionLog:[],deleteLog:[],effects:[],trust:"A",trustWeekModifier:20,trustWeekKey:"",tutorialDone:false,fixed20:false};d.quests.push({id:uid(),title:"GALAKTOGON-Tutorial ansehen",due:"",xp:0,note:"Einmalige Einführung in Benutzeroberfläche und XP-System.",tutorial:true});return d}
 
 function normalize(d){
  const f=fresh(); if(!d||typeof d!=="object")return f;
@@ -141,26 +143,69 @@ function saveRaw(d){localStorage.setItem(KEY,JSON.stringify(d))}
 let db=load();
 let currentUser=null;
 let currentUsername="";
+let userRole="child";
+let managedChildren=[];
+let activeChildId=localStorage.getItem("gap_active_child")||"";
+let activeChildUsername="";
 let saveTimer=null;
 async function save(){
   saveRaw(db);
   if(!currentUser||!supabaseClient)return;
   clearTimeout(saveTimer);
   saveTimer=setTimeout(async()=>{
-    const {error}=await supabaseClient.from("galaktogon_data").upsert({user_id:currentUser.id,username:currentUsername,data:db,updated_at:new Date().toISOString()});
-    const now=new Date();const day=periodXP("day"),week=periodXP("week"),month=periodXP("month");await supabaseClient.from("gap_leaderboard_public").upsert({user_id:currentUser.id,username:currentUsername||"Unbekannt",xp:db.xp,day_xp:day,week_xp:week,month_xp:month,all_xp:db.xp,updated_at:now.toISOString()});
-    if(error) console.error("Online-Speicher:",error);
+    try{
+      if(userRole==="parent"){await saveChildNow();return}
+      const {error}=await supabaseClient.from("galaktogon_data").upsert({user_id:currentUser.id,username:currentUsername,data:db,updated_at:new Date().toISOString()});
+      const now=new Date();const day=periodXP("day"),week=periodXP("week"),month=periodXP("month");
+      await supabaseClient.from("gap_leaderboard_public").upsert({user_id:currentUser.id,username:currentUsername||"Unbekannt",xp:db.xp,day_xp:day,week_xp:week,month_xp:month,all_xp:db.xp,updated_at:now.toISOString()});
+      if(error) console.error("Online-Speicher:",error);
+    }catch(e){console.error("Online-Speicher:",e)}
   },150);
+}
+async function saveChildNow(){
+  if(!currentUser||!activeChildId||!supabaseClient)return;
+  const {error}=await supabaseClient.from("galaktogon_data").update({data:db,updated_at:new Date().toISOString()}).eq("user_id",activeChildId);
+  if(error)throw error;
 }
 async function saveNow(){
   saveRaw(db);
   if(!currentUser||!supabaseClient)return;
+  if(userRole==="parent"){await saveChildNow();return}
   const {error}=await supabaseClient.from("galaktogon_data").upsert({user_id:currentUser.id,username:currentUsername,data:db,updated_at:new Date().toISOString()});
-  if(error) throw error;
+  if(error)throw error;
+}
+async function ensureProfile(role){
+  const {error}=await supabaseClient.from("gap_profiles").upsert({user_id:currentUser.id,username:currentUsername,role,updated_at:new Date().toISOString()});
+  if(error)console.error("Profil:",error);
+}
+async function loadParentChildren(){
+  const {data:links,error}=await supabaseClient.from("gap_parent_children").select("child_id").eq("parent_id",currentUser.id);
+  if(error)throw error;
+  const ids=(links||[]).map(x=>x.child_id);
+  if(!ids.length){managedChildren=[];activeChildId="";activeChildUsername="";db=normalize(fresh());return}
+  const {data:profiles,error:pe}=await supabaseClient.from("gap_profiles").select("user_id,username").eq("role","child").in("user_id",ids);
+  if(pe)throw pe;
+  managedChildren=profiles||[];
+  if(!managedChildren.some(x=>x.user_id===activeChildId))activeChildId=managedChildren[0]?.user_id||"";
+  localStorage.setItem("gap_active_child",activeChildId||"");
+  if(activeChildId)await loadManagedChild(activeChildId);
+}
+async function loadManagedChild(childId){
+  if(!managedChildren.some(x=>x.user_id===childId))throw new Error("Kind ist nicht verbunden.");
+  const {data,error}=await supabaseClient.from("galaktogon_data").select("data,username").eq("user_id",childId).maybeSingle();
+  if(error)throw error;
+  activeChildId=childId;localStorage.setItem("gap_active_child",childId);
+  activeChildUsername=managedChildren.find(x=>x.user_id===childId)?.username||data?.username||"Kind";
+  db=data?.data?normalize(data.data):normalize(fresh());saveRaw(db);
 }
 async function loadOnline(){
+  const {data:profile,error:profileError}=await supabaseClient.from("gap_profiles").select("username,role").eq("user_id",currentUser.id).maybeSingle();
+  if(profileError)throw profileError;
+  userRole=profile?.role||"child";currentUsername=profile?.username||currentUsername;
+  if(userRole==="parent"){await loadParentChildren();return}
+  await ensureProfile("child");
   const {data,error}=await supabaseClient.from("galaktogon_data").select("data,username").eq("user_id",currentUser.id).maybeSingle();
-  if(error) throw error;
+  if(error)throw error;
   if(data&&data.data){db=normalize(data.data);currentUsername=data.username||currentUsername;saveRaw(db)}
   else {db=normalize(fresh());await saveNow()}
 }
@@ -199,36 +244,71 @@ function usernameEmail(name){return name.toLowerCase().trim()+"@galaktogon.local
 function validUsername(name){return /^[A-Za-z0-9_-]{3,20}$/.test(name)}
 function setAuthMode(signup){document.getElementById("authLogin").style.display=signup?"none":"block";document.getElementById("authSignup").style.display=signup?"block":"none";authMsg("")}
 async function signUp(){
- if(!supabaseConfigured){authMsg("Die Supabase-Daten fehlen noch. URL und Publishable Key in der index.html eintragen.",true);return}
- const name=document.getElementById("signupName").value.trim();const pw=document.getElementById("signupPassword").value;const pw2=document.getElementById("signupPassword2").value;
+ if(!supabaseConfigured){authMsg("Die Supabase-Daten fehlen noch.",true);return}
+ const name=el("signupName").value.trim(),pw=el("signupPassword").value,pw2=el("signupPassword2").value,role=el("signupRole").value;
  if(!validUsername(name)){authMsg("Benutzername: 3–20 Zeichen, nur Buchstaben, Zahlen, _ oder -.",true);return}
  if(pw!==pw2){authMsg("Die Passwörter stimmen nicht überein.",true);return}
  authMsg("Konto wird erstellt …");
  const {data,error}=await supabaseClient.auth.signUp({email:usernameEmail(name),password:pw});
  if(error){authMsg("Konto konnte nicht erstellt werden: "+error.message,true);return}
- if(!data.session){authMsg("Konto erstellt. In Supabase muss die E-Mail-Bestätigung deaktiviert sein, weil GALAKTOGON mit Benutzername + Passwort arbeitet.",true);return}
- currentUser=data.user;currentUsername=name;db=normalize(fresh());await saveNow();enterApp();
+ if(!data.session){authMsg("Konto erstellt. Für GAP muss die E-Mail-Bestätigung in Supabase deaktiviert sein.",true);return}
+ currentUser=data.user;currentUsername=name;userRole=role;await ensureProfile(role);
+ if(role==="child"){db=normalize(fresh());await saveNow()}else{db=normalize(fresh());saveRaw(db)}
+ enterApp();
 }
 async function signIn(){
- if(!supabaseConfigured){authMsg("Die Supabase-Daten fehlen noch. URL und Publishable Key in der index.html eintragen.",true);return}
- const name=document.getElementById("loginName").value.trim();const pw=document.getElementById("loginPassword").value;
+ if(!supabaseConfigured){authMsg("Die Supabase-Daten fehlen noch.",true);return}
+ const name=el("loginName").value.trim(),pw=el("loginPassword").value;
  if(!validUsername(name)){authMsg("Ungültiger Benutzername.",true);return}
  authMsg("Anmeldung …");
  const {data,error}=await supabaseClient.auth.signInWithPassword({email:usernameEmail(name),password:pw});
  if(error){authMsg("Anmeldung fehlgeschlagen. Benutzername oder Passwort prüfen.",true);return}
  currentUser=data.user;await loadOnline();enterApp();
 }
-function enterApp(){document.getElementById("authScreen").style.display="none";renderAll();showPage("dashboard")}
-async function logout(){await saveNow().catch(()=>{});if(supabaseClient)await supabaseClient.auth.signOut();currentUser=null;currentUsername="";document.getElementById("authScreen").style.display="flex";setAuthMode(false);document.getElementById("loginPassword").value="";authMsg("")}
+function syncRoleUI(){
+ document.querySelectorAll("[data-role]").forEach(x=>x.style.display=x.dataset.role===userRole?"":"none");
+ document.querySelectorAll(".page").forEach(x=>{const isParent=["parents","parentTutorial"].includes(x.id);x.classList.toggle("role-hidden",userRole==="parent"?!isParent:isParent)});
+}
+function enterApp(){document.getElementById("authScreen").style.display="none";syncRoleUI();if(userRole==="parent"){renderParentDashboard();showPage("parents")}else{renderAll();showPage("dashboard")}}
+async function logout(){await saveNow().catch(()=>{});if(supabaseClient)await supabaseClient.auth.signOut();currentUser=null;currentUsername="";userRole="child";managedChildren=[];activeChildId="";activeChildUsername="";document.getElementById("authScreen").style.display="flex";setAuthMode(false);document.getElementById("loginPassword").value="";authMsg("")}
 async function bootAuth(){
- document.getElementById("showSignup").onclick=()=>setAuthMode(true);document.getElementById("showLogin").onclick=()=>setAuthMode(false);document.getElementById("loginForm").addEventListener("submit",e=>{e.preventDefault();signIn()});document.getElementById("signupForm").addEventListener("submit",e=>{e.preventDefault();signUp()});document.getElementById("logoutBtn").onclick=logout;
- if(!supabaseConfigured){authMsg("Noch nicht eingerichtet: Supabase-Projekt erstellen und die beiden Werte oben in der Datei eintragen.",true);return}
+ el("showSignup").onclick=()=>setAuthMode(true);el("showLogin").onclick=()=>setAuthMode(false);el("loginForm").addEventListener("submit",e=>{e.preventDefault();signIn()});el("signupForm").addEventListener("submit",e=>{e.preventDefault();signUp()});el("logoutBtn").onclick=logout;
+ if(!supabaseConfigured){authMsg("Noch nicht eingerichtet.",true);return}
  const {data}=await supabaseClient.auth.getSession();if(data.session){currentUser=data.session.user;await loadOnline();enterApp()}
 }
-function showPage(p){document.querySelectorAll(".page").forEach(x=>x.classList.remove("active"));document.getElementById(p).classList.add("active");document.querySelectorAll("nav button").forEach(x=>x.classList.toggle("active",x.dataset.page===p));renderAll()}
+function showPage(p){
+ const parentPage=["parents","parentTutorial"].includes(p);
+ if(userRole==="parent"&&!parentPage)p="parents";
+ if(userRole!=="parent"&&parentPage)p="dashboard";
+ document.querySelectorAll(".page").forEach(x=>x.classList.remove("active"));
+ const page=document.getElementById(p);if(page)page.classList.add("active");
+ document.querySelectorAll("nav button").forEach(x=>x.classList.toggle("active",x.dataset.page===p));
+ if(userRole==="parent")renderParentDashboard();else renderAll();
+}
 document.querySelectorAll("nav button").forEach(b=>b.addEventListener("click",()=>showPage(b.dataset.page)));
 document.querySelectorAll("[data-period]").forEach(b=>b.addEventListener("click",()=>{leaderboardPeriod=b.dataset.period;document.querySelectorAll("[data-period]").forEach(x=>x.classList.toggle("primary",x===b));renderLeaderboard()}));
 
+function renderParentDashboard(){
+ if(userRole!=="parent")return;
+ const sel=el("activeChildSelect"),add=el("availableChildSelect");
+ if(sel)sel.innerHTML=managedChildren.length?managedChildren.map(x=>'<option value="'+x.user_id+'" '+(x.user_id===activeChildId?"selected":"")+'>'+esc(x.username)+'</option>').join(""):'<option value="">Noch kein Kind verbunden</option>';
+ if(add)loadAvailableChildren().then(rows=>{const linked=new Set(managedChildren.map(x=>x.user_id));add.innerHTML=rows.filter(x=>!linked.has(x.user_id)).map(x=>'<option value="'+x.user_id+'">'+esc(x.username)+'</option>').join("")||'<option value="">Keine weiteren Kinder gefunden</option>'}).catch(()=>{});
+ const status=el("parentChildStatus");if(status)status.textContent=activeChildId?"Aktives Kind: "+activeChildUsername+" · synchronisiert":"Noch kein Kind verbunden. Bitte unten ein vorhandenes Kinderkonto auswählen.";
+ const list=el("parentChildrenList");if(list)list.innerHTML=managedChildren.length?managedChildren.map(x=>'<div class="item"><strong>'+esc(x.username)+'</strong><div class="actions"><button class="btn primary" data-parent-child="'+x.user_id+'">Verwalten</button><button class="btn danger" data-remove-child="'+x.user_id+'">Verbindung entfernen</button></div></div>').join(""):'<div class="empty">Noch keine Kinder verbunden.</div>';
+ if(activeChildId){
+  if(el("parentTaskList"))el("parentTaskList").innerHTML=db.tasks.map(taskHTML).join("")||'<div class="empty">Keine offenen Sektoraufgaben.</div>';
+  if(el("parentExamList"))el("parentExamList").innerHTML=db.exams.slice().sort((a,b)=>(a.date||"").localeCompare(b.date||"")).map(examHTML).join("")||'<div class="empty">Keine offenen Sektorprüfungen.</div>';
+  const w=weeklyReview(),now=new Date(),sun=now.getDay()===0&&now.getHours()>=20;
+  if(el("weeklyReview"))el("weeklyReview").innerHTML=sun?'<div class="item"><strong>'+w.label+' · '+w.score+'/100</strong><div class="meta">'+w.week+'</div><div class="meta">'+w.xp+' XP · '+w.completed+' Abschlüsse · '+w.overdue+' überfällige Aufgaben</div></div>':'<div class="empty">Die Wochenbilanz wird sonntags ab 20:00 angezeigt.</div>';
+  if(el("trustStatus"))el("trustStatus").value=db.trust;
+  if(el("trustInfo")){const tw=trustWeeklyModifier();el("trustInfo").innerHTML='<div class="item"><strong>Vertrauenswirkung: '+(tw>=0?"+":"")+tw+'% XP</strong><div class="meta">A: +20 % · B: +5 % · C: −5 % · D: −20 %</div></div>'}
+  if(el("parentEffects"))el("parentEffects").innerHTML=effectsHTML()||'<div class="empty">Keine aktiven Effekte.</div>';
+ }else{["parentTaskList","parentExamList","weeklyReview"].forEach(id=>{if(el(id))el(id).innerHTML='<div class="empty">Erst ein Kind verbinden.</div>'})}
+}
+async function loadAvailableChildren(){const {data,error}=await supabaseClient.from("gap_profiles").select("user_id,username").eq("role","child").order("username");if(error)throw error;return data||[]}
+async function switchManagedChild(id){if(!id)return;await loadManagedChild(id);renderParentDashboard();showPage("parents")}
+async function addManagedChild(id){if(!id)return;const {error}=await supabaseClient.from("gap_parent_children").insert({parent_id:currentUser.id,child_id:id});if(error){authMsg("Kind konnte nicht verbunden werden: "+error.message,true);return}await loadParentChildren();renderParentDashboard();showPage("parents")}
+async function removeManagedChild(id){if(!confirm("Verbindung zu diesem Kind entfernen?"))return;const {error}=await supabaseClient.from("gap_parent_children").delete().eq("parent_id",currentUser.id).eq("child_id",id);if(error){authMsg("Verbindung konnte nicht entfernt werden.",true);return}await loadParentChildren();renderParentDashboard();showPage("parents")}
 function taskHTML(t,recurring=false){return `<div class="item"><div class="item-title">${esc(t.title)}</div><div class="meta">${esc(t.subject||"Kein Fach")} · +${recurring?t.xp:taskXP(t.type)} XP ${recurring?"· Dauerauftrag":"· "+(t.type==="large"?"Große Aufgabe":t.type==="presentation"?"Präsentation":"Aufgabe")}</div><div class="meta">${recurring?"Heute fällig":"Termin: "+dateText(t.due)}</div><div class="actions"><button class="btn success" data-act="complete-${recurring?"recurring":"task"}" data-id="${t.id}">Erledigt</button>${!recurring?`<button class="btn edit-btn" data-act="edit-task" data-id="${t.id}">Bearbeiten</button><button class="btn danger" data-act="delete-task" data-id="${t.id}">Löschen</button>`:""}</div></div>`}
 function questHTML(q){return `<div class="item"><div class="item-title">${esc(q.title)}</div><div class="meta">+${q.xp||0} XP · ${q.due?"Fällig: "+dateText(q.due):"Kein Termin"}</div>${q.note?`<div class="meta">${esc(q.note)}</div>`:""}<div class="actions"><button class="btn success" data-act="complete-quest" data-id="${q.id}">Erledigt</button><button class="btn edit-btn" data-act="edit-quest" data-id="${q.id}">Bearbeiten</button><button class="btn danger" data-act="delete-quest" data-id="${q.id}">Löschen</button></div></div>`}
 function examHTML(e){return `<div class="item"><div class="item-title">${esc(e.subject)} – ${esc(e.title)}</div><div class="meta">${dateText(e.date)} · ${e.size==="large"?"Große Prüfung":"Normale Prüfung"} · +${e.size==="large"?50:30} XP · Ziel ${e.target||2}</div><div class="actions"><button class="btn success" data-act="grade" data-id="${e.id}">Note eintragen</button><button class="btn edit-btn" data-act="edit-exam" data-id="${e.id}">Bearbeiten</button><button class="btn danger" data-act="delete-exam" data-id="${e.id}">Löschen</button></div></div>`}
@@ -264,8 +344,8 @@ function renderRanks(){const r=rank();document.getElementById("rankList").innerH
 let leaderboardPeriod="week";
 async function renderLeaderboard(){const box=document.getElementById("leaderboardList");if(!supabaseClient||!currentUser){box.innerHTML="<div class=\"empty\">Leaderboard erst nach Anmeldung verfügbar.</div>";return}box.innerHTML="<div class=\"muted\">Lade Leaderboard…</div>";const {data,error}=await supabaseClient.from("gap_leaderboard_public").select("username,day_xp,week_xp,month_xp,all_xp").order(leaderboardPeriod+"_xp",{ascending:false}).limit(50);if(error){box.innerHTML="<div class=\"empty\">Leaderboard konnte nicht geladen werden.</div>";console.error(error);return}const key=leaderboardPeriod+"_xp";box.innerHTML=data.length?data.map((x,i)=>"<div class=\"item\"><strong>#"+(i+1)+" · "+esc(x.username)+"</strong><div class=\"meta\">"+Number(x[key]||0).toLocaleString("de-DE")+" XP · "+leaderboardPeriodLabel(leaderboardPeriod)+"</div></div>").join(""):"<div class=\"empty\">Noch keine Accounts im Leaderboard.</div>"}
 function leaderboardPeriodLabel(p){return p==="day"?"heute":p==="week"?"diese Woche":p==="month"?"diesen Monat":"insgesamt"}
-function renderParents(){document.getElementById("trustStatus").value=db.trust;const tw=trustWeeklyModifier();document.getElementById("trustInfo").innerHTML=`<div class="item"><strong>Aktuelle Vertrauenswirkung: ${tw>=0?"+":""}${tw}% XP</strong><div class="meta">A: +20 % · B: +5 % · C: −5 % · D: −20 %</div><div class="meta">Eine Änderung des Status wirkt direkt bei der nächsten XP-Vergabe.</div><div class="meta">Aktueller Status: ${esc(db.trust)}</div></div>`;document.getElementById("parentEffects").innerHTML=effectsHTML()||'<div class="empty">Keine aktiven Effekte.</div>'}
-function renderAll(){renderDashboard();renderTasks();renderExams();renderQuests();renderRecurring();renderActivities();renderProgress();renderParents();renderWeeklyReview();renderRanks();if(document.getElementById("leaderboard").classList.contains("active"))renderLeaderboard()}
+function renderParents(){if(userRole==="parent"||!document.getElementById("trustStatus"))return;document.getElementById("trustStatus").value=db.trust;const tw=trustWeeklyModifier();document.getElementById("trustInfo").innerHTML=`<div class="item"><strong>Aktuelle Vertrauenswirkung: ${tw>=0?"+":""}${tw}% XP</strong><div class="meta">A: +20 % · B: +5 % · C: −5 % · D: −20 %</div><div class="meta">Eine Änderung des Status wirkt direkt bei der nächsten XP-Vergabe.</div><div class="meta">Aktueller Status: ${esc(db.trust)}</div></div>`;document.getElementById("parentEffects").innerHTML=effectsHTML()||'<div class="empty">Keine aktiven Effekte.</div>'}
+function renderAll(){if(userRole==="parent"){renderParentDashboard();return}renderDashboard();renderTasks();renderExams();renderQuests();renderRecurring();renderActivities();renderProgress();renderRanks();if(document.getElementById("leaderboard").classList.contains("active"))renderLeaderboard()}
 
 function deleteLog(type,obj){db.deleteLog.unshift({id:uid(),type,title:obj.title||obj.name||"Eintrag",date:new Date().toISOString()})}
 function completeTask(id){const i=db.tasks.findIndex(x=>x.id===id);if(i<0)return;const t=db.tasks[i];const earned=addXP(taskXP(t.type),"Sektoraufgabe: "+t.title,"Sektoraufgabe");db.completionLog.unshift({id:uid(),title:t.title,earned,type:"Sektoraufgabe",date:new Date().toISOString()});db.tasks.splice(i,1);save();renderAll()}
@@ -307,38 +387,39 @@ function saveEdit(){
  save();closeEdit();renderAll();
 }
 
-function handleClick(e){const b=e.target.closest("[data-act]");if(!b)return;const a=b.dataset.act,id=b.dataset.id;if(a==="complete-task")completeTask(id);else if(a==="delete-task")deleteTask(id);else if(a==="complete-recurring")completeRecurring(id);else if(a==="delete-recurring")deleteRecurring(id);else if(a==="complete-quest")completeQuest(id);else if(a==="delete-quest")deleteQuest(id);else if(a==="activity")completeActivity(id);else if(a==="delete-activity")deleteActivity(id);else if(a==="grade")grade(id);else if(a==="delete-exam")deleteExam(id);else if(a==="toggle-recurring")toggleRecurring(id);else if(a==="edit-task")openEdit("task",id);else if(a==="edit-exam")openEdit("exam",id);else if(a==="edit-quest")openEdit("quest",id);else if(a==="edit-recurring")openEdit("recurring",id);else if(a==="edit-activity")openEdit("activity",id);else if(a==="open-tutorial")startTutorial();else if(a==="open-parent-tutorial")startParentTutorial()}
+function handleClick(e){const b=e.target.closest("[data-act]");if(!b)return;const a=b.dataset.act,id=b.dataset.id;if(a==="complete-task")completeTask(id);else if(a==="delete-task")deleteTask(id);else if(a==="complete-recurring")completeRecurring(id);else if(a==="delete-recurring")deleteRecurring(id);else if(a==="complete-quest")completeQuest(id);else if(a==="delete-quest")deleteQuest(id);else if(a==="activity")completeActivity(id);else if(a==="delete-activity")deleteActivity(id);else if(a==="grade")grade(id);else if(a==="delete-exam")deleteExam(id);else if(a==="toggle-recurring")toggleRecurring(id);else if(a==="edit-task")openEdit("task",id);else if(a==="edit-exam")openEdit("exam",id);else if(a==="edit-quest")openEdit("quest",id);else if(a==="edit-recurring")openEdit("recurring",id);else if(a==="edit-activity")openEdit("activity",id);else if(a==="open-tutorial")startTutorial();else if(a==="open-parent-tutorial")parentTutorialStart()}
 document.addEventListener("click",handleClick);
+document.addEventListener("click",async e=>{const b=e.target.closest("[data-parent-child]");if(b){await switchManagedChild(b.dataset.parentChild);return}const r=e.target.closest("[data-remove-child]");if(r)await removeManagedChild(r.dataset.removeChild)});
 
 
 const TOUR_STEPS=[
-{page:"dashboard",selector:"header",title:"1 · Willkommen bei GAP",text:"Das ist dein GALAKTOGON Aufgabenprotokoll. Oben findest du Rang, XP und die Navigation. Das Tutorial führt dich einmal durch das komplette System."},
-{page:"dashboard",selector:"#dashboard .grid .card:nth-child(1)",title:"2 · Ränge",text:"Dein Rang wird aus deinen gesammelten XP bestimmt. Je mehr XP du sammelst, desto weiter steigst du im GALAKTOGON-System auf."},
-{page:"dashboard",selector:"#dashboard .grid .card:nth-child(2)",title:"3 · XP & Fortschritt",text:"Hier siehst du deine aktuellen XP, den Fortschrittsbalken und wie weit es noch bis zum nächsten Rang ist."},
-{page:"dashboard",selector:"#dashboard .grid .card:nth-child(3)",title:"4 · XP-Modifikator",text:"Der Modifikator zeigt, wie Buffs, Debuffs und der Vertrauensstatus deine nächste XP-Vergabe verändern können."},
-{page:"dashboard",selector:"#dashboard .grid .card:nth-child(4)",title:"5 · Dashboard-Missionen",text:"Das Dashboard zeigt dir offene Aufgaben für heute, heutige Missionen, Quests und bevorstehende Prüfungen. So musst du nicht jeden Bereich einzeln durchsuchen."},
-{page:"tasks",selector:'nav button[data-page="tasks"]',title:"6 · Sektoraufgaben",text:"Hier trägst du Schulaufgaben ein. Du kannst Fach, Fälligkeit, Aufgabentyp und Notizen speichern. Beim Erledigen bekommst du die vorgesehenen XP."},
-{page:"exams",selector:'nav button[data-page="exams"]',title:"7 · Sektorprüfungen",text:"Prüfungen werden mit Fach, Termin, Größe und Zielnote gespeichert. Nach der Prüfung kannst du die Note eintragen; abhängig von der Zielnote werden die vorgesehenen XP vergeben."},
-{page:"quests",selector:'nav button[data-page="quests"]',title:"8 · Quests",text:"Quests sind persönliche Aufgaben. Sie können eine eigene XP-Belohnung und eine Notiz haben. Auch Eltern können Quests vergeben."},
-{page:"recurring",selector:'nav button[data-page="recurring"]',title:"9 · Daueraufträge",text:"Daueraufträge sind wiederkehrende Aufgaben. Du wählst die Wochentage aus und kannst sie an den jeweiligen Tagen erledigen."},
-{page:"activities",selector:'nav button[data-page="activities"]',title:"10 · Aktivitäten",text:"Häufige Aktivitäten kannst du als Favoriten speichern und mit einem Klick ausführen. Auch dafür kann XP vergeben werden."},
-{page:"progress",selector:'nav button[data-page="progress"]',title:"11 · Fortschritt & Protokolle",text:"Hier findest du dein XP-Protokoll, aktive Effekte, erledigte Aufgaben und Quests sowie gelöschte Einträge. Damit bleibt dein Fortschritt nachvollziehbar."},
-{page:"ranks",selector:'nav button[data-page="ranks"]',title:"12 · Alle Ränge",text:"Hier kannst du jede Rangstufe sehen und exakt nachlesen, wie viel XP für den nächsten Rang benötigt werden."},
-{page:"leaderboard",selector:'nav button[data-page="leaderboard"]',title:"13 · Leaderboard",text:"Das Leaderboard vergleicht Accounts nach XP für Tag, Woche, Monat oder die gesamte Zeit. Die Ansicht kann jederzeit zwischen den vier Zeiträumen wechseln."},
-{page:"parents",selector:'nav button[data-page="parents"]',title:"14 · Wochenbilanz & Elternmodus",text:"Sonntags ab 20:00 erscheint auf der Elternseite die Wochenbilanz. Sie bewertet XP, erledigte Einträge, Regelmäßigkeit und überfällige Aufgaben nach einem festen Schema. Für die übrigen Elternfunktionen gibt es das separate Eltern-Tutorial."}
+{page:"dashboard",selector:"header",title:"1 · Willkommen bei GAP",text:"Das ist dein GALAKTOGON Aufgabenprotokoll. Hier verwaltest du Sektoraufgaben, Prüfungen, Quests, Daueraufträge, Aktivitäten, XP, Ränge und Fortschritt."},
+{page:"dashboard",selector:"#dashboard .grid .card:nth-child(1)",title:"2 · Ränge",text:"Dein Rang wird aus deinen XP bestimmt. Die genaue Rangliste findest du im Bereich Ränge."},
+{page:"tasks",selector:'nav button[data-page="tasks"]',title:"3 · Sektoraufgaben",text:"Hier trägst du Schulaufgaben mit Fach, Termin, Typ und Notiz ein. Erledigte Aufgaben geben die vorgesehenen XP."},
+{page:"exams",selector:'nav button[data-page="exams"]',title:"4 · Sektorprüfungen",text:"Prüfungen werden mit Fach, Termin, Größe und Zielnote gespeichert. Nach der Prüfung kannst du die Note eintragen."},
+{page:"quests",selector:'nav button[data-page="quests"]',title:"5 · Quests",text:"Quests sind persönliche Aufgaben mit eigener XP-Belohnung."},
+{page:"recurring",selector:'nav button[data-page="recurring"]',title:"6 · Daueraufträge",text:"Daueraufträge sind wiederkehrende Aufgaben mit frei wählbaren Wochentagen."},
+{page:"activities",selector:'nav button[data-page="activities"]',title:"7 · Aktivitäten",text:"Häufige Aktivitäten kannst du als Favoriten speichern und mit einem Klick ausführen."},
+{page:"progress",selector:'nav button[data-page="progress"]',title:"8 · Fortschritt",text:"Hier findest du XP-, Effekt-, Abschluss- und Löschprotokolle."},
+{page:"ranks",selector:'nav button[data-page="ranks"]',title:"9 · Alle Ränge",text:"Hier siehst du alle Rangstufen und die jeweils benötigte XP-Grenze."},
+{page:"leaderboard",selector:'nav button[data-page="leaderboard"]',title:"10 · Leaderboard",text:"Das Leaderboard vergleicht Accounts nach Tag, Woche, Monat oder insgesamt."}
 ];
 const PARENT_TOUR_STEPS=[
-{page:"parents",selector:"#parents .card:nth-child(1)",title:"1 · Elternseite",text:"Auf dieser Seite finden Eltern die wichtigsten Verwaltungsfunktionen. Der obere Bereich erklärt kurz die Idee und startet diesen Rundgang erneut."},
-{page:"parents",selector:"#trustForm",title:"2 · Vertrauensstatus",text:"Hier kann der aktuelle Status A bis D gespeichert werden. Der Status verändert den XP-Faktor: A +20 %, B +5 %, C −5 %, D −20 %."},
-{page:"parents",selector:"#trustInfo",title:"3 · Wirkung prüfen",text:"Direkt unter dem Formular wird angezeigt, welcher XP-Effekt aktuell durch den Vertrauensstatus entsteht."},
-{page:"parents",selector:"#parentQuestForm",title:"4 · Eltern-Quest vergeben",text:"Hier können Eltern eine zusätzliche Quest mit Titel, Fälligkeit, XP-Belohnung und Notiz vergeben. Sie erscheint danach beim Kind unter Quests."},
-{page:"parents",selector:"#buffForm",title:"5 · Buff oder Debuff",text:"Ein Buff erhöht zukünftige XP-Vergaben, ein Debuff verringert sie. Name, Stärke und Anzahl der betroffenen XP-Vergaben können festgelegt werden."},
-{page:"parents",selector:"#parentEffects",title:"6 · Aktive Effekte",text:"Hier sehen Eltern, welche Effekte gerade aktiv sind und wie viele XP-Vergaben noch betroffen sind."},
-{page:"progress",selector:"#progress .card:nth-child(4)",title:"7 · XP-Protokoll",text:"Im Fortschritt kann nachvollzogen werden, wann XP vergeben wurden, aus welchem Grund und welcher Modifikator dabei verwendet wurde."},
-{page:"progress",selector:"#progress .card:nth-child(5)",title:"8 · Abschlussprotokoll",text:"Hier sieht man erledigte Aufgaben, Prüfungen und Quests. So lässt sich der Verlauf gemeinsam nachvollziehen."},
-{page:"progress",selector:"#progress .card:nth-child(6)",title:"9 · Löschprotokoll",text:"Gelöschte Einträge werden ebenfalls protokolliert. Dadurch bleiben wichtige Änderungen sichtbar."},
-{page:"parents",selector:'nav button[data-page="parents"]',title:"10 · Grundregel",text:"GAP soll klare, gemeinsam vereinbarte Regeln unterstützen. XP, Vertrauensstatus und Effekte sollten deshalb vorher gemeinsam abgesprochen werden."}
+{page:"parents",selector:"#parents .card:nth-child(1)",title:"1 · Eltern-Dashboard",text:"Im Elternaccount verwalten Sie die verbundenen Kinder. Ein Elternaccount kann mehrere Kinder verwalten."},
+{page:"parents",selector:"#activeChildSelect",title:"2 · Kind auswählen",text:"Hier wechseln Sie jederzeit zwischen den bereits verbundenen Kindern."},
+{page:"parents",selector:"#parentChildrenList",title:"3 · Mehrere Kinder",text:"Alle verbundenen Kinder werden hier angezeigt. Die Verbindung kann später entfernt werden."},
+{page:"parents",selector:"#addChildForm",title:"4 · Kind verbinden",text:"Hier können Sie ein bereits vorhandenes Kinderkonto verbinden. Nach dem Erstellen des Elternaccounts ist dies der erste wichtige Schritt."},
+{page:"parents",selector:"#parentTaskList",title:"5 · Sektoraufgaben ansehen",text:"Hier sehen Sie die offenen Sektoraufgaben des aktuell ausgewählten Kindes."},
+{page:"parents",selector:"#parentExamList",title:"6 · Sektorprüfungen ansehen",text:"Hier sehen Sie die beim Kind eingetragenen Sektorprüfungen."},
+{page:"parents",selector:"#parentQuestForm",title:"7 · Quests erstellen",text:"Eltern können eigene Quests für das ausgewählte Kind mit Termin, XP und Notiz erstellen."},
+{page:"parents",selector:"#parentRecurringForm",title:"8 · Daueraufträge erstellen",text:"Auch Daueraufträge können Eltern für das ausgewählte Kind anlegen und auf bestimmte Wochentage legen."},
+{page:"parents",selector:"#weeklyReview",title:"9 · Wochenbilanz",text:"Sonntags ab 20:00 wird die Wochenbilanz des ausgewählten Kindes angezeigt."},
+{page:"parents",selector:"#trustForm",title:"10 · Vertrauensstatus",text:"Der Vertrauensstatus kann im Elternaccount verwaltet werden und wirkt auf die XP-Vergabe des ausgewählten Kindes."},
+{page:"parents",selector:"#buffForm",title:"11 · Buffs & Debuffs",text:"Hier können zeitlich begrenzte Buffs oder Debuffs für das ausgewählte Kind vergeben werden."},
+{page:"parentTutorial",selector:'nav button[data-page="parentTutorial"]',title:"12 · Eltern-Tutorial",text:"Dieses Tutorial gehört zum Elternaccount und ist beim Kinderaccount nicht vorhanden."}
 ];
+let tourIndex=0,tourMode="main";
+function parentTutorialStart(){tourMode="parent";tourIndex=0;el("tourOverlay").classList.add("active");el("tourOverlay").setAttribute("aria-hidden","false");showPage("parents");setTimeout(renderTourStep,80)}
 let tourIndex=0,tourMode="main";
 function clearTourTarget(){document.querySelectorAll(".tour-target").forEach(x=>x.classList.remove("tour-target"))}
 function closeTutorialTour(markDone=false){clearTourTarget();el("tourOverlay").classList.remove("active");el("tourOverlay").setAttribute("aria-hidden","true");if(markDone&&tourMode==="main"){db.tutorialDone=true;db.quests=db.quests.filter(q=>!q.tutorial);save();renderAll()}}
@@ -354,15 +435,20 @@ el("tourOverlay").addEventListener("click",e=>{if(e.target===el("tourOverlay"))c
 window.addEventListener("resize",()=>{if(el("tourOverlay").classList.contains("active"))positionTour()});
 
 function setupForms(){
- el("taskForm").addEventListener("submit",e=>{e.preventDefault();db.tasks.push({id:uid(),title:el("taskTitle").value.trim(),subject:el("taskSubject").value.trim(),due:el("taskDue").value,type:el("taskType").value,note:el("taskNote").value.trim()});e.target.reset();save();renderAll()});
- el("examForm").addEventListener("submit",e=>{e.preventDefault();db.exams.push({id:uid(),subject:el("examSubject").value.trim(),title:el("examTitle").value.trim(),date:el("examDate").value,size:el("examSize").value,target:Number(el("examTarget").value)});e.target.reset();el("examTarget").value="2";save();renderAll()});
- el("questForm").addEventListener("submit",e=>{e.preventDefault();db.quests.push({id:uid(),title:el("questTitle").value.trim(),due:el("questDue").value,xp:Number(el("questXP").value)||0,note:el("questNote").value.trim()});e.target.reset();el("questXP").value=0;save();renderAll()});
- el("parentQuestForm").addEventListener("submit",e=>{e.preventDefault();db.quests.push({id:uid(),title:el("parentQuestTitle").value.trim(),due:el("parentQuestDue").value,xp:Number(el("parentQuestXP").value)||0,note:el("parentQuestNote").value.trim(),fromParent:true});e.target.reset();el("parentQuestXP").value=20;save();renderAll();showPage("quests")});
- el("activityForm").addEventListener("submit",e=>{e.preventDefault();db.activities.push({id:uid(),title:el("activityTitle").value.trim(),xp:Number(el("activityXP").value)||0});e.target.reset();el("activityXP").value=10;save();renderAll()});
- el("trustForm").addEventListener("submit",e=>{e.preventDefault();const old=db.trust;db.trust=el("trustStatus").value;const now=new Date().toISOString();if(old!==db.trust){db.xpLog.unshift({id:uid(),amount:0,reason:"Vertrauensstatus sofort geändert: "+old+" → "+db.trust+" ("+trustLabel(db.trust)+")",date:now})}save();renderAll()});
-el("buffForm").addEventListener("submit",e=>{e.preventDefault();const kind=el("buffKind").value;const percent=Math.max(1,Math.min(100,Number(el("buffPercent").value)||0));const uses=Math.max(1,Number(el("buffUses").value)||1);addEffect(el("buffName").value.trim(),kind,percent,uses,"Eltern");e.target.reset();el("buffPercent").value=20;el("buffUses").value=3;renderAll()});
-el("recurringForm").addEventListener("submit",e=>{e.preventDefault();const days=[...document.querySelectorAll("#weekdayInputs input:checked")].map(x=>Number(x.value));if(!days.length){alert("Bitte mindestens einen Wochentag auswählen.");return}db.recurring.push({id:uid(),title:el("recurringTitle").value.trim(),subject:el("recurringSubject").value.trim(),xp:Number(el("recurringXP").value)||0,days,doneDates:[],active:true});e.target.reset();renderAll()});
+ if(el("taskForm"))el("taskForm").addEventListener("submit",e=>{e.preventDefault();db.tasks.push({id:uid(),title:el("taskTitle").value.trim(),subject:el("taskSubject").value.trim(),due:el("taskDue").value,type:el("taskType").value,note:el("taskNote").value.trim()});e.target.reset();save();renderAll()});
+ if(el("examForm"))el("examForm").addEventListener("submit",e=>{e.preventDefault();db.exams.push({id:uid(),subject:el("examSubject").value.trim(),title:el("examTitle").value.trim(),date:el("examDate").value,size:el("examSize").value,target:Number(el("examTarget").value)});e.target.reset();el("examTarget").value="2";save();renderAll()});
+ if(el("questForm"))el("questForm").addEventListener("submit",e=>{e.preventDefault();db.quests.push({id:uid(),title:el("questTitle").value.trim(),due:el("questDue").value,xp:Number(el("questXP").value)||0,note:el("questNote").value.trim()});e.target.reset();el("questXP").value=0;save();renderAll()});
+ if(el("parentQuestForm"))el("parentQuestForm").addEventListener("submit",e=>{e.preventDefault();if(userRole!=="parent"||!activeChildId)return;db.quests.push({id:uid(),title:el("parentQuestTitle").value.trim(),due:el("parentQuestDue").value,xp:Number(el("parentQuestXP").value)||0,note:el("parentQuestNote").value.trim(),fromParent:true});e.target.reset();el("parentQuestXP").value=20;save();renderParentDashboard()});
+ if(el("parentRecurringForm"))el("parentRecurringForm").addEventListener("submit",e=>{e.preventDefault();if(userRole!=="parent"||!activeChildId)return;const days=[...document.querySelectorAll("#parentWeekdayInputs input:checked")].map(x=>Number(x.value));if(!days.length){alert("Bitte mindestens einen Wochentag auswählen.");return}db.recurring.push({id:uid(),title:el("parentRecurringTitle").value.trim(),subject:el("parentRecurringSubject").value.trim(),xp:Number(el("parentRecurringXP").value)||0,days,doneDates:[],active:true,fromParent:true});e.target.reset();renderParentDashboard();save()});
+
+ if(el("activityForm"))el("activityForm").addEventListener("submit",e=>{e.preventDefault();db.activities.push({id:uid(),title:el("activityTitle").value.trim(),xp:Number(el("activityXP").value)||0});e.target.reset();el("activityXP").value=10;save();renderAll()});
+ if(el("trustForm"))el("trustForm").addEventListener("submit",e=>{e.preventDefault();if(userRole!=="parent"||!activeChildId)return;const old=db.trust;db.trust=el("trustStatus").value;const now=new Date().toISOString();if(old!==db.trust){db.xpLog.unshift({id:uid(),amount:0,reason:"Vertrauensstatus sofort geändert: "+old+" → "+db.trust+" ("+trustLabel(db.trust)+")",date:now})}save();renderAll()});
+if(el("buffForm"))el("buffForm").addEventListener("submit",e=>{e.preventDefault();if(userRole!=="parent"||!activeChildId)return;const kind=el("buffKind").value;const percent=Math.max(1,Math.min(100,Number(el("buffPercent").value)||0));const uses=Math.max(1,Number(el("buffUses").value)||1);addEffect(el("buffName").value.trim(),kind,percent,uses,"Eltern");e.target.reset();el("buffPercent").value=20;el("buffUses").value=3;renderAll()});
+if(el("recurringForm"))el("recurringForm").addEventListener("submit",e=>{e.preventDefault();const days=[...document.querySelectorAll("#weekdayInputs input:checked")].map(x=>Number(x.value));if(!days.length){alert("Bitte mindestens einen Wochentag auswählen.");return}db.recurring.push({id:uid(),title:el("recurringTitle").value.trim(),subject:el("recurringSubject").value.trim(),xp:Number(el("recurringXP").value)||0,days,doneDates:[],active:true});e.target.reset();renderAll()});
 }
+if(el("switchChildBtn"))el("switchChildBtn").onclick=()=>switchManagedChild(el("activeChildSelect").value);
+if(el("addChildForm"))el("addChildForm").addEventListener("submit",e=>{e.preventDefault();addManagedChild(el("availableChildSelect").value)});
+if(el("parentWeekdayInputs"))el("parentWeekdayInputs").innerHTML=DAYS.map((d,i)=>`<label class="day"><input type="checkbox" value="${i}" ${i>0&&i<6?"checked":""}>${d}</label>`).join("");
 function setupDays(){document.getElementById("weekdayInputs").innerHTML=DAYS.map((d,i)=>`<label class="day"><input type="checkbox" value="${i}" ${i>0&&i<6?"checked":""}>${d}</label>`).join("")}
 setupDays();setupForms();bootAuth();
 </script>
