@@ -41,8 +41,8 @@
 </section>
 
 <section id="tutorial" class="page">
-<div class="card"><h2>GALAKTOGON-Tutorial</h2><p class="muted">Der interaktive Rundgang erklärt die wichtigsten Bereiche direkt in der Oberfläche.</p><div class="actions"><button class="btn primary" data-act="open-tutorial">Tutorial von Anfang an starten</button></div></div>
-<div class="card"><h2>Eltern-Tutorial</h2><p class="muted">Eine eigene Erklärung für Eltern: Aufgaben, Prüfungen, Quests, XP, Vertrauensstatus, Buffs und der Elternmodus.</p><div class="actions"><button class="btn purple" data-act="open-parent-tutorial">Eltern-Tutorial öffnen</button></div></div>
+<div class="card"><h2>GALAKTOGON-Tutorial</h2><p class="muted">Ein kompletter interaktiver Rundgang durch GAP. Du kannst jeden Schritt direkt ausprobieren und dich mit <strong>Weiter</strong> durch alle Funktionen führen lassen.</p><div class="actions"><button class="btn primary" data-act="open-tutorial">Gesamtes Tutorial starten</button></div></div>
+<div class="card"><h2>Eltern-Tutorial</h2><p class="muted">Ein eigener interaktiver Rundgang für Eltern: Elternmodus, Vertrauensstatus, Eltern-Quests, Buffs & Debuffs, Protokolle und die wichtigsten Regeln.</p><div class="actions"><button class="btn purple" data-act="open-parent-tutorial">Eltern-Tutorial starten</button></div></div>
 </section>
 <section id="tasks" class="page">
 <div class="card"><h2>Neue Sektoraufgabe</h2><form id="taskForm"><input id="taskTitle" placeholder="Aufgabe" required><div class="form-grid"><input id="taskSubject" placeholder="Fach"><input id="taskDue" type="date"><select id="taskType"><option value="normal">Normale Aufgabe (+10 XP)</option><option value="vocabulary">Vokabeln (+10 XP)</option><option value="large">Große Aufgabe (+20 XP)</option><option value="presentation">Präsentation (+30 XP)</option><option value="learning">Lernen (+10 XP)</option></select></div><textarea id="taskNote" placeholder="Notiz"></textarea><button class="btn primary">Sektoraufgabe hinzufügen</button></form></div>
@@ -80,14 +80,12 @@
 
 <section id="parents" class="page">
 <div class="card"><h2>Eltern-Tutorial</h2>
-<p>GAP ist ein Aufgaben- und Belohnungssystem für den Alltag. Dieser Bereich erklärt die Funktionen, die für Eltern wichtig sind.</p>
-<h3>1. Aufgaben und Prüfungen</h3><p>Sektoraufgaben sind normale Schulaufgaben. Sektorprüfungen werden mit Fach, Termin, Größe und Zielnote gespeichert. Beim Erledigen bzw. Eintragen einer Prüfung werden die vorgesehenen XP verarbeitet.</p>
-<h3>2. Quests</h3><p>Quests sind persönliche Aufgaben. Eltern können zusätzlich eine eigene Quest mit Fälligkeit, XP und einer Notiz vergeben. Diese erscheint anschließend beim Benutzer unter „Quests“ und kann dort erledigt werden.</p>
-<h3>3. XP-System</h3><p>XP werden für erledigte Aufgaben, Prüfungen, Quests und Aktivitäten vergeben. Der tatsächliche XP-Gewinn kann durch den aktuellen XP-Modifikator verändert werden.</p>
-<h3>4. Vertrauensstatus</h3><p>Der Status A bis D verändert den XP-Faktor. A entspricht +20 %, B +5 %, C −5 % und D −20 %. Eine Änderung wird sofort bei der nächsten XP-Vergabe berücksichtigt.</p>
-<h3>5. Buffs und Debuffs</h3><p>Ein Buff erhöht zukünftige XP-Vergaben, ein Debuff verringert sie. Eltern können Name, Stärke und Anzahl der betroffenen XP-Vergaben festlegen. Danach wird der Effekt automatisch nach seinen Verwendungen abgebaut.</p>
-<h3>6. Fortschritt und Protokolle</h3><p>Unter „Fortschritt“ können XP, aktive Effekte, erledigte Einträge und Löschungen nachvollzogen werden. So bleiben die wichtigsten Änderungen transparent.</p>
-<h3>7. Grundidee</h3><p>GAP soll klare Vereinbarungen und Motivation unterstützen. Eltern können Aufgaben und Belohnungen festlegen; die konkrete Ausgestaltung der Regeln kann gemeinsam vereinbart werden.</p>
+<p class="muted">Starten Sie den interaktiven Rundgang, wenn Sie GAP zum ersten Mal nutzen. Er erklärt die Elternseite Schritt für Schritt.</p>
+<div class="actions"><button class="btn purple" data-act="open-parent-tutorial">Eltern-Tutorial starten</button></div>
+<hr>
+<h3>Kurz erklärt</h3>
+<p><strong>Vertrauensstatus:</strong> A bis D beeinflusst den XP-Modifikator. <strong>Eltern-Quests:</strong> Aufgaben können mit eigener XP-Belohnung vergeben werden. <strong>Buffs & Debuffs:</strong> zeitlich begrenzte Veränderungen für zukünftige XP-Vergaben. <strong>Fortschritt:</strong> Protokolle machen Änderungen nachvollziehbar.</p>
+<p class="small muted">Die Regeln sollten gemeinsam vereinbart werden. GAP ist ein Protokoll- und Motivationssystem, kein Ersatz für Gespräche.</p>
 </div>
 <div class="card"><h2>Elternmodus</h2><p class="muted">Hier können Vertrauensstatus, Eltern-Quests sowie zeitlich begrenzte Buffs und Debuffs verwaltet werden.</p><form id="trustForm"><select id="trustStatus"><option value="A">A – Vereinbarungen zuverlässig eingehalten</option><option value="B">B – meistens eingehalten</option><option value="C">C – mehrere Probleme</option><option value="D">D – Vereinbarung funktioniert aktuell nicht</option></select><button class="btn primary">Vertrauensstatus speichern</button></form><div id="trustInfo"></div></div>
 <div class="card"><h2>Eltern-Quest mit XP</h2><form id="parentQuestForm"><input id="parentQuestTitle" placeholder="z. B. Zimmer bis Samstag ordentlich halten" required><div class="form-grid"><input id="parentQuestDue" type="date"><input id="parentQuestXP" type="number" min="0" value="20" placeholder="XP"></div><textarea id="parentQuestNote" placeholder="Was soll gemacht werden?"></textarea><button class="btn purple">Eltern-Quest vergeben</button></form></div>
@@ -299,31 +297,45 @@ function saveEdit(){
  save();closeEdit();renderAll();
 }
 
-function handleClick(e){const b=e.target.closest("[data-act]");if(!b)return;const a=b.dataset.act,id=b.dataset.id;if(a==="complete-task")completeTask(id);else if(a==="delete-task")deleteTask(id);else if(a==="complete-recurring")completeRecurring(id);else if(a==="delete-recurring")deleteRecurring(id);else if(a==="complete-quest")completeQuest(id);else if(a==="delete-quest")deleteQuest(id);else if(a==="activity")completeActivity(id);else if(a==="delete-activity")deleteActivity(id);else if(a==="grade")grade(id);else if(a==="delete-exam")deleteExam(id);else if(a==="toggle-recurring")toggleRecurring(id);else if(a==="edit-task")openEdit("task",id);else if(a==="edit-exam")openEdit("exam",id);else if(a==="edit-quest")openEdit("quest",id);else if(a==="edit-recurring")openEdit("recurring",id);else if(a==="edit-activity")openEdit("activity",id);else if(a==="open-tutorial")startTutorial();else if(a==="open-parent-tutorial")showPage("parents")}
+function handleClick(e){const b=e.target.closest("[data-act]");if(!b)return;const a=b.dataset.act,id=b.dataset.id;if(a==="complete-task")completeTask(id);else if(a==="delete-task")deleteTask(id);else if(a==="complete-recurring")completeRecurring(id);else if(a==="delete-recurring")deleteRecurring(id);else if(a==="complete-quest")completeQuest(id);else if(a==="delete-quest")deleteQuest(id);else if(a==="activity")completeActivity(id);else if(a==="delete-activity")deleteActivity(id);else if(a==="grade")grade(id);else if(a==="delete-exam")deleteExam(id);else if(a==="toggle-recurring")toggleRecurring(id);else if(a==="edit-task")openEdit("task",id);else if(a==="edit-exam")openEdit("exam",id);else if(a==="edit-quest")openEdit("quest",id);else if(a==="edit-recurring")openEdit("recurring",id);else if(a==="edit-activity")openEdit("activity",id);else if(a==="open-tutorial")startTutorial();else if(a==="open-parent-tutorial")startParentTutorial()}
 document.addEventListener("click",handleClick);
 
 
 const TOUR_STEPS=[
-{page:"dashboard",selector:"header",title:"GALAKTOGON-Kopfbereich",text:"Hier siehst du deinen Rang, deine XP und die Navigation zu allen Bereichen."},
-{page:"dashboard",selector:"#dashboard .grid .card:nth-child(1)",title:"Rang",text:"Dein Rang steigt automatisch, wenn du XP sammelst."},
-{page:"dashboard",selector:"#dashboard .grid .card:nth-child(2)",title:"XP & Fortschritt",text:"Hier stehen deine aktuellen XP und der Fortschritt bis zum nächsten Rang."},
-{page:"dashboard",selector:"#dashboard .grid .card:nth-child(3)",title:"XP-Modifikator",text:"Buffs, Debuffs und der Vertrauensstatus beeinflussen deine nächste XP-Vergabe."},
-{page:"tasks",selector:'nav button[data-page="tasks"]',title:"Sektoraufgaben",text:"Hier trägst du normale Schulaufgaben ein. Beim Erledigen werden XP vergeben."},
-{page:"exams",selector:'nav button[data-page="exams"]',title:"Sektorprüfungen",text:"Hier werden Prüfungen mit Datum, Größe und Zielnote gespeichert."},
-{page:"quests",selector:'nav button[data-page="quests"]',title:"Quests",text:"Quests sind persönliche Aufgaben und können auch von Eltern vergeben werden."},
-{page:"recurring",selector:'nav button[data-page="recurring"]',title:"Daueraufträge",text:"Daueraufträge erscheinen automatisch an den ausgewählten Wochentagen."},
-{page:"activities",selector:'nav button[data-page="activities"]',title:"Aktivitäten",text:"Häufige Aktivitäten wie Gitarre lernen können direkt ausgeführt werden."},
-{page:"progress",selector:'nav button[data-page="progress"]',title:"Fortschritt",text:"Hier findest du XP-, Effekt-, Abschluss- und Löschprotokolle."},
-{page:"parents",selector:'nav button[data-page="parents"]',title:"Elternmodus",text:"Hier werden Vertrauensstatus sowie zeitlich begrenzte Buffs und Debuffs verwaltet."}
+{page:"dashboard",selector:"header",title:"1 · Willkommen bei GAP",text:"Das ist dein GALAKTOGON Aufgabenprotokoll. Oben findest du Rang, XP und die Navigation. Das Tutorial führt dich einmal durch das komplette System."},
+{page:"dashboard",selector:"#dashboard .grid .card:nth-child(1)",title:"2 · Ränge",text:"Dein Rang wird aus deinen gesammelten XP bestimmt. Je mehr XP du sammelst, desto weiter steigst du im GALAKTOGON-System auf."},
+{page:"dashboard",selector:"#dashboard .grid .card:nth-child(2)",title:"3 · XP & Fortschritt",text:"Hier siehst du deine aktuellen XP, den Fortschrittsbalken und wie weit es noch bis zum nächsten Rang ist."},
+{page:"dashboard",selector:"#dashboard .grid .card:nth-child(3)",title:"4 · XP-Modifikator",text:"Der Modifikator zeigt, wie Buffs, Debuffs und der Vertrauensstatus deine nächste XP-Vergabe verändern können."},
+{page:"dashboard",selector:"#dashboard .grid .card:nth-child(4)",title:"5 · Dashboard-Missionen",text:"Das Dashboard zeigt dir offene Aufgaben für heute, heutige Missionen, Quests und bevorstehende Prüfungen. So musst du nicht jeden Bereich einzeln durchsuchen."},
+{page:"tasks",selector:'nav button[data-page="tasks"]',title:"6 · Sektoraufgaben",text:"Hier trägst du Schulaufgaben ein. Du kannst Fach, Fälligkeit, Aufgabentyp und Notizen speichern. Beim Erledigen bekommst du die vorgesehenen XP."},
+{page:"exams",selector:'nav button[data-page="exams"]',title:"7 · Sektorprüfungen",text:"Prüfungen werden mit Fach, Termin, Größe und Zielnote gespeichert. Nach der Prüfung kannst du die Note eintragen; abhängig von der Zielnote werden die vorgesehenen XP vergeben."},
+{page:"quests",selector:'nav button[data-page="quests"]',title:"8 · Quests",text:"Quests sind persönliche Aufgaben. Sie können eine eigene XP-Belohnung und eine Notiz haben. Auch Eltern können Quests vergeben."},
+{page:"recurring",selector:'nav button[data-page="recurring"]',title:"9 · Daueraufträge",text:"Daueraufträge sind wiederkehrende Aufgaben. Du wählst die Wochentage aus und kannst sie an den jeweiligen Tagen erledigen."},
+{page:"activities",selector:'nav button[data-page="activities"]',title:"10 · Aktivitäten",text:"Häufige Aktivitäten kannst du als Favoriten speichern und mit einem Klick ausführen. Auch dafür kann XP vergeben werden."},
+{page:"progress",selector:'nav button[data-page="progress"]',title:"11 · Fortschritt & Protokolle",text:"Hier findest du dein XP-Protokoll, aktive Effekte, erledigte Aufgaben und Quests sowie gelöschte Einträge. Damit bleibt dein Fortschritt nachvollziehbar."},
+{page:"parents",selector:'nav button[data-page="parents"]',title:"12 · Elternmodus",text:"Die Elternseite ist ein eigener Bereich für Vertrauensstatus, Eltern-Quests und zeitlich begrenzte Buffs oder Debuffs. Für die genaue Nutzung gibt es ein separates Eltern-Tutorial."}
 ];
-let tourIndex=0;
+const PARENT_TOUR_STEPS=[
+{page:"parents",selector:"#parents .card:nth-child(1)",title:"1 · Elternseite",text:"Auf dieser Seite finden Eltern die wichtigsten Verwaltungsfunktionen. Der obere Bereich erklärt kurz die Idee und startet diesen Rundgang erneut."},
+{page:"parents",selector:"#trustForm",title:"2 · Vertrauensstatus",text:"Hier kann der aktuelle Status A bis D gespeichert werden. Der Status verändert den XP-Faktor: A +20 %, B +5 %, C −5 %, D −20 %."},
+{page:"parents",selector:"#trustInfo",title:"3 · Wirkung prüfen",text:"Direkt unter dem Formular wird angezeigt, welcher XP-Effekt aktuell durch den Vertrauensstatus entsteht."},
+{page:"parents",selector:"#parentQuestForm",title:"4 · Eltern-Quest vergeben",text:"Hier können Eltern eine zusätzliche Quest mit Titel, Fälligkeit, XP-Belohnung und Notiz vergeben. Sie erscheint danach beim Kind unter Quests."},
+{page:"parents",selector:"#buffForm",title:"5 · Buff oder Debuff",text:"Ein Buff erhöht zukünftige XP-Vergaben, ein Debuff verringert sie. Name, Stärke und Anzahl der betroffenen XP-Vergaben können festgelegt werden."},
+{page:"parents",selector:"#parentEffects",title:"6 · Aktive Effekte",text:"Hier sehen Eltern, welche Effekte gerade aktiv sind und wie viele XP-Vergaben noch betroffen sind."},
+{page:"progress",selector:"#progress .card:nth-child(4)",title:"7 · XP-Protokoll",text:"Im Fortschritt kann nachvollzogen werden, wann XP vergeben wurden, aus welchem Grund und welcher Modifikator dabei verwendet wurde."},
+{page:"progress",selector:"#progress .card:nth-child(5)",title:"8 · Abschlussprotokoll",text:"Hier sieht man erledigte Aufgaben, Prüfungen und Quests. So lässt sich der Verlauf gemeinsam nachvollziehen."},
+{page:"progress",selector:"#progress .card:nth-child(6)",title:"9 · Löschprotokoll",text:"Gelöschte Einträge werden ebenfalls protokolliert. Dadurch bleiben wichtige Änderungen sichtbar."},
+{page:"parents",selector:'nav button[data-page="parents"]',title:"10 · Grundregel",text:"GAP soll klare, gemeinsam vereinbarte Regeln unterstützen. XP, Vertrauensstatus und Effekte sollten deshalb vorher gemeinsam abgesprochen werden."}
+];
+let tourIndex=0,tourMode="main";
 function clearTourTarget(){document.querySelectorAll(".tour-target").forEach(x=>x.classList.remove("tour-target"))}
-function closeTutorialTour(markDone=false){clearTourTarget();el("tourOverlay").classList.remove("active");el("tourOverlay").setAttribute("aria-hidden","true");if(markDone){db.tutorialDone=true;db.quests=db.quests.filter(q=>!q.tutorial);save();renderAll()}}
-function positionTour(){const s=TOUR_STEPS[tourIndex],target=document.querySelector(s.selector),card=el("tourCard");if(!target)return;clearTourTarget();target.classList.add("tour-target");target.scrollIntoView({behavior:"smooth",block:"center",inline:"nearest"});setTimeout(()=>{const r=target.getBoundingClientRect();const w=Math.min(390,window.innerWidth-24);let left=Math.max(12,Math.min(window.innerWidth-w-12,r.left+r.width/2-w/2));let top=r.bottom+14;if(top+card.offsetHeight>window.innerHeight-12)top=Math.max(12,r.top-card.offsetHeight-14);card.style.width=w+"px";card.style.left=left+"px";card.style.top=top+"px"},120)}
-function renderTourStep(){const s=TOUR_STEPS[tourIndex];el("tourProgress").textContent=(tourIndex+1)+" / "+TOUR_STEPS.length;el("tourTitle").textContent=s.title;el("tourText").textContent=s.text;el("tourBack").style.display=tourIndex===0?"none":"inline-block";el("tourNext").textContent=tourIndex===TOUR_STEPS.length-1?"Tutorial abschließen":"Weiter";positionTour()}
-function startTutorial(){tourIndex=0;el("tourOverlay").classList.add("active");el("tourOverlay").setAttribute("aria-hidden","false");showPage("dashboard");setTimeout(renderTourStep,80)}
-function nextTour(){if(tourIndex<TOUR_STEPS.length-1){tourIndex++;const s=TOUR_STEPS[tourIndex];showPage(s.page);setTimeout(renderTourStep,80)}else closeTutorialTour(true)}
-function prevTour(){if(tourIndex<=0)return;tourIndex--;const s=TOUR_STEPS[tourIndex];showPage(s.page);setTimeout(renderTourStep,80)}
+function closeTutorialTour(markDone=false){clearTourTarget();el("tourOverlay").classList.remove("active");el("tourOverlay").setAttribute("aria-hidden","true");if(markDone&&tourMode==="main"){db.tutorialDone=true;db.quests=db.quests.filter(q=>!q.tutorial);save();renderAll()}}
+function positionTour(){const steps=tourMode==="parent"?PARENT_TOUR_STEPS:TOUR_STEPS,s=steps[tourIndex],target=document.querySelector(s.selector),card=el("tourCard");if(!target)return;clearTourTarget();target.classList.add("tour-target");target.scrollIntoView({behavior:"smooth",block:"center",inline:"nearest"});setTimeout(()=>{const r=target.getBoundingClientRect();const w=Math.min(390,window.innerWidth-24);let left=Math.max(12,Math.min(window.innerWidth-w-12,r.left+r.width/2-w/2));let top=r.bottom+14;if(top+card.offsetHeight>window.innerHeight-12)top=Math.max(12,r.top-card.offsetHeight-14);card.style.width=w+"px";card.style.left=left+"px";card.style.top=top+"px"},120)}
+function renderTourStep(){const steps=tourMode==="parent"?PARENT_TOUR_STEPS:TOUR_STEPS,s=steps[tourIndex];el("tourProgress").textContent=(tourIndex+1)+" / "+steps.length+(tourMode==="parent"?" · ELTERN":"");el("tourTitle").textContent=s.title;el("tourText").textContent=s.text;el("tourBack").style.display=tourIndex===0?"none":"inline-block";el("tourNext").textContent=tourIndex===steps.length-1?"Tutorial abschließen":"Weiter";positionTour()}
+function startTutorial(){tourMode="main";tourIndex=0;el("tourOverlay").classList.add("active");el("tourOverlay").setAttribute("aria-hidden","false");showPage("dashboard");setTimeout(renderTourStep,80)}
+function startParentTutorial(){tourMode="parent";tourIndex=0;el("tourOverlay").classList.add("active");el("tourOverlay").setAttribute("aria-hidden","false");showPage("parents");setTimeout(renderTourStep,80)}
+function nextTour(){const steps=tourMode==="parent"?PARENT_TOUR_STEPS:TOUR_STEPS;if(tourIndex<steps.length-1){tourIndex++;const s=steps[tourIndex];showPage(s.page);setTimeout(renderTourStep,80)}else closeTutorialTour(tourMode==="main")}
+function prevTour(){if(tourIndex<=0)return;tourIndex--;const steps=tourMode==="parent"?PARENT_TOUR_STEPS:TOUR_STEPS;const s=steps[tourIndex];showPage(s.page);setTimeout(renderTourStep,80)}
 el("editForm").addEventListener("submit",e=>{e.preventDefault();saveEdit()});el("editCancel").addEventListener("click",closeEdit);el("editModal").addEventListener("click",e=>{if(e.target===el("editModal"))closeEdit()});
 el("tourNext").addEventListener("click",nextTour);el("tourBack").addEventListener("click",prevTour);el("tourSkip").addEventListener("click",()=>closeTutorialTour(false));
 el("tourOverlay").addEventListener("click",e=>{if(e.target===el("tourOverlay"))closeTutorialTour(false)});
