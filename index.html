@@ -26,7 +26,7 @@
 <div id="authMessage" class="small" style="margin-top:10px"></div></div></div>
 
 <header>
-<div class="header-inner"><div><div class="logo">GALAKTOGON AUFGABENPROTOKOLL</div><div class="version">GAP // 2.3 beta</div></div><div class="xp-mini"><div id="headerRank">Kadett</div><div id="headerXP">0 XP</div><button class="btn small" id="logoutBtn" style="margin-top:6px">Abmelden</button></div></div>
+<div class="header-inner"><div><div class="logo">GALAKTOGON AUFGABENPROTOKOLL</div><div class="version">GAP // 2.4 beta</div></div><div class="xp-mini"><div id="headerRank">Kadett</div><div id="headerXP">0 XP</div><button class="btn small" id="logoutBtn" style="margin-top:6px">Abmelden</button></div></div>
 <nav>
 <button data-page="dashboard">Dashboard</button><button data-page="tutorial">Tutorial</button><button data-page="tasks">Sektoraufgaben</button><button data-page="exams">Sektorprüfungen</button><button data-page="quests">Quests</button><button data-page="recurring">Daueraufträge</button><button data-page="activities">Aktivitäten</button><button data-page="progress">Fortschritt</button><button data-page="ranks">Ränge</button><button data-page="leaderboard">Leaderboard</button><button data-page="parents">Elternmodus</button>
 </nav>
@@ -323,7 +323,9 @@ const TOUR_STEPS=[
 {page:"recurring",selector:'nav button[data-page="recurring"]',title:"9 · Daueraufträge",text:"Daueraufträge sind wiederkehrende Aufgaben. Du wählst die Wochentage aus und kannst sie an den jeweiligen Tagen erledigen."},
 {page:"activities",selector:'nav button[data-page="activities"]',title:"10 · Aktivitäten",text:"Häufige Aktivitäten kannst du als Favoriten speichern und mit einem Klick ausführen. Auch dafür kann XP vergeben werden."},
 {page:"progress",selector:'nav button[data-page="progress"]',title:"11 · Fortschritt & Protokolle",text:"Hier findest du dein XP-Protokoll, aktive Effekte, erledigte Aufgaben und Quests sowie gelöschte Einträge. Damit bleibt dein Fortschritt nachvollziehbar."},
-{page:"parents",selector:'nav button[data-page="parents"]',title:"12 · Elternmodus",text:"Die Elternseite ist ein eigener Bereich für Vertrauensstatus, Eltern-Quests und zeitlich begrenzte Buffs oder Debuffs. Für die genaue Nutzung gibt es ein separates Eltern-Tutorial."}
+{page:"ranks",selector:'nav button[data-page="ranks"]',title:"12 · Alle Ränge",text:"Hier kannst du jede Rangstufe sehen und exakt nachlesen, wie viel XP für den nächsten Rang benötigt werden."},
+{page:"leaderboard",selector:'nav button[data-page="leaderboard"]',title:"13 · Leaderboard",text:"Das Leaderboard vergleicht Accounts nach XP für Tag, Woche, Monat oder die gesamte Zeit. Die Ansicht kann jederzeit zwischen den vier Zeiträumen wechseln."},
+{page:"parents",selector:'nav button[data-page="parents"]',title:"14 · Wochenbilanz & Elternmodus",text:"Sonntags ab 20:00 erscheint auf der Elternseite die Wochenbilanz. Sie bewertet XP, erledigte Einträge, Regelmäßigkeit und überfällige Aufgaben nach einem festen Schema. Für die übrigen Elternfunktionen gibt es das separate Eltern-Tutorial."}
 ];
 const PARENT_TOUR_STEPS=[
 {page:"parents",selector:"#parents .card:nth-child(1)",title:"1 · Elternseite",text:"Auf dieser Seite finden Eltern die wichtigsten Verwaltungsfunktionen. Der obere Bereich erklärt kurz die Idee und startet diesen Rundgang erneut."},
