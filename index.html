@@ -26,7 +26,7 @@
 <div id="authMessage" class="small" style="margin-top:10px"></div></div></div>
 
 <header>
-<div class="header-inner"><div><div class="logo">GALAKTOGON AUFGABENPROTOKOLL</div><div class="version">GAP // 2.1 beta</div></div><div class="xp-mini"><div id="headerRank">Kadett</div><div id="headerXP">0 XP</div><button class="btn small" id="logoutBtn" style="margin-top:6px">Abmelden</button></div></div>
+<div class="header-inner"><div><div class="logo">GALAKTOGON AUFGABENPROTOKOLL</div><div class="version">GAP // 2.2 beta</div></div><div class="xp-mini"><div id="headerRank">Kadett</div><div id="headerXP">0 XP</div><button class="btn small" id="logoutBtn" style="margin-top:6px">Abmelden</button></div></div>
 <nav>
 <button data-page="dashboard">Dashboard</button><button data-page="tutorial">Tutorial</button><button data-page="tasks">Sektoraufgaben</button><button data-page="exams">Sektorprüfungen</button><button data-page="quests">Quests</button><button data-page="recurring">Daueraufträge</button><button data-page="activities">Aktivitäten</button><button data-page="progress">Fortschritt</button><button data-page="parents">Elternmodus</button>
 </nav>
@@ -41,20 +41,8 @@
 </section>
 
 <section id="tutorial" class="page">
-<div class="card"><h2>GALAKTOGON-Tutorial</h2><p class="muted">Hier wird die komplette Benutzeroberfläche erklärt. Das Tutorial ist für Benutzer und Eltern gedacht.</p><div class="actions"><button class="btn primary" data-act="open-tutorial">Tutorial von Anfang an lesen</button></div></div>
-<div class="card" id="tutorialContent">
-<h2>1. Dashboard</h2><p>Auf dem Dashboard siehst du Rang, XP, den aktuellen XP-Modifikator, offene Aufgaben, Quests, Prüfungen und aktive Buffs/Debuffs.</p>
-<h2>2. Sektoraufgaben</h2><p>Hier werden normale Schulaufgaben eingetragen. Nach dem Erledigen werden die passenden XP vergeben. Gelöschte Aufgaben erscheinen nur noch im Löschprotokoll.</p>
-<h2>3. Sektorprüfungen</h2><p>Prüfungen werden mit Datum, Größe und Zielnote gespeichert. Nach der Prüfung wird die Note 1–6 eingetragen. Wird die Zielnote erreicht, gibt es die vorgesehenen XP.</p>
-<h2>4. Quests</h2><p>Quests sind persönliche Aufgaben. Eltern können eigene Quests mit XP und Fälligkeitsdatum vergeben.</p>
-<h2>5. Daueraufträge</h2><p>Daueraufträge sind wiederkehrende Aufgaben, zum Beispiel „Vokabeln machen“. Du bestimmst selbst, an welchen Wochentagen sie erledigt werden sollen.</p>
-<h2>6. Aktivitäten</h2><p>Im Favoritenfeld liegen häufige Aktivitäten wie Gitarre lernen oder Lesen. Ein Klick erledigt die Aktivität und vergibt ihre XP. Darunter befindet sich nur das Aktivitätslog.</p>
-<h2>7. XP, Buffs und Debuffs</h2><p>Der Grundwert einer Aufgabe wird mit dem aktuellen XP-Modifikator verrechnet. Buffs erhöhen zukünftige XP-Vergaben, Debuffs verringern sie. Vergessene Sektoraufgaben können einen einmaligen Debuff auslösen.</p>
-<h2>8. Vertrauenswürdigkeit</h2><p>Der Vertrauensstatus wird sonntags ab 20:00 überprüft und bestimmt den XP-Faktor für die kommende Woche: <strong>A = +20 %</strong>, <strong>B = +5 %</strong>, <strong>C = −5 %</strong>, <strong>D = −20 %</strong>. Der Status bleibt während der Woche unverändert.</p>
-<h2>9. Fortschritt</h2><p>Hier findest du Rang, XP sowie die Protokolle für Buffs/Debuffs, XP, erledigte Aufgaben und gelöschte Einträge. Das abgeschlossene Tutorial bleibt hier dauerhaft nachvollziehbar.</p>
-<h2>10. Elternmodus</h2><p>Eltern können den Vertrauensstatus festlegen, eigene XP-Quests vergeben und zeitlich begrenzte Buffs aktivieren. Ein Buff kann zum Beispiel für besonders gute Klassenarbeiten oder andere vereinbarte Leistungen vergeben werden.</p>
-<h2>Für Eltern</h2><p>Der Elternmodus ist nicht dazu gedacht, jede Kleinigkeit zu kontrollieren. Er bietet Werkzeuge für klare Vereinbarungen: Vertrauensstatus, zusätzliche Quests und Belohnungs-Buffs. Die konkrete Entscheidung über Vereinbarungen und Freiheiten bleibt bei den Eltern.</p>
-</div>
+<div class="card"><h2>GALAKTOGON-Tutorial</h2><p class="muted">Der interaktive Rundgang erklärt die wichtigsten Bereiche direkt in der Oberfläche.</p><div class="actions"><button class="btn primary" data-act="open-tutorial">Tutorial von Anfang an starten</button></div></div>
+<div class="card"><h2>Eltern-Tutorial</h2><p class="muted">Eine eigene Erklärung für Eltern: Aufgaben, Prüfungen, Quests, XP, Vertrauensstatus, Buffs und der Elternmodus.</p><div class="actions"><button class="btn purple" data-act="open-parent-tutorial">Eltern-Tutorial öffnen</button></div></div>
 </section>
 <section id="tasks" class="page">
 <div class="card"><h2>Neue Sektoraufgabe</h2><form id="taskForm"><input id="taskTitle" placeholder="Aufgabe" required><div class="form-grid"><input id="taskSubject" placeholder="Fach"><input id="taskDue" type="date"><select id="taskType"><option value="normal">Normale Aufgabe (+10 XP)</option><option value="vocabulary">Vokabeln (+10 XP)</option><option value="large">Große Aufgabe (+20 XP)</option><option value="presentation">Präsentation (+30 XP)</option><option value="learning">Lernen (+10 XP)</option></select></div><textarea id="taskNote" placeholder="Notiz"></textarea><button class="btn primary">Sektoraufgabe hinzufügen</button></form></div>
@@ -91,7 +79,17 @@
 </section>
 
 <section id="parents" class="page">
-<div class="card"><h2>Elternmodus</h2><p class="muted">Der Vertrauensstatus wirkt als XP-Debuff. Eltern können außerdem eigene XP-Quests und Buffs vergeben.</p><form id="trustForm"><select id="trustStatus"><option value="A">A – Vereinbarungen zuverlässig eingehalten</option><option value="B">B – meistens eingehalten</option><option value="C">C – mehrere Probleme</option><option value="D">D – Vereinbarung funktioniert aktuell nicht</option></select><button class="btn primary">Vertrauensstatus speichern</button></form><div id="trustInfo"></div></div>
+<div class="card"><h2>Eltern-Tutorial</h2>
+<p>GAP ist ein Aufgaben- und Belohnungssystem für den Alltag. Dieser Bereich erklärt die Funktionen, die für Eltern wichtig sind.</p>
+<h3>1. Aufgaben und Prüfungen</h3><p>Sektoraufgaben sind normale Schulaufgaben. Sektorprüfungen werden mit Fach, Termin, Größe und Zielnote gespeichert. Beim Erledigen bzw. Eintragen einer Prüfung werden die vorgesehenen XP verarbeitet.</p>
+<h3>2. Quests</h3><p>Quests sind persönliche Aufgaben. Eltern können zusätzlich eine eigene Quest mit Fälligkeit, XP und einer Notiz vergeben. Diese erscheint anschließend beim Benutzer unter „Quests“ und kann dort erledigt werden.</p>
+<h3>3. XP-System</h3><p>XP werden für erledigte Aufgaben, Prüfungen, Quests und Aktivitäten vergeben. Der tatsächliche XP-Gewinn kann durch den aktuellen XP-Modifikator verändert werden.</p>
+<h3>4. Vertrauensstatus</h3><p>Der Status A bis D verändert den XP-Faktor. A entspricht +20 %, B +5 %, C −5 % und D −20 %. Eine Änderung wird sofort bei der nächsten XP-Vergabe berücksichtigt.</p>
+<h3>5. Buffs und Debuffs</h3><p>Ein Buff erhöht zukünftige XP-Vergaben, ein Debuff verringert sie. Eltern können Name, Stärke und Anzahl der betroffenen XP-Vergaben festlegen. Danach wird der Effekt automatisch nach seinen Verwendungen abgebaut.</p>
+<h3>6. Fortschritt und Protokolle</h3><p>Unter „Fortschritt“ können XP, aktive Effekte, erledigte Einträge und Löschungen nachvollzogen werden. So bleiben die wichtigsten Änderungen transparent.</p>
+<h3>7. Grundidee</h3><p>GAP soll klare Vereinbarungen und Motivation unterstützen. Eltern können Aufgaben und Belohnungen festlegen; die konkrete Ausgestaltung der Regeln kann gemeinsam vereinbart werden.</p>
+</div>
+<div class="card"><h2>Elternmodus</h2><p class="muted">Hier können Vertrauensstatus, Eltern-Quests sowie zeitlich begrenzte Buffs und Debuffs verwaltet werden.</p><form id="trustForm"><select id="trustStatus"><option value="A">A – Vereinbarungen zuverlässig eingehalten</option><option value="B">B – meistens eingehalten</option><option value="C">C – mehrere Probleme</option><option value="D">D – Vereinbarung funktioniert aktuell nicht</option></select><button class="btn primary">Vertrauensstatus speichern</button></form><div id="trustInfo"></div></div>
 <div class="card"><h2>Eltern-Quest mit XP</h2><form id="parentQuestForm"><input id="parentQuestTitle" placeholder="z. B. Zimmer bis Samstag ordentlich halten" required><div class="form-grid"><input id="parentQuestDue" type="date"><input id="parentQuestXP" type="number" min="0" value="20" placeholder="XP"></div><textarea id="parentQuestNote" placeholder="Was soll gemacht werden?"></textarea><button class="btn purple">Eltern-Quest vergeben</button></form></div>
 <div class="card"><h2>Buff / Debuff vergeben</h2><p class="muted">Eltern können einen zeitlich begrenzten Buff oder Debuff für zukünftige XP-Vergaben vergeben.</p><form id="buffForm"><input id="buffName" placeholder="z. B. Sehr gute Klassenarbeit" required><div class="form-grid"><select id="buffKind"><option value="buff">Buff (+)</option><option value="debuff">Debuff (−)</option></select><input id="buffPercent" type="number" min="1" max="100" value="20" placeholder="Stärke %"><input id="buffUses" type="number" min="1" value="3" placeholder="Anzahl XP-Vergaben"></div><button class="btn success">Effekt aktivieren</button></form></div>
 <div class="card"><h2>Aktive Effekte</h2><div id="parentEffects"></div></div>
@@ -301,7 +299,7 @@ function saveEdit(){
  save();closeEdit();renderAll();
 }
 
-function handleClick(e){const b=e.target.closest("[data-act]");if(!b)return;const a=b.dataset.act,id=b.dataset.id;if(a==="complete-task")completeTask(id);else if(a==="delete-task")deleteTask(id);else if(a==="complete-recurring")completeRecurring(id);else if(a==="delete-recurring")deleteRecurring(id);else if(a==="complete-quest")completeQuest(id);else if(a==="delete-quest")deleteQuest(id);else if(a==="activity")completeActivity(id);else if(a==="delete-activity")deleteActivity(id);else if(a==="grade")grade(id);else if(a==="delete-exam")deleteExam(id);else if(a==="toggle-recurring")toggleRecurring(id);else if(a==="edit-task")openEdit("task",id);else if(a==="edit-exam")openEdit("exam",id);else if(a==="edit-quest")openEdit("quest",id);else if(a==="edit-recurring")openEdit("recurring",id);else if(a==="edit-activity")openEdit("activity",id);else if(a==="open-tutorial")startTutorial()}
+function handleClick(e){const b=e.target.closest("[data-act]");if(!b)return;const a=b.dataset.act,id=b.dataset.id;if(a==="complete-task")completeTask(id);else if(a==="delete-task")deleteTask(id);else if(a==="complete-recurring")completeRecurring(id);else if(a==="delete-recurring")deleteRecurring(id);else if(a==="complete-quest")completeQuest(id);else if(a==="delete-quest")deleteQuest(id);else if(a==="activity")completeActivity(id);else if(a==="delete-activity")deleteActivity(id);else if(a==="grade")grade(id);else if(a==="delete-exam")deleteExam(id);else if(a==="toggle-recurring")toggleRecurring(id);else if(a==="edit-task")openEdit("task",id);else if(a==="edit-exam")openEdit("exam",id);else if(a==="edit-quest")openEdit("quest",id);else if(a==="edit-recurring")openEdit("recurring",id);else if(a==="edit-activity")openEdit("activity",id);else if(a==="open-tutorial")startTutorial();else if(a==="open-parent-tutorial")showPage("parents")}
 document.addEventListener("click",handleClick);
 
 
