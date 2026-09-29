@@ -275,11 +275,11 @@ async function signIn(){
  try{
   const {data,error}=await supabaseClient.auth.signInWithPassword({email:usernameEmail(name),password:pw});
   if(error)throw error;
-  if(!data?.user)throw new Error("Supabase hat kein Benutzerkonto zurückgegeben.");
-  currentUser=data.user;
   const {data:verified,error:verifyError}=await supabaseClient.auth.getUser();
   if(verifyError)throw verifyError;
-  if(!verified?.user||verified.user.id!==currentUser.id)throw new Error("Das angemeldete Benutzerkonto konnte nicht verifiziert werden.");
+  if(!verified?.user)throw new Error("Supabase hat kein gültiges Benutzerkonto zurückgegeben.");
+  if(data?.user?.id!==verified.user.id)throw new Error("Die Supabase-Session gehört nicht zum angemeldeten Benutzerkonto.");
+  currentUser=verified.user;
   await loadOnline();
   enterApp();
  }catch(e){
@@ -301,7 +301,10 @@ async function bootAuth(){
   const {data,error}=await supabaseClient.auth.getSession();
   if(error)throw error;
   if(data.session){
-   currentUser=data.session.user;
+   const {data:verified,error:verifyError}=await supabaseClient.auth.getUser();
+   if(verifyError)throw verifyError;
+   if(!verified?.user)throw new Error("Die gespeicherte Supabase-Session ist nicht mehr gültig.");
+   currentUser=verified.user;
    await loadOnline();
    enterApp();
   }
