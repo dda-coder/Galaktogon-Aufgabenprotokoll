@@ -312,20 +312,96 @@ document.addEventListener("click",handleClick);
 
 
 const TOUR_STEPS=[
-{page:"dashboard",selector:"header",title:"1 · Willkommen bei GAP",text:"Das ist dein GALAKTOGON Aufgabenprotokoll. Oben findest du Rang, XP und die Navigation. Das Tutorial führt dich einmal durch das komplette System."},
-{page:"dashboard",selector:"#dashboard .grid .card:nth-child(1)",title:"2 · Ränge",text:"Dein Rang wird aus deinen gesammelten XP bestimmt. Je mehr XP du sammelst, desto weiter steigst du im GALAKTOGON-System auf."},
-{page:"dashboard",selector:"#dashboard .grid .card:nth-child(2)",title:"3 · XP & Fortschritt",text:"Hier siehst du deine aktuellen XP, den Fortschrittsbalken und wie weit es noch bis zum nächsten Rang ist."},
-{page:"dashboard",selector:"#dashboard .grid .card:nth-child(3)",title:"4 · XP-Modifikator",text:"Der Modifikator zeigt, wie Buffs, Debuffs und der Vertrauensstatus deine nächste XP-Vergabe verändern können."},
-{page:"dashboard",selector:"#dashboard .grid .card:nth-child(4)",title:"5 · Dashboard-Missionen",text:"Das Dashboard zeigt dir offene Aufgaben für heute, heutige Missionen, Quests und bevorstehende Prüfungen. So musst du nicht jeden Bereich einzeln durchsuchen."},
-{page:"tasks",selector:'nav button[data-page="tasks"]',title:"6 · Sektoraufgaben",text:"Hier trägst du Schulaufgaben ein. Du kannst Fach, Fälligkeit, Aufgabentyp und Notizen speichern. Beim Erledigen bekommst du die vorgesehenen XP."},
-{page:"exams",selector:'nav button[data-page="exams"]',title:"7 · Sektorprüfungen",text:"Prüfungen werden mit Fach, Termin, Größe und Zielnote gespeichert. Nach der Prüfung kannst du die Note eintragen; abhängig von der Zielnote werden die vorgesehenen XP vergeben."},
-{page:"quests",selector:'nav button[data-page="quests"]',title:"8 · Quests",text:"Quests sind persönliche Aufgaben. Sie können eine eigene XP-Belohnung und eine Notiz haben. Auch Eltern können Quests vergeben."},
-{page:"recurring",selector:'nav button[data-page="recurring"]',title:"9 · Daueraufträge",text:"Daueraufträge sind wiederkehrende Aufgaben. Du wählst die Wochentage aus und kannst sie an den jeweiligen Tagen erledigen."},
-{page:"activities",selector:'nav button[data-page="activities"]',title:"10 · Aktivitäten",text:"Häufige Aktivitäten kannst du als Favoriten speichern und mit einem Klick ausführen. Auch dafür kann XP vergeben werden."},
-{page:"progress",selector:'nav button[data-page="progress"]',title:"11 · Fortschritt & Protokolle",text:"Hier findest du dein XP-Protokoll, aktive Effekte, erledigte Aufgaben und Quests sowie gelöschte Einträge. Damit bleibt dein Fortschritt nachvollziehbar."},
-{page:"ranks",selector:'nav button[data-page="ranks"]',title:"12 · Alle Ränge",text:"Hier kannst du jede Rangstufe sehen und exakt nachlesen, wie viel XP für den nächsten Rang benötigt werden."},
-{page:"leaderboard",selector:'nav button[data-page="leaderboard"]',title:"13 · Leaderboard",text:"Das Leaderboard vergleicht Accounts nach XP für Tag, Woche, Monat oder die gesamte Zeit. Die Ansicht kann jederzeit zwischen den vier Zeiträumen wechseln."},
-{page:"parents",selector:'nav button[data-page="parents"]',title:"14 · Wochenbilanz & Elternmodus",text:"Sonntags ab 20:00 erscheint auf der Elternseite die Wochenbilanz. Sie bewertet XP, erledigte Einträge, Regelmäßigkeit und überfällige Aufgaben nach einem festen Schema. Für die übrigen Elternfunktionen gibt es das separate Eltern-Tutorial."}
+{page:"tutorial",selector:"#tutorial .card:nth-child(1)",title:"1 · Tutorial-Zentrale",text:"Hier findest du den interaktiven Rundgang. Jeder Schritt markiert genau einen Bereich der aktuellen Seite. Mit Weiter gehst du Schritt für Schritt durch GAP."},
+{page:"tutorial",selector:'button[data-act="open-tutorial"]',title:"2 · Gesamtes Tutorial starten",text:"Mit diesem Button startest du den großen Rundgang. Dabei wechseln wir automatisch zwischen den Seiten und erklären die einzelnen Bereiche."},
+
+{page:"dashboard",selector:"#dashboard .grid .card:nth-child(1)",title:"3 · Rang",text:"Hier siehst du deinen aktuellen Rang. Der Rang richtet sich nach deinen gesammelten XP."},
+{page:"dashboard",selector:"#dashboard .grid .card:nth-child(2)",title:"4 · XP & Rangfortschritt",text:"Hier stehen deine aktuellen XP. Der Balken zeigt, wie weit du bis zum nächsten Rang gekommen bist."},
+{page:"dashboard",selector:"#dashboard .grid .card:nth-child(3)",title:"5 · XP-Modifikator",text:"Der Modifikator zeigt, wie Buffs, Debuffs und der Vertrauensstatus die nächste XP-Vergabe verändern."},
+{page:"dashboard",selector:"#dashboard .grid .card:nth-child(4)",title:"6 · Offene Aufgaben heute",text:"Diese Zahl zeigt dir, wie viele Aufgaben heute fällig oder offen sind."},
+{page:"dashboard",selector:"#dashboard .card:nth-child(1)",title:"7 · Aktive Buffs & Debuffs",text:"Hier siehst du aktive Effekte. Ein Buff kann XP erhöhen, ein Debuff kann XP verringern. Auch der Vertrauensstatus wird hier berücksichtigt."},
+{page:"dashboard",selector:"#dashboard .card:nth-child(2)",title:"8 · Heutige Mission",text:"Hier werden Aufgaben angezeigt, die heute erledigt werden sollten. Du kannst sie direkt als erledigt markieren."},
+{page:"dashboard",selector:"#dashboard .card:nth-child(3)",title:"9 · Offene Quests",text:"Hier erscheinen deine offenen persönlichen Quests. Sie lassen sich direkt erledigen, bearbeiten oder löschen."},
+{page:"dashboard",selector:"#dashboard .card:nth-child(4)",title:"10 · Nächste Prüfungen",text:"Hier werden deine kommenden Sektorprüfungen nach Termin angezeigt."},
+
+{page:"tasks",selector:"#taskForm",title:"11 · Sektoraufgaben – Eingabe",text:"Hier legst du eine neue Sektoraufgabe an. Die folgenden Schritte erklären jedes einzelne Eingabefeld."},
+{page:"tasks",selector:"#taskTitle",title:"12 · Aufgabe",text:"Hier kommt der Name der Schulaufgabe hinein, zum Beispiel „Mathe Seite 42 Nr. 3–5“."},
+{page:"tasks",selector:"#taskSubject",title:"13 · Fach",text:"Hier trägst du das Fach ein, zu dem die Aufgabe gehört."},
+{page:"tasks",selector:"#taskDue",title:"14 · Fälligkeit",text:"Hier kannst du den Termin festlegen, bis wann die Aufgabe erledigt werden soll."},
+{page:"tasks",selector:"#taskType",title:"15 · Aufgabentyp",text:"Hier legst du fest, welche XP-Belohnung die Aufgabe hat: normale Aufgabe, Vokabeln, große Aufgabe, Präsentation oder Lernen."},
+{page:"tasks",selector:"#taskNote",title:"16 · Notiz",text:"Hier kannst du zusätzliche Informationen zur Aufgabe speichern."},
+{page:"tasks",selector:'#taskForm button[type="submit"]',title:"17 · Aufgabe hinzufügen",text:"Mit diesem Button wird die Sektoraufgabe gespeichert und erscheint anschließend in der Liste."},
+{page:"tasks",selector:"#taskList",title:"18 · Offene Sektoraufgaben",text:"Hier stehen alle noch offenen Sektoraufgaben. Über die Buttons kannst du Aufgaben erledigen, bearbeiten oder löschen."},
+
+{page:"exams",selector:"#examForm",title:"19 · Sektorprüfungen – Eingabe",text:"Hier werden kommende Sektorprüfungen eingetragen. Auch hier gehen wir jedes Feld einzeln durch."},
+{page:"exams",selector:"#examSubject",title:"20 · Prüfungsfach",text:"Hier steht das Fach der Prüfung, zum Beispiel Englisch oder Französisch."},
+{page:"exams",selector:"#examTitle",title:"21 · Prüfung",text:"Hier kannst du die genaue Bezeichnung der Prüfung eintragen."},
+{page:"exams",selector:"#examDate",title:"22 · Prüfungstermin",text:"Hier legst du das Datum der Sektorprüfung fest."},
+{page:"exams",selector:"#examSize",title:"23 · Prüfungsgröße",text:"Hier entscheidest du zwischen einer normalen Prüfung mit 30 XP und einer großen Prüfung mit 50 XP."},
+{page:"exams",selector:"#examTarget",title:"24 · Zielnote",text:"Hier legst du deine Zielnote fest. Beim Eintragen der späteren Note entscheidet dieses Ziel mit darüber, ob die vorgesehenen XP vergeben werden."},
+{page:"exams",selector:'#examForm button[type="submit"]',title:"25 · Prüfung hinzufügen",text:"Mit diesem Button wird die Prüfung gespeichert."},
+{page:"exams",selector:"#examList",title:"26 · Offene Sektorprüfungen",text:"Hier siehst du alle kommenden Prüfungen. Du kannst eine Prüfung später bewerten, bearbeiten oder löschen."},
+
+{page:"quests",selector:"#questForm",title:"27 · Quests – Eingabe",text:"Quests sind persönliche Aufgaben außerhalb der normalen Sektoraufgaben."},
+{page:"quests",selector:"#questTitle",title:"28 · Quest",text:"Hier kommt der Name deiner persönlichen Quest hinein."},
+{page:"quests",selector:"#questDue",title:"29 · Quest-Termin",text:"Hier kannst du festlegen, bis wann die Quest erledigt werden soll."},
+{page:"quests",selector:"#questXP",title:"30 · Quest-XP",text:"Hier bestimmst du selbst, wie viele XP die Quest bei erfolgreicher Erledigung bringt."},
+{page:"quests",selector:"#questNote",title:"31 · Quest-Notiz",text:"Hier kannst du genauer beschreiben, was bei der Quest gemacht werden soll."},
+{page:"quests",selector:'#questForm button[type="submit"]',title:"32 · Quest hinzufügen",text:"Mit diesem Button wird die Quest gespeichert."},
+{page:"quests",selector:"#questList",title:"33 · Offene Quests",text:"Hier erscheinen deine offenen Quests mit den Buttons zum Erledigen, Bearbeiten und Löschen."},
+
+{page:"recurring",selector:"#recurringForm",title:"34 · Daueraufträge – Eingabe",text:"Daueraufträge sind Aufgaben, die regelmäßig an ausgewählten Wochentagen erscheinen."},
+{page:"recurring",selector:"#recurringTitle",title:"35 · Name des Dauerauftrags",text:"Hier trägst du ein, was regelmäßig gemacht werden soll, zum Beispiel „Jeden Tag Gitarre üben“."},
+{page:"recurring",selector:"#recurringSubject",title:"36 · Fach",text:"Hier kannst du dem Dauerauftrag ein Fach zuordnen. Bei persönlichen Aufgaben kann das Feld auch leer bleiben."},
+{page:"recurring",selector:"#recurringXP",title:"37 · XP",text:"Hier legst du fest, wie viele XP das Erledigen des Dauerauftrags bringt."},
+{page:"recurring",selector:"#weekdayInputs",title:"38 · Wochentage",text:"Hier wählst du aus, an welchen Wochentagen der Dauerauftrag erscheinen soll."},
+{page:"recurring",selector:'#recurringForm button[type="submit"]',title:"39 · Dauerauftrag hinzufügen",text:"Mit diesem Button wird der Dauerauftrag gespeichert."},
+{page:"recurring",selector:"#recurringList",title:"40 · Aktive Daueraufträge",text:"Hier werden alle Daueraufträge angezeigt. Du kannst sie pausieren, aktivieren, bearbeiten oder löschen."},
+
+{page:"activities",selector:"#favoriteActivities",title:"41 · Favorisierte Aktivitäten",text:"Hier erscheinen deine gespeicherten Aktivitäten. Ein Klick auf eine Aktivität führt sie direkt aus und vergibt die hinterlegte XP-Menge."},
+{page:"activities",selector:"#activityForm",title:"42 · Favorit hinzufügen",text:"Hier kannst du eine häufig verwendete Aktivität als Favorit speichern."},
+{page:"activities",selector:"#activityTitle",title:"43 · Aktivität",text:"Hier trägst du den Namen der Aktivität ein."},
+{page:"activities",selector:"#activityXP",title:"44 · Aktivitäts-XP",text:"Hier legst du die XP fest, die eine Ausführung der Aktivität bringt."},
+{page:"activities",selector:'#activityForm button[type="submit"]',title:"45 · Favorit speichern",text:"Mit diesem Button wird die Aktivität zu deinen Favoriten hinzugefügt."},
+{page:"activities",selector:"#activityLog",title:"46 · Aktivitätslog",text:"Hier wird protokolliert, wann eine Aktivität ausgeführt wurde und wie viele XP sie gebracht hat."},
+
+{page:"progress",selector:"#progress .card:nth-child(1)",title:"47 · Tutorial-Fortschritt",text:"Hier siehst du, ob das Haupttutorial bereits abgeschlossen wurde. Du kannst es jederzeit erneut öffnen."},
+{page:"progress",selector:"#progress .card:nth-child(2)",title:"48 · XP & Rang",text:"Hier siehst du deinen aktuellen Rang, deine XP und den Fortschritt bis zur nächsten Rangstufe."},
+{page:"progress",selector:"#progress .card:nth-child(3)",title:"49 · Buff- & Debuff-Protokoll",text:"Hier werden die aktuell relevanten Effekte und ihre Wirkung angezeigt."},
+{page:"progress",selector:"#progress .card:nth-child(4)",title:"50 · XP-Protokoll",text:"Hier kannst du nachvollziehen, wann XP vergeben wurden, aus welchem Grund und mit welchem Modifikator."},
+{page:"progress",selector:"#progress .card:nth-child(5)",title:"51 · Abschlussprotokoll",text:"Hier werden erledigte Aufgaben, Prüfungen und Quests aufgezeichnet."},
+{page:"progress",selector:"#progress .card:nth-child(6)",title:"52 · Löschprotokoll",text:"Hier bleiben gelöschte Einträge nachvollziehbar."},
+
+{page:"ranks",selector:"#rankList",title:"53 · Rangstufen",text:"Hier findest du alle Rangstufen von GAP. Bei jeder Stufe steht die benötigte XP-Grenze."},
+{page:"ranks",selector:"#ranks .card",title:"54 · Aktueller Rang",text:"Der aktuelle Rang wird markiert, damit du sofort siehst, wo du gerade stehst."},
+
+{page:"leaderboard",selector:"#leaderboard .card",title:"55 · Leaderboard",text:"Das Leaderboard zeigt die gespeicherte XP-Leistung der GAP-Accounts."},
+{page:"leaderboard",selector:"#leaderboard .actions",title:"56 · Zeitraum auswählen",text:"Mit diesen Buttons kannst du zwischen Tag, Woche, Monat und Gesamtzeit wechseln."},
+{page:"leaderboard",selector:'button[data-period="week"]',title:"57 · Wochenansicht",text:"Die Wochenansicht vergleicht die XP, die in der aktuellen Woche gesammelt wurden."},
+{page:"leaderboard",selector:"#leaderboardList",title:"58 · Rangliste",text:"Hier wird die Rangliste des ausgewählten Zeitraums angezeigt."},
+
+{page:"parents",selector:"#parents .card:nth-child(1)",title:"59 · Eltern-Tutorial",text:"Hier kann das separate Eltern-Tutorial gestartet werden. Es erklärt die Funktionen des Elternmodus ausführlicher."},
+{page:"parents",selector:"#parents .card:nth-child(2)",title:"60 · Wochenbilanz",text:"Sonntags ab 20:00 wird hier die Wochenbilanz angezeigt."},
+{page:"parents",selector:"#trustForm",title:"61 · Vertrauensstatus",text:"Hier kann ein Vertrauensstatus von A bis D gespeichert werden. Er verändert die XP-Wirkung."},
+{page:"parents",selector:"#trustStatus",title:"62 · Status auswählen",text:"A bedeutet +20 %, B +5 %, C −5 % und D −20 % XP bei zukünftigen XP-Vergaben."},
+{page:"parents",selector:'#trustForm button[type="submit"]',title:"63 · Status speichern",text:"Mit diesem Button wird die ausgewählte Einstellung gespeichert."},
+{page:"parents",selector:"#trustInfo",title:"64 · Vertrauenswirkung",text:"Hier wird angezeigt, welcher XP-Effekt durch den aktuellen Vertrauensstatus entsteht."},
+{page:"parents",selector:"#parentQuestForm",title:"65 · Eltern-Quest",text:"Hier kann eine Quest mit eigener XP-Belohnung für das Kind angelegt werden."},
+{page:"parents",selector:"#parentQuestTitle",title:"66 · Eltern-Quest Titel",text:"Hier wird beschrieben, welche Aufgabe erledigt werden soll."},
+{page:"parents",selector:"#parentQuestDue",title:"67 · Eltern-Quest Termin",text:"Hier kann eine Fälligkeit für die Quest gesetzt werden."},
+{page:"parents",selector:"#parentQuestXP",title:"68 · Eltern-Quest XP",text:"Hier wird die XP-Belohnung der Eltern-Quest festgelegt."},
+{page:"parents",selector:"#parentQuestNote",title:"69 · Eltern-Quest Notiz",text:"Hier können zusätzliche Vorgaben oder Informationen stehen."},
+{page:"parents",selector:'#parentQuestForm button[type="submit"]',title:"70 · Eltern-Quest vergeben",text:"Mit diesem Button wird die Quest gespeichert und erscheint anschließend bei den Quests."},
+{page:"parents",selector:"#buffForm",title:"71 · Buff / Debuff",text:"Hier können zeitlich begrenzte XP-Effekte vergeben werden."},
+{page:"parents",selector:"#buffName",title:"72 · Effektname",text:"Hier gibst du dem Effekt einen verständlichen Namen."},
+{page:"parents",selector:"#buffKind",title:"73 · Effektart",text:"Hier entscheidest du, ob es ein Buff oder ein Debuff sein soll."},
+{page:"parents",selector:"#buffPercent",title:"74 · Stärke",text:"Hier wird festgelegt, wie stark der Effekt die XP beeinflusst."},
+{page:"parents",selector:"#buffUses",title:"75 · XP-Vergaben",text:"Hier legst du fest, bei wie vielen zukünftigen XP-Vergaben der Effekt gilt."},
+{page:"parents",selector:'#buffForm button[type="submit"]',title:"76 · Effekt aktivieren",text:"Mit diesem Button wird der Buff oder Debuff aktiviert."},
+{page:"parents",selector:"#parentEffects",title:"77 · Aktive Effekte",text:"Hier sehen Eltern, welche Effekte gerade aktiv sind und wie viele XP-Vergaben noch betroffen sind."},
+
+{page:"tutorial",selector:"#tutorial .card:nth-child(2)",title:"78 · Eltern-Tutorial",text:"Das separate Eltern-Tutorial ist kürzer und konzentriert sich auf Elternmodus, Vertrauensstatus, Eltern-Quests, Buffs, Debuffs und Protokolle."},
+{page:"parents",selector:'nav button[data-page="parents"]',title:"79 · Tutorial abgeschlossen",text:"Damit kennst du jetzt alle wichtigen Bereiche von GAP. Du kannst das Tutorial jederzeit auf der Tutorial-Seite erneut starten."}
 ];
 const PARENT_TOUR_STEPS=[
 {page:"parents",selector:"#parents .card:nth-child(1)",title:"1 · Elternseite",text:"Auf dieser Seite finden Eltern die wichtigsten Verwaltungsfunktionen. Der obere Bereich erklärt kurz die Idee und startet diesen Rundgang erneut."},
@@ -344,7 +420,7 @@ function clearTourTarget(){document.querySelectorAll(".tour-target").forEach(x=>
 function closeTutorialTour(markDone=false){clearTourTarget();el("tourOverlay").classList.remove("active");el("tourOverlay").setAttribute("aria-hidden","true");if(markDone&&tourMode==="main"){db.tutorialDone=true;db.quests=db.quests.filter(q=>!q.tutorial);save();renderAll()}}
 function positionTour(){const steps=tourMode==="parent"?PARENT_TOUR_STEPS:TOUR_STEPS,s=steps[tourIndex],target=document.querySelector(s.selector),card=el("tourCard");if(!target)return;clearTourTarget();target.classList.add("tour-target");target.scrollIntoView({behavior:"smooth",block:"center",inline:"nearest"});setTimeout(()=>{const r=target.getBoundingClientRect();const w=Math.min(390,window.innerWidth-24);let left=Math.max(12,Math.min(window.innerWidth-w-12,r.left+r.width/2-w/2));let top=r.bottom+14;if(top+card.offsetHeight>window.innerHeight-12)top=Math.max(12,r.top-card.offsetHeight-14);card.style.width=w+"px";card.style.left=left+"px";card.style.top=top+"px"},120)}
 function renderTourStep(){const steps=tourMode==="parent"?PARENT_TOUR_STEPS:TOUR_STEPS,s=steps[tourIndex];el("tourProgress").textContent=(tourIndex+1)+" / "+steps.length+(tourMode==="parent"?" · ELTERN":"");el("tourTitle").textContent=s.title;el("tourText").textContent=s.text;el("tourBack").style.display=tourIndex===0?"none":"inline-block";el("tourNext").textContent=tourIndex===steps.length-1?"Tutorial abschließen":"Weiter";positionTour()}
-function startTutorial(){tourMode="main";tourIndex=0;el("tourOverlay").classList.add("active");el("tourOverlay").setAttribute("aria-hidden","false");showPage("dashboard");setTimeout(renderTourStep,80)}
+function startTutorial(){tourMode="main";tourIndex=0;el("tourOverlay").classList.add("active");el("tourOverlay").setAttribute("aria-hidden","false");showPage("tutorial");setTimeout(renderTourStep,80)}
 function startParentTutorial(){tourMode="parent";tourIndex=0;el("tourOverlay").classList.add("active");el("tourOverlay").setAttribute("aria-hidden","false");showPage("parents");setTimeout(renderTourStep,80)}
 function nextTour(){const steps=tourMode==="parent"?PARENT_TOUR_STEPS:TOUR_STEPS;if(tourIndex<steps.length-1){tourIndex++;const s=steps[tourIndex];showPage(s.page);setTimeout(renderTourStep,80)}else closeTutorialTour(tourMode==="main")}
 function prevTour(){if(tourIndex<=0)return;tourIndex--;const steps=tourMode==="parent"?PARENT_TOUR_STEPS:TOUR_STEPS;const s=steps[tourIndex];showPage(s.page);setTimeout(renderTourStep,80)}
