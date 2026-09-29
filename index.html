@@ -123,7 +123,7 @@ const RANKS=[{n:"Kadett",x:0},{n:"Operator",x:300},{n:"Spezialist",x:800},{n:"Se
 function uid(){return "id_"+Date.now().toString(36)+"_"+Math.random().toString(36).slice(2,9)}
 function esc(v){return String(v==null?"":v).replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;").replaceAll("'","&#039;")}
 function today(){const d=new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")}
-function dateText(s){if(!s)return "Kein Termin";const d=new Date(s+"T00:00:00");return isNaN(d)?s:d.toLocaleDateString("de-DE")}
+function dateText(s){if(!s)return "Kein Termin";const d=new Date(s.includes("T")?s:s+"T00:00:00");if(isNaN(d))return s;return s.includes("T")?d.toLocaleString("de-DE",{dateStyle:"short",timeStyle:"short"}):d.toLocaleDateString("de-DE")}
 function taskXP(t){return t==="large"?20:t==="presentation"?30:10}
 function rank(){let r=RANKS[0];RANKS.forEach(v=>{if(db.xp>=v.x)r=v});return r}
 function nextRank(){return RANKS.find(v=>db.xp<v.x)||null}
