@@ -324,9 +324,19 @@ async function signIn(){
   if(!validUsername(name)){authMsg("Ungültiger Benutzername.",true);return}
   authMsg("Anmeldung …");
   const {data,error}=await supabaseClient.auth.signInWithPassword({email:usernameEmail(name),password:pw});
-  if(error){authMsg("Anmeldung fehlgeschlagen. Benutzername oder Passwort prüfen.",true);return}
+  if(error){authMsg("Anmeldung fehlgeschlagen: "+(error.message||"Benutzername oder Passwort prüfen."),true);return}
+  if(!data?.user){authMsg("Supabase hat keine Benutzer-Sitzung zurückgegeben.",true);return}
   currentUser=data.user;
-  try{await loadProfile();if(currentAccountType==="parent")await setupParentSession();else await loadOnline();enterApp()}catch(e){await supabaseClient.auth.signOut();authMsg("Kontoprofil konnte nicht geladen werden: "+e.message,true)}
+  authMsg("Anmeldung erfolgreich – Kontoprofil wird geladen …");
+  try{
+    await loadProfile();
+    authMsg("Kontoprofil geladen – Spielstand wird geladen …");
+    if(currentAccountType==="parent")await setupParentSession();else await loadOnline();
+    enterApp();
+  }catch(e){
+    console.error("GAP Login:",e);
+    authMsg("Anmeldung erfolgreich, aber das Konto konnte nicht geladen werden: "+(e?.message||e),true);
+  }
 }
 async function bootAuth(){
   document.getElementById("showSignup").onclick=()=>setAuthMode(true);document.getElementById("showLogin").onclick=()=>setAuthMode(false);document.getElementById("loginForm").addEventListener("submit",e=>{e.preventDefault();signIn()});document.getElementById("signupForm").addEventListener("submit",e=>{e.preventDefault();signUp()});document.getElementById("logoutBtn").onclick=logout;
