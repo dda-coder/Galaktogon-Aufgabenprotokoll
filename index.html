@@ -173,6 +173,9 @@ let supabaseClient=createAnonClient();
 let currentAccessToken="";
 const KEY="galaktogon_v9";
 const OLD_KEYS=["galaktogon_v6","galaktogon_v52","galaktogon_v51","galaktogon_v5"];
+let currentUser=null,currentUsername="",currentAccountType="child",currentProfile=null;
+let activeChildId=null,activeChildUsername="",linkedChildren=[],saveTimer=null;
+let db=load();
 const DAYS=["So","Mo","Di","Mi","Do","Fr","Sa"];
 const RANKS=[{n:"Kadett",x:0},{n:"Operator",x:300},{n:"Spezialist",x:800},{n:"Sektorführer",x:1500},{n:"Kommandant",x:2400},{n:"Eliteoperator",x:3500},{n:"Meister",x:5000},{n:"Galaktogon-Veteran",x:7000},{n:"Galaktogon-Legende",x:9500}];
 
