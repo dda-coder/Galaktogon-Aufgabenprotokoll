@@ -743,7 +743,7 @@ el("buffForm").addEventListener("submit",e=>{e.preventDefault();const kind=el("b
 el("recurringForm").addEventListener("submit",e=>{e.preventDefault();const days=[...document.querySelectorAll("#weekdayInputs input:checked")].map(x=>Number(x.value));if(!days.length){alert("Bitte mindestens einen Wochentag auswählen.");return}db.recurring.push({id:uid(),title:el("recurringTitle").value.trim(),subject:el("recurringSubject").value.trim(),due:el("recurringDue").value,latePenalty:Math.max(0,Math.min(100,Number(el("recurringLatePenalty").value)||0)),xp:Number(el("recurringXP").value)||getSettings().recurringXP,days,doneDates:[],active:true});e.target.reset();renderAll()});
 }
 function setupDays(){document.getElementById("weekdayInputs").innerHTML=DAYS.map((d,i)=>`<label class="day"><input type="checkbox" value="${i}" ${i>0&&i<6?"checked":""}>${d}</label>`).join("")}
-setupDays();decorateFields();setupParentControls();setupForms();renderUpdates();applyViewMode();setupSettings();bootAuth();
+bootAuth();setupDays();decorateFields();setupParentControls();setupForms();renderUpdates();applyViewMode();setupSettings();
 </script>
 </body>
 </html>
