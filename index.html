@@ -322,7 +322,8 @@ async function signIn(){
   if(!supabaseConfigured){authMsg("Die Supabase-Daten fehlen noch. URL und Publishable Key in der index.html eintragen.",true);return}
   const name=document.getElementById("loginName").value.trim();const pw=document.getElementById("loginPassword").value;
   if(!validUsername(name)){authMsg("Ungültiger Benutzername.",true);return}
-  authMsg("Anmeldung …");
+  authMsg("Schritt 2/3: Login-Anfrage wird gestartet …");
+  console.log("GAP Login Schritt 2: signIn() erreicht");
   let loginResult;
   try{
     loginResult=await Promise.race([
