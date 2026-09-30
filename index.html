@@ -46,7 +46,8 @@
 
 <div class="card"><h2>Konto</h2>
 <div class="item"><div class="item-title">Benutzerkonto</div><div id="settingsAccountInfo" class="meta">Angemeldetes Konto</div><div id="settingsPairingInfo" class="meta"></div><div class="actions"><button class="btn" id="copyPairingBtn">Verknüpfungscode kopieren</button><button class="btn" id="settingsLogoutBtn">Abmelden</button></div></div>
-<div class="item"><div class="item-title">Passwort</div><div class="meta">Das Passwort kann über die Kontofunktionen geändert werden.</div><div class="actions"><button class="btn" id="settingsPasswordBtn">Passwort ändern</button></div></div>
+<div class="item"><div class="item-title">Passwort</div><div class="meta">Das Passwort kann über die Kontofunktionen geändert werden.</div><div class="item" id="parentLinkSettings"><div class="item-title">Kinderkonto verknüpfen</div><div class="meta">Nur im Elternkonto: Gib den Verknüpfungscode des Kinderkontos ein. Den Code findest du im Kinderkonto unter Einstellungen.</div><form id="parentLinkForm"><div class="form-grid"><input id="parentLinkCode" placeholder="Verknüpfungscode" maxlength="8" autocomplete="off" required><button class="btn primary" type="submit">Kinderkonto verknüpfen</button></div></form><div id="parentLinkStatus" class="meta"></div></div>
+<div class="actions"><button class="btn" id="settingsPasswordBtn">Passwort ändern</button></div></div>
 </div>
 
 
@@ -81,7 +82,7 @@
 
 </section>
 <section id="dashboard" class="page active">
-<div class="grid"><div class="card"><div class="muted">RANG</div><div class="stat" id="dashRank">Kadett</div></div><div class="card"><div class="muted">XP</div><div class="stat" id="dashXP">0</div><div class="progress"><div id="dashBar" class="progress-bar"></div></div><div id="dashNext" class="meta"></div></div><div class="card"><div class="muted">XP-MODIFIKATOR</div><div class="stat" id="dashModifier">100%</div><div id="dashModifierInfo" class="meta"></div></div><div class="card"><div class="muted">OFFENE AUFGABEN HEUTE</div><div class="stat" id="dashToday">0</div></div></div>
+<div class="grid"><div class="card"><div class="muted">RANG</div><div class="stat" id="dashRank">Kadett</div></div><div class="card"><div class="muted">XP</div><div class="stat" id="dashXP">0</div><div class="progress"><div id="dashBar" class="progress-bar"></div></div><div id="dashNext" class="meta"></div></div><div class="card"><div class="muted">XP-MODIFIKATOR</div><div class="stat" id="dashModifier">100%</div><div id="dashModifierInfo" class="meta"></div></div><div class="card"><div class="muted">OFFENE AUFGABEN HEUTE</div><div class="stat" id="dashToday">0</div></div></div><div class="card"><div class="muted">OFFENE QUESTS</div><div class="stat" id="dashOpenQuests">0</div><div class="meta">Aktuell offene Quests</div></div>
 <div class="card"><h2>Aktive Buffs & Debuffs</h2><div id="dashboardEffects"></div></div>
 <div class="card"><h2>Heutige Mission</h2><div id="dashboardToday"></div></div>
 <div class="card"><h2>Offene Quests</h2><div id="dashboardQuests"></div></div>
@@ -125,10 +126,7 @@
 
 <section id="parents" class="page">
 <div class="card"><h2>Elternübersicht</h2>
-<p class="muted">Hier kannst du Kinderkonten verknüpfen und anschließend das aktive Kinderkonto auswählen.</p>
-<div class="item"><h3 style="margin-top:0">Kinderkonto verknüpfen</h3><p class="muted">Gib den Verknüpfungscode vom Kinderkonto ein. Der Code steht beim Kinderkonto unter Einstellungen.</p>
-<form id="parentLinkForm"><div class="form-grid"><input id="parentLinkCode" placeholder="Verknüpfungscode" maxlength="8" autocomplete="off" required><button class="btn primary" type="submit">Kinderkonto verknüpfen</button></div></form>
-<div id="parentLinkStatus" class="meta"></div></div>
+<p class="muted">Wähle hier das aktive Kinderkonto aus, um dessen Daten zu verwalten.</p>
 <div class="item"><div class="item-title">Kinderkonto auswählen</div><div class="actions"><select id="parentChildSelect"></select></div></div>
 <div id="parentChildInfo"></div>
 </div>
@@ -519,6 +517,8 @@ function renderDashboard(){
  const dueRecurring=getRecurringToday();const normal=db.tasks.filter(t=>!t.due||t.due<=today());const dueQuests=db.quests.filter(q=>q.due&&q.due<=today());document.getElementById("dashToday").textContent=normal.length+dueRecurring.length+dueQuests.length;
  document.getElementById("dashboardEffects").innerHTML=effectsHTML()||'<div class="empty">Keine aktiven Effekte.</div>';
  document.getElementById("dashboardToday").innerHTML=[...normal,...dueRecurring].slice(0,8).map(x=>x.id&&x.days?taskHTML(x,true):taskHTML(x)).join("")||'<div class="empty">Keine Aufgaben für heute.</div>';
+ const openQuests=db.quests.filter(q=>!q.completed);
+ const openQuestCounter=document.getElementById("dashOpenQuests");if(openQuestCounter)openQuestCounter.textContent=openQuests.length;
  document.getElementById("dashboardQuests").innerHTML=db.quests.slice(0,6).map(questHTML).join("")||'<div class="empty">Keine offenen Quests.</div>';
  document.getElementById("dashboardExams").innerHTML=db.exams.slice().sort((a,b)=>(a.date||"").localeCompare(b.date||"")).slice(0,5).map(examHTML).join("")||'<div class="empty">Keine offenen Prüfungen.</div>';
 }
@@ -815,6 +815,7 @@ function toggleTheme(){localStorage.setItem(THEME_KEY,localStorage.getItem(THEME
 function renderSettings(){
  const childOnlyTutorial= currentAccountType==="child";
  ["childTutorialProgressSettings","childTutorialSettings"].forEach(id=>{const x=el(id);if(x)x.style.display=childOnlyTutorial?"block":"none"});
+ const linkBox=el("parentLinkSettings");if(linkBox)linkBox.style.display=currentAccountType==="parent"?"block":"none";
  const accountInfo=el("settingsAccountInfo");if(accountInfo)accountInfo.innerHTML="<strong>"+esc(currentUsername)+"</strong> · "+(currentAccountType==="parent"?"Elternkonto":"Kinderkonto");const pairing=el("settingsPairingInfo");if(pairing){pairing.textContent=currentAccountType==="child"?(currentProfile?.pairing_code?"Verknüpfungscode: "+currentProfile.pairing_code:"Verknüpfungscode wird geladen."):"Kinderkonten können jetzt direkt in der Elternübersicht über einen Verknüpfungscode verknüpft werden."}const copyBtn=el("copyPairingBtn");if(copyBtn)copyBtn.style.display=currentAccountType==="child"?"inline-block":"none";
  const s=getSettings();
  const fields={settingsReminderTime:s.reminderTime,settingsFontSize:s.fontSize};
