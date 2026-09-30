@@ -461,8 +461,8 @@ function renderProgress(){const r=rank(),n=nextRank();renderTutorialProgress();d
 function weekStart(d=new Date()){const x=new Date(d);const day=(x.getDay()+6)%7;x.setHours(0,0,0,0);x.setDate(x.getDate()-day);return x}
 function periodXP(period){const now=new Date(),start=new Date(now);if(period==="day")start.setHours(0,0,0,0);else if(period==="week")start.setTime(weekStart(now).getTime());else if(period==="month"){start.setDate(1);start.setHours(0,0,0,0)}else return db.xp;return db.xpLog.filter(x=>new Date(x.date)>=start).reduce((s,x)=>s+(Number(x.amount)||0),0)}
 function weeklyReview(){const now=new Date(),start=weekStart(now),end=new Date(start);end.setDate(end.getDate()+7);const logs=db.completionLog.filter(x=>{const d=new Date(x.date);return d>=start&&d<end});const xp=db.xpLog.filter(x=>{const d=new Date(x.date);return d>=start&&d<end}).reduce((s,x)=>s+(Number(x.amount)||0),0);const completed=logs.length;const overdue=db.tasks.filter(t=>t.due&&t.due<today()).length;const possible=Math.max(1,completed+overdue);const completionScore=Math.min(30,completed/possible*30);const consistency=Math.min(20,completed>=7?20:completed*3);const penalty=Math.min(10,overdue*2);const score=Math.max(0,Math.min(100,Math.round(Math.min(40,xp/5)+completionScore+consistency-penalty)));const label=score>=90?"Hervorragende Woche":score>=75?"Sehr gute Woche":score>=60?"Gute Woche":score>=40?"Solide Woche":"Aufholbedarf";return{score,label,xp,completed,overdue,week:start.toLocaleDateString("de-DE")+" – "+new Date(end.getTime()-1).toLocaleDateString("de-DE")}}
-function weeklyReviewHTML(){const w=weeklyReview(),now=new Date(),sun=now.getDay()===0&&now.getHours()>=20;return sun?`<div class="item"><strong>${w.label} · ${w.score}/100</strong><div class="meta">${w.week}</div><div class="meta">${w.xp} XP · ${w.completed} Abschlüsse · ${w.overdue} überfällige Aufgaben</div><div class="meta">Bewertung: XP 40 · Erledigungen 30 · Regelmäßigkeit 20 · Überfällige Aufgaben −10.</div></div>`:"<div class=\"empty\">Die Wochenbilanz wird sonntags ab 20:00 angezeigt.</div>"}
-function renderWeeklyReview(){const wr=document.getElementById("weeklyReview");if(wr)wr.innerHTML=weeklyReviewHTML()}
+function parentWeeklyReviewHTML(){const w=weeklyReview(),now=new Date(),sun=now.getDay()===0&&now.getHours()>=20;return sun?`<div class="item"><strong>${w.label} · ${w.score}/100</strong><div class="meta">${w.week}</div><div class="meta">${w.xp} XP · ${w.completed} Abschlüsse · ${w.overdue} überfällige Aufgaben</div><div class="meta">Bewertung: XP 40 · Erledigungen 30 · Regelmäßigkeit 20 · Überfällige Aufgaben −10.</div></div>`:"<div class=\"empty\">Die Wochenbilanz wird sonntags ab 20:00 angezeigt.</div>"}
+function renderWeeklyReview(){const wr=document.getElementById("weeklyReview");if(wr)wr.innerHTML=parentWeeklyReviewHTML()}
 function renderRanks(){const r=rank();document.getElementById("rankList").innerHTML=RANKS.map((x,i)=>{const next=RANKS[i+1],active=x.n===r.n;return "<div class=\"item\"><strong>"+(active?"<span class=\"tag green\">AKTUELL</span> ":"")+esc(x.n)+"</strong><div class=\"meta\">"+x.x.toLocaleString("de-DE")+" XP benötigt"+(next?" · nächste Stufe ab "+next.x.toLocaleString("de-DE")+" XP":" · höchste Stufe")+"</div></div>"}).join("")}
 let leaderboardPeriod="week";
 async function renderLeaderboard(){const box=document.getElementById("leaderboardList");if(!supabaseClient||!currentUser){box.innerHTML="<div class=\"empty\">Leaderboard erst nach Anmeldung verfügbar.</div>";return}box.innerHTML="<div class=\"muted\">Lade Leaderboard…</div>";const {data,error}=await supabaseClient.from("gap_leaderboard_public").select("username,day_xp,week_xp,month_xp,all_xp").order(leaderboardPeriod+"_xp",{ascending:false}).limit(50);if(error){box.innerHTML="<div class=\"empty\">Leaderboard konnte nicht geladen werden.</div>";console.error(error);return}const key=leaderboardPeriod+"_xp";box.innerHTML=data.length?data.map((x,i)=>"<div class=\"item\"><strong>#"+(i+1)+" · "+esc(x.username)+"</strong><div class=\"meta\">"+Number(x[key]||0).toLocaleString("de-DE")+" XP · "+leaderboardPeriodLabel(leaderboardPeriod)+"</div></div>").join(""):"<div class=\"empty\">Noch keine Accounts im Leaderboard.</div>"}
@@ -475,15 +475,29 @@ function renderParents(){
     select.disabled=!linkedChildren.length;
     if(activeChildId)select.value=activeChildId;
   }
-  const info=el("parentChildInfo");
-  if(info)info.innerHTML=activeChildId?'<div class="item"><strong>'+esc(activeChildUsername)+'</strong><div class="meta">Ausgewähltes Kinderkonto · '+Number(db.xp||0).toLocaleString("de-DE")+' XP · Rang '+esc(rank().n)+'</div></div>':'<div class="empty">Noch kein Kinderkonto ausgewählt. Ein Kinderkonto kann über den Verknüpfungscode hinzugefügt werden.</div>';
   const linked=Boolean(activeChildId);
-  ["trustForm","parentQuestForm","buffForm"].forEach(id=>{const x=el(id);if(x)x.style.display=linked?"grid":"none"});
-  const tw=linked?trustWeeklyModifier():0;
-  const trust=el("trustStatus");if(trust&&linked)trust.value=db.trust;
-  const ti=el("trustInfo");if(ti)ti.innerHTML=linked?'<div class="item"><strong>Aktuelle Vertrauenswirkung: '+(tw>=0?"+":"")+tw+'% XP</strong><div class="meta">A: +20 % · B: +5 % · C: −5 % · D: −20 %</div><div class="meta">Aktueller Status: '+esc(db.trust)+'</div></div>':'';
-  const pe=el("parentEffects");if(pe)pe.innerHTML=linked?(effectsHTML()||'<div class="empty">Keine aktiven Effekte.</div>'):'';
-  const wr=el("weeklyReview");if(wr)wr.innerHTML=linked?weeklyReviewHTML():'<div class="empty">Noch kein Kinderkonto ausgewählt.</div>';
+  const info=el("parentChildInfo");
+  if(!info)return;
+  if(!linked){
+    info.innerHTML='<div class="empty">Noch kein Kinderkonto ausgewählt. Ein Kinderkonto kann über den Verknüpfungscode hinzugefügt werden.</div>';
+    return;
+  }
+  const r=rank(),n=nextRank(),pct=n?Math.max(0,Math.min(100,(db.xp-r.x)/(n.x-r.x)*100)):100;
+  const recentActivities=(db.activityLog||[]).slice(0,10).map(l=>'<div class="log"><strong>'+esc(l.title)+'</strong> · +'+Number(l.earned||0)+' XP<div class="small muted">'+new Date(l.date).toLocaleString("de-DE")+'</div></div>').join("")||'<div class="empty">Noch keine Aktivitäten.</div>';
+  const completions=(db.completionLog||[]).slice(0,15).map(l=>'<div class="log"><strong>'+esc(l.title)+'</strong> · +'+Number(l.earned||0)+' XP<div class="small muted">'+esc(l.type||"")+' · '+new Date(l.date).toLocaleString("de-DE")+'</div></div>').join("")||'<div class="empty">Noch keine Erledigungen.</div>';
+  info.innerHTML=
+    '<div class="item"><strong>'+esc(activeChildUsername)+'</strong><div class="meta">'+Number(db.xp||0).toLocaleString("de-DE")+' XP · Rang '+esc(r.n)+' · '+Math.round(modifier()*100)+'% XP-Modifikator</div><div class="progress"><div class="progress-bar" style="width:'+pct+'%"></div></div><div class="meta">'+(n?(n.x-db.xp)+' XP bis '+esc(n.n):'Maximaler Rang')+'</div></div>'+
+    '<div class="card"><h3>Offene Sektoraufgaben</h3><div id="parentTaskList">'+db.tasks.map(taskHTML).join("")||'<div class="empty">Keine offenen Sektoraufgaben.</div>'+'</div></div>'+
+    '<div class="card"><h3>Offene Sektorprüfungen</h3><div id="parentExamList">'+db.exams.slice().sort((a,b)=>(a.date||"").localeCompare(b.date||"")).map(examHTML).join("")||'<div class="empty">Keine offenen Sektorprüfungen.</div>'+'</div></div>'+
+    '<div class="card"><h3>Offene Quests</h3><div id="parentQuestList">'+db.quests.map(questHTML).join("")||'<div class="empty">Keine offenen Quests.</div>'+'</div></div>'+
+    '<div class="card"><h3>Was das Kind zuletzt gemacht hat</h3>'+recentActivities+'</div>'+
+    '<div class="card"><h3>Erledigungen</h3>'+completions+'</div>';
+  ["trustForm","parentQuestForm","buffForm"].forEach(id=>{const x=el(id);if(x)x.style.display="grid"});
+  const tw=trustWeeklyModifier(),trust=el("trustStatus");
+  if(trust)trust.value=db.trust;
+  const ti=el("trustInfo");if(ti)ti.innerHTML='<div class="item"><strong>Aktuelle Vertrauenswirkung: '+(tw>=0?"+":"")+tw+'% XP</strong><div class="meta">A: +20 % · B: +5 % · C: −5 % · D: −20 %</div></div>';
+  const pe=el("parentEffects");if(pe)pe.innerHTML=effectsHTML()||'<div class="empty">Keine aktiven Effekte.</div>';
+  const wr=el("weeklyReview");if(wr)wr.innerHTML=parentWeeklyReviewHTML();
 }
 function renderAll(){renderDashboard();renderTasks();renderExams();renderQuests();renderRecurring();renderActivities();renderProgress();renderParents();renderWeeklyReview();renderRanks();if(document.getElementById("leaderboard").classList.contains("active"))renderLeaderboard()}
 
