@@ -381,41 +381,10 @@ function showXPGain(amount,reason){if(amount<=0)return;const pop=document.create
 function consumeBuffs(){db.effects.forEach(e=>{if((e.kind==="buff"||e.kind==="debuff")&&e.remaining>0)e.remaining--});db.effects=db.effects.filter(e=>(e.kind!=="buff"&&e.kind!=="debuff")||e.remaining>0)}
 function forgetDebuff(){addEffect("Vergessene Aufgabe","debuff",5,1,"System")}
 
-function authMsg(msg,error=false){const x=document.getElementById("authMessage");x.textContent=msg;x.style.color=error?"#ff7474":"#68d69a"}
+function authMsg(msg,error=false){const x=document.getElementById("authMessage");if(x){x.textContent=msg;x.style.color=error?"#ff7474":"#68d69a"}}
 function usernameEmail(name){return name.toLowerCase().trim()+"@galaktogon.local"}
 function validUsername(name){return /^[A-Za-z0-9_-]{3,20}$/.test(name)}
 function setAuthMode(signup){document.getElementById("authLogin").style.display=signup?"none":"block";document.getElementById("authSignup").style.display=signup?"block":"none";authMsg("")}
-async function signUp(){
- if(!supabaseConfigured){authMsg("Die Supabase-Daten fehlen noch. URL und Publishable Key in der index.html eintragen.",true);return}
- const name=document.getElementById("signupName").value.trim();const pw=document.getElementById("signupPassword").value;const pw2=document.getElementById("signupPassword2").value;
- if(!validUsername(name)){authMsg("Benutzername: 3–20 Zeichen, nur Buchstaben, Zahlen, _ oder -.",true);return}
- if(pw!==pw2){authMsg("Die Passwörter stimmen nicht überein.",true);return}
- authMsg("Konto wird erstellt …");
- const {data,error}=await supabaseClient.auth.signUp({email:usernameEmail(name),password:pw});
- if(error){authMsg("Konto konnte nicht erstellt werden: "+error.message,true);return}
- if(!data.session){authMsg("Konto erstellt. In Supabase muss die E-Mail-Bestätigung deaktiviert sein, weil GALAKTOGON mit Benutzername + Passwort arbeitet.",true);return}
- currentUser=data.user;currentUsername=name;db=normalize(fresh());await saveNow();enterApp();
-}
-async function signIn(){
- if(!supabaseConfigured){authMsg("Die Supabase-Daten fehlen noch. URL und Publishable Key in der index.html eintragen.",true);return}
- const name=document.getElementById("loginName").value.trim();const pw=document.getElementById("loginPassword").value;
- if(!validUsername(name)){authMsg("Ungültiger Benutzername.",true);return}
- authMsg("Anmeldung …");
- const {data,error}=await supabaseClient.auth.signInWithPassword({email:usernameEmail(name),password:pw});
- if(error){authMsg("Anmeldung fehlgeschlagen. Benutzername oder Passwort prüfen.",true);return}
- currentUser=data.user;await loadOnline();enterApp();
-}
-function enterApp(){document.getElementById("authScreen").style.display="none";renderAll();showPage("dashboard")}
-async function logout(){await saveNow().catch(()=>{});if(supabaseClient)await supabaseClient.auth.signOut();currentUser=null;currentUsername="";document.getElementById("authScreen").style.display="flex";setAuthMode(false);document.getElementById("loginPassword").value="";authMsg("")}
-async function bootAuth(){
- document.getElementById("showSignup").onclick=()=>setAuthMode(true);document.getElementById("showLogin").onclick=()=>setAuthMode(false);document.getElementById("loginForm").addEventListener("submit",e=>{e.preventDefault();signIn()});document.getElementById("signupForm").addEventListener("submit",e=>{e.preventDefault();signUp()});document.getElementById("logoutBtn").onclick=logout;
- if(!supabaseConfigured){authMsg("Noch nicht eingerichtet: Supabase-Projekt erstellen und die beiden Werte oben in der Datei eintragen.",true);return}
- const {data}=await supabaseClient.auth.getSession();if(data.session){currentUser=data.session.user;await loadOnline();enterApp()}
-}
-function showPage(p){document.querySelectorAll(".page").forEach(x=>x.classList.remove("active"));document.getElementById(p).classList.add("active");document.querySelectorAll("nav button").forEach(x=>x.classList.toggle("active",x.dataset.page===p));renderAll()}
-document.querySelectorAll("nav button").forEach(b=>b.addEventListener("click",()=>showPage(b.dataset.page)));
-document.querySelectorAll("[data-period]").forEach(b=>b.addEventListener("click",()=>{leaderboardPeriod=b.dataset.period;document.querySelectorAll("[data-period]").forEach(x=>x.classList.toggle("primary",x===b));renderLeaderboard()}));
-
 function taskHTML(t,recurring=false){return `<div class="item"><div class="item-title">${esc(t.title)}</div><div class="meta">${esc(t.subject||"Kein Fach")} · +${recurring?t.xp:taskXP(t.type)} XP ${recurring?"· Dauerauftrag":"· "+(t.type==="large"?"Große Aufgabe":t.type==="presentation"?"Präsentation":"Aufgabe")}</div><div class="meta">${recurring?"Heute fällig":"Termin: "+dateText(t.due)}</div><div class="actions"><button class="btn success" data-act="complete-${recurring?"recurring":"task"}" data-id="${t.id}">Erledigt</button>${!recurring?`<button class="btn edit-btn" data-act="edit-task" data-id="${t.id}">Bearbeiten</button><button class="btn danger" data-act="delete-task" data-id="${t.id}">Löschen</button>`:""}</div></div>`}
 function questHTML(q){return `<div class="item"><div class="item-title">${esc(q.title)}</div><div class="meta">+${q.xp||0} XP · ${q.due?"Fällig: "+dateText(q.due):"Kein Termin"}</div>${q.note?`<div class="meta">${esc(q.note)}</div>`:""}<div class="actions"><button class="btn success" data-act="complete-quest" data-id="${q.id}">Erledigt</button><button class="btn edit-btn" data-act="edit-quest" data-id="${q.id}">Bearbeiten</button><button class="btn danger" data-act="delete-quest" data-id="${q.id}">Löschen</button></div></div>`}
 function examHTML(e){return `<div class="item"><div class="item-title">${esc(e.subject)} – ${esc(e.title)}</div><div class="meta">${dateText(e.date)} · ${e.size==="large"?"Große Prüfung":"Normale Prüfung"} · +${e.size==="large"?50:30} XP · Ziel ${e.target||2}</div><div class="actions"><button class="btn success" data-act="grade" data-id="${e.id}">Note eintragen</button><button class="btn edit-btn" data-act="edit-exam" data-id="${e.id}">Bearbeiten</button><button class="btn danger" data-act="delete-exam" data-id="${e.id}">Löschen</button></div></div>`}
