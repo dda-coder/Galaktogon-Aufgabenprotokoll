@@ -166,7 +166,11 @@
 const SUPABASE_URL="https://tkbopzdurmejcwawtswa.supabase.co";
 const SUPABASE_KEY="sb_publishable_NaSGbCf_A8HrrPV6O9D0ig_0tiFPA6D";
 const supabaseConfigured=SUPABASE_URL.startsWith("https://")&&SUPABASE_KEY.length>20;
-const supabaseClient=supabaseConfigured?window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY,{auth:{persistSession:false,autoRefreshToken:false,detectSessionInUrl:false}}):null;
+function createAnonClient(){
+ return supabaseConfigured?window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY,{auth:{persistSession:false,autoRefreshToken:false,detectSessionInUrl:false}}):null;
+}
+let supabaseClient=createAnonClient();
+let currentAccessToken="";
 const KEY="galaktogon_v9";
 const OLD_KEYS=["galaktogon_v6","galaktogon_v52","galaktogon_v51","galaktogon_v5"];
 const DAYS=["So","Mo","Di","Mi","Do","Fr","Sa"];
@@ -299,7 +303,8 @@ function enterApp(){
 }
 async function logout(){
   await saveNow().catch(()=>{});
-  if(supabaseClient)await supabaseClient.auth.signOut();
+  currentAccessToken="";
+  supabaseClient=createAnonClient();
   currentUser=null;currentUsername="";currentAccountType="child";currentProfile=null;activeChildId=null;activeChildUsername="";linkedChildren=[];
   document.getElementById("authScreen").style.display="flex";
   setAuthMode(false);
@@ -330,36 +335,40 @@ async function signIn(){
       new Promise((_,reject)=>setTimeout(()=>reject(new Error("Supabase-Erreichbarkeitstest: Zeitüberschreitung nach 8 Sekunden.")),8000))
     ]);
     if(!probe.ok) throw new Error("Supabase antwortet mit HTTP "+probe.status+".");
-    authMsg("Schritt 2/3: Supabase erreichbar – Login-Anfrage wird gesendet …");
+    authMsg("Schritt 2/3: Supabase erreichbar – direkter Login wird gesendet …");
   }catch(e){
     console.error("GAP Supabase Erreichbarkeit:",e);
     authMsg("Schritt 2/3 fehlgeschlagen: "+(e?.message||e),true);
     return;
   }
-  let loginResult;
   try{
-    loginResult=await Promise.race([
-      supabaseClient.auth.signInWithPassword({email:usernameEmail(name),password:pw}),
-      new Promise((_,reject)=>setTimeout(()=>reject(new Error("Zeitüberschreitung: Supabase hat innerhalb von 15 Sekunden nicht geantwortet. Bitte Internetverbindung und Supabase-Erreichbarkeit prüfen.")),15000))
+    const response=await Promise.race([
+      fetch(SUPABASE_URL+"/auth/v1/token?grant_type=password",{
+        method:"POST",
+        headers:{apikey:SUPABASE_KEY,"Content-Type":"application/json"},
+        body:JSON.stringify({email:usernameEmail(name),password:pw})
+      }),
+      new Promise((_,reject)=>setTimeout(()=>reject(new Error("Zeitüberschreitung: Supabase hat innerhalb von 15 Sekunden nicht geantwortet.")),15000))
     ]);
-  }catch(e){
-    console.error("GAP Supabase Login:",e);
-    authMsg("Anmeldung konnte nicht abgeschlossen werden: "+(e?.message||e),true);
-    return;
-  }
-  const {data,error}=loginResult;
-  if(error){authMsg("Anmeldung fehlgeschlagen: "+(error.message||"Benutzername oder Passwort prüfen."),true);return}
-  if(!data?.user){authMsg("Supabase hat keine Benutzer-Sitzung zurückgegeben.",true);return}
-  currentUser=data.user;
-  authMsg("Anmeldung erfolgreich – Kontoprofil wird geladen …");
-  try{
+    const body=await response.json().catch(()=>null);
+    if(!response.ok) throw new Error(body?.msg||body?.message||"Anmeldung fehlgeschlagen.");
+    if(!body?.access_token||!body?.user) throw new Error("Supabase hat keine vollständige Sitzung zurückgegeben.");
+    currentAccessToken=body.access_token;
+    supabaseClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY,{
+      auth:{persistSession:false,autoRefreshToken:false,detectSessionInUrl:false},
+      global:{headers:{Authorization:"Bearer "+body.access_token}}
+    });
+    currentUser=body.user;
+    authMsg("Schritt 3/3: Anmeldung erfolgreich – Kontoprofil wird geladen …");
     await loadProfile();
-    authMsg("Kontoprofil geladen – Spielstand wird geladen …");
+    authMsg("Schritt 3/3: Kontoprofil geladen – Spielstand wird geladen …");
     if(currentAccountType==="parent")await setupParentSession();else await loadOnline();
     enterApp();
   }catch(e){
-    console.error("GAP Login:",e);
-    authMsg("Anmeldung erfolgreich, aber das Konto konnte nicht geladen werden: "+(e?.message||e),true);
+    console.error("GAP direkter Supabase Login:",e);
+    authMsg("Anmeldung konnte nicht abgeschlossen werden: "+(e?.message||e),true);
+    currentAccessToken="";
+    supabaseClient=createAnonClient();
   }
 }
 async function bootAuth(){
