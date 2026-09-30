@@ -43,11 +43,7 @@
 
 </div>
 
-<div class="card" id="parentLinkSettings" style="display:none"><h2>Kinderkonto verknüpfen</h2>
-<p class="muted">Kinderkonto per Verknüpfungscode hinzufügen.</p>
-<form id="parentLinkForm"><div class="form-grid"><input id="parentLinkCode" placeholder="Verknüpfungscode" maxlength="8" autocomplete="off"><button class="btn primary">Kinderkonto verknüpfen</button></div></form>
-<div id="parentLinkStatus" class="meta"></div>
-</div>
+
 <div class="card"><h2>Konto</h2>
 <div class="item"><div class="item-title">Benutzerkonto</div><div id="settingsAccountInfo" class="meta">Angemeldetes Konto</div><div id="settingsPairingInfo" class="meta"></div><div class="actions"><button class="btn" id="copyPairingBtn">Verknüpfungscode kopieren</button><button class="btn" id="settingsLogoutBtn">Abmelden</button></div></div>
 <div class="item"><div class="item-title">Passwort</div><div class="meta">Das Passwort kann über die Kontofunktionen geändert werden.</div><div class="actions"><button class="btn" id="settingsPasswordBtn">Passwort ändern</button></div></div>
@@ -129,7 +125,10 @@
 
 <section id="parents" class="page">
 <div class="card"><h2>Elternübersicht</h2>
-<p class="muted">Übersicht über das ausgewählte Kinderkonto. Die Detailbereiche sind jetzt auf eigene Seiten aufgeteilt.</p>
+<p class="muted">Hier kannst du Kinderkonten verknüpfen und anschließend das aktive Kinderkonto auswählen.</p>
+<div class="item"><h3 style="margin-top:0">Kinderkonto verknüpfen</h3><p class="muted">Gib den Verknüpfungscode vom Kinderkonto ein. Der Code steht beim Kinderkonto unter Einstellungen.</p>
+<form id="parentLinkForm"><div class="form-grid"><input id="parentLinkCode" placeholder="Verknüpfungscode" maxlength="8" autocomplete="off" required><button class="btn primary" type="submit">Kinderkonto verknüpfen</button></div></form>
+<div id="parentLinkStatus" class="meta"></div></div>
 <div class="item"><div class="item-title">Kinderkonto auswählen</div><div class="actions"><select id="parentChildSelect"></select></div></div>
 <div id="parentChildInfo"></div>
 </div>
@@ -343,14 +342,23 @@ async function selectParentChild(childId){
 }
 async function linkParentChild(code){
   const clean=(code||"").trim().toUpperCase();
-  if(!clean){authMsg("");return}
+  if(!clean)throw new Error("Bitte einen Verknüpfungscode eingeben.");
   const {data,error}=await supabaseClient.rpc("link_parent_to_child",{p_code:clean});
   if(error)throw error;
-  await loadLinkedChildren();
-  const linked=data?.[0];
-  if(linked?.child_user_id)activeChildId=linked.child_user_id;
-  if(activeChildId)await loadChildOwner(activeChildId);
-  return linkedChildren.find(x=>x.user_id===activeChildId)?.username||linked?.child_username||"";
+  const linked=data?.[0]||data;
+  if(!linked?.child_user_id)throw new Error("Das Kinderkonto konnte nicht ermittelt werden.");
+  activeChildId=linked.child_user_id;
+  activeChildUsername=linked.child_username||"";
+  try{
+    await loadLinkedChildren();
+  }catch(e){
+    console.warn("GAP Elternkonto – Verknüpfung wurde gespeichert, Kinderliste konnte nicht neu geladen werden:",e);
+    if(!linkedChildren.some(x=>x.user_id===activeChildId)){
+      linkedChildren.push({user_id:activeChildId,username:activeChildUsername||"Kinderkonto"});
+    }
+  }
+  await loadChildOwner(activeChildId);
+  return activeChildUsername||linkedChildren.find(x=>x.user_id===activeChildId)?.username||"";
 }
 function enterApp(){
   const auth=document.getElementById("authScreen");
@@ -536,7 +544,6 @@ async function renderLeaderboard(){const box=document.getElementById("leaderboar
 function leaderboardPeriodLabel(p){return p==="day"?"heute":p==="week"?"diese Woche":p==="month"?"diesen Monat":"insgesamt"}
 function renderParents(){
   const parent=currentAccountType==="parent";
-  const linkBox=el("parentLinkSettings");if(linkBox)linkBox.style.display=parent?"block":"none";
   if(!parent)return;
   const select=el("parentChildSelect");
   if(select){
@@ -803,7 +810,7 @@ function toggleTheme(){localStorage.setItem(THEME_KEY,localStorage.getItem(THEME
 function renderSettings(){
  const childOnlyTutorial= currentAccountType==="child";
  ["childTutorialProgressSettings","childTutorialSettings"].forEach(id=>{const x=el(id);if(x)x.style.display=childOnlyTutorial?"block":"none"});
- const accountInfo=el("settingsAccountInfo");if(accountInfo)accountInfo.innerHTML="<strong>"+esc(currentUsername)+"</strong> · "+(currentAccountType==="parent"?"Elternkonto":"Kinderkonto");const pairing=el("settingsPairingInfo");if(pairing){pairing.textContent=currentAccountType==="child"?(currentProfile?.pairing_code?"Verknüpfungscode: "+currentProfile.pairing_code:"Verknüpfungscode wird geladen."):"Kinderkonten werden im Elternbereich über einen Verknüpfungscode verknüpft."}const copyBtn=el("copyPairingBtn");if(copyBtn)copyBtn.style.display=currentAccountType==="child"?"inline-block":"none";
+ const accountInfo=el("settingsAccountInfo");if(accountInfo)accountInfo.innerHTML="<strong>"+esc(currentUsername)+"</strong> · "+(currentAccountType==="parent"?"Elternkonto":"Kinderkonto");const pairing=el("settingsPairingInfo");if(pairing){pairing.textContent=currentAccountType==="child"?(currentProfile?.pairing_code?"Verknüpfungscode: "+currentProfile.pairing_code:"Verknüpfungscode wird geladen."):"Kinderkonten können jetzt direkt in der Elternübersicht über einen Verknüpfungscode verknüpft werden."}const copyBtn=el("copyPairingBtn");if(copyBtn)copyBtn.style.display=currentAccountType==="child"?"inline-block":"none";
  const s=getSettings();
  const fields={settingsReminderTime:s.reminderTime,settingsFontSize:s.fontSize};
  Object.entries(fields).forEach(([id,v])=>{const x=el(id);if(x)x.value=v});
