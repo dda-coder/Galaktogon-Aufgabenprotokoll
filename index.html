@@ -792,9 +792,14 @@ const SETTINGS_KEY="gap_settings";
 const DEFAULT_SETTINGS={normalXP:10,largeXP:20,presentationXP:30,questXP:0,learningXP:10,recurringXP:10,taskReminder:true,examReminder:true,questReminder:true,reminderTime:"18:00",fontSize:"normal",animations:true,compact:false};
 function getSettings(){try{return {...DEFAULT_SETTINGS,...JSON.parse(localStorage.getItem(SETTINGS_KEY)||"{}")}}catch(e){return {...DEFAULT_SETTINGS}}}
 function saveSettings(s){localStorage.setItem(SETTINGS_KEY,JSON.stringify(s))}
-const NAV_LABELS={dashboard:["Dashboard","Übersicht"],updates:["Updates","Änderungen"],tasks:["Sektoraufgaben","Aufgaben"],exams:["Sektorprüfungen","Prüfungen"],quests:["Quests","Persönliche Aufgaben"],recurring:["Daueraufträge","Wiederkehrende Aufgaben"],activities:["Aktivitäten","Aktivitäten"],progress:["Fortschritt","Statistiken"],ranks:["Ränge","Rangstufen"],leaderboard:["Leaderboard","Vergleich"],parents:["Elternmodus","Elternbereich"],settings:["Einstellungen","Einstellungen"]};
+const NAV_LABELS={dashboard:["Dashboard","Übersicht"],updates:["Updates","Änderungen"],tasks:["Sektoraufgaben","Aufgaben"],exams:["Sektorprüfungen","Prüfungen"],quests:["Quests","Persönliche Aufgaben"],recurring:["Daueraufträge","Wiederkehrende Aufgaben"],activities:["Aktivitäten","Aktivitäten"],progress:["Fortschritt","Statistiken"],ranks:["Ränge","Rangstufen"],leaderboard:["Leaderboard","Vergleich"],parents:["Elternübersicht","Übersicht"],parentTasks:["Sektoraufgaben","Aufgaben"],parentExams:["Sektorprüfungen","Prüfungen"],parentQuests:["Quests","Aufträge"],parentEffects:["Buffs & Debuffs","Effekte"],parentLogs:["Logs","Protokolle"],parentReview:["Wochenbericht","Wochenbericht"],settings:["Einstellungen","Einstellungen"]};
+function getSeriousModeKey(){
+ return currentAccountType==="parent"?SERIOUS_MODE_KEY+"_parent":SERIOUS_MODE_KEY;
+}
 function applyViewMode(){
- const serious=localStorage.getItem(SERIOUS_MODE_KEY)==="1";
+ const seriousKey=getSeriousModeKey();
+ if(currentAccountType==="parent" && localStorage.getItem(seriousKey)===null)localStorage.setItem(seriousKey,"1");
+ const serious=localStorage.getItem(seriousKey)==="1";
  const light=localStorage.getItem(THEME_KEY)==="light";
  document.body.classList.toggle("light-mode",light);
  document.body.classList.toggle("serious-mode",serious);
@@ -805,7 +810,7 @@ function applyViewMode(){
  const themeBtn=el("themeBtn");if(themeBtn)themeBtn.textContent=light?"Black Mode aktivieren":"White Mode aktivieren";
  const themeStatus=el("themeStatus");if(themeStatus)themeStatus.textContent=light?"Aktiv: White Mode":"Aktiv: Black Mode";
 }
-function toggleSeriousMode(){localStorage.setItem(SERIOUS_MODE_KEY,localStorage.getItem(SERIOUS_MODE_KEY)==="1"?"0":"1");applyViewMode()}
+function toggleSeriousMode(){const key=getSeriousModeKey();localStorage.setItem(key,localStorage.getItem(key)==="1"?"0":"1");applyViewMode()}
 function toggleTheme(){localStorage.setItem(THEME_KEY,localStorage.getItem(THEME_KEY)==="light"?"dark":"light");applyViewMode()}
 function renderSettings(){
  const childOnlyTutorial= currentAccountType==="child";
