@@ -304,7 +304,7 @@ const SUPABASE_URL="https://tkbopzdurmejcwawtswa.supabase.co";
 const SUPABASE_KEY="sb_publishable_NaSGbCf_A8HrrPV6O9D0ig_0tiFPA6D";
 const supabaseConfigured=SUPABASE_URL.startsWith("https://")&&SUPABASE_KEY.length>20;
 function createAnonClient(){
- return supabaseConfigured?window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY,{auth:{persistSession:false,autoRefreshToken:false,detectSessionInUrl:false}}):null;
+ return supabaseConfigured?window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:false}}):null;
 }
 let supabaseClient=createAnonClient();
 let currentAccessToken="";
@@ -345,7 +345,15 @@ function load(){
  for(const k of OLD_KEYS){raw=localStorage.getItem(k);if(raw){try{const d=normalize(JSON.parse(raw));if(!d.fixed20){d.xp=Math.max(0,d.xp-20);d.xpLog.unshift({id:uid(),amount:-20,reason:"V7-Systemkorrektur: einmalig 20 XP entfernt",date:new Date().toISOString()});d.fixed20=true}localStorage.setItem(KEY,JSON.stringify(d));return d}catch(e){console.error(e)}}}
  const d=fresh();d.fixed20=true;saveRaw(d);return d;
 }
-function saveRaw(d,ownerId=null){localStorage.setItem(ownerId?(KEY+"_"+ownerId):KEY,JSON.stringify(d))}
+function saveRaw(d,ownerId=null){
+ try{
+  localStorage.setItem(ownerId?(KEY+"_"+ownerId):KEY,JSON.stringify(d));
+  return true;
+ }catch(e){
+  console.warn("Lokaler Speicher nicht verfügbar:",e);
+  return false;
+ }
+}
 function userDataOwnerId(){return currentAccountType==="parent"?activeChildId:(currentUser?.id||null)}
 async function save(){
   const ownerId=userDataOwnerId();
@@ -436,14 +444,15 @@ async function linkParentChild(code){
   return linkedChildren.find(x=>x.user_id===activeChildId)?.username||linked?.child_username||"";
 }
 function enterApp(){
-  document.getElementById("authScreen").style.display="none";
   applyAccountView();
   applyViewMode();
   renderAll();
   showPage(currentAccountType==="parent"?"parents":"dashboard");
+  document.getElementById("authScreen").style.display="none";
 }
 async function logout(){
   await saveNow().catch(()=>{});
+  try{if(supabaseClient?.auth?.signOut)await supabaseClient.auth.signOut()}catch(e){console.warn("Abmeldung:",e)}
   currentAccessToken="";
   supabaseClient=createAnonClient();
   currentUser=null;currentUsername="";currentAccountType="child";currentProfile=null;activeChildId=null;activeChildUsername="";linkedChildren=[];
@@ -466,59 +475,58 @@ async function signUp(){
 }
 async function signIn(){
   if(!supabaseConfigured){authMsg("Die Supabase-Daten fehlen noch. URL und Publishable Key in der index.html eintragen.",true);return}
-  const name=document.getElementById("loginName").value.trim();const pw=document.getElementById("loginPassword").value;
+  const name=document.getElementById("loginName").value.trim();
+  const pw=document.getElementById("loginPassword").value;
   if(!validUsername(name)){authMsg("Ungültiger Benutzername.",true);return}
-  authMsg("Schritt 2/3: Supabase-Erreichbarkeit wird geprüft …");
-  console.log("GAP Login Schritt 2: signIn() erreicht");
+  authMsg("Schritt 2/3: Anmeldung wird geprüft …");
   try{
-    const probe=await Promise.race([
-      fetch(SUPABASE_URL+"/auth/v1/settings",{method:"GET",headers:{apikey:SUPABASE_KEY}}),
-      new Promise((_,reject)=>setTimeout(()=>reject(new Error("Supabase-Erreichbarkeitstest: Zeitüberschreitung nach 8 Sekunden.")),8000))
-    ]);
-    if(!probe.ok) throw new Error("Supabase antwortet mit HTTP "+probe.status+".");
-    authMsg("Schritt 2/3: Supabase erreichbar – direkter Login wird gesendet …");
-  }catch(e){
-    console.error("GAP Supabase Erreichbarkeit:",e);
-    authMsg("Schritt 2/3 fehlgeschlagen: "+(e?.message||e),true);
-    return;
-  }
-  try{
-    const response=await Promise.race([
-      fetch(SUPABASE_URL+"/auth/v1/token?grant_type=password",{
-        method:"POST",
-        headers:{apikey:SUPABASE_KEY,"Content-Type":"application/json"},
-        body:JSON.stringify({email:usernameEmail(name),password:pw})
-      }),
-      new Promise((_,reject)=>setTimeout(()=>reject(new Error("Zeitüberschreitung: Supabase hat innerhalb von 15 Sekunden nicht geantwortet.")),15000))
-    ]);
-    const body=await response.json().catch(()=>null);
-    if(!response.ok) throw new Error(body?.msg||body?.message||"Anmeldung fehlgeschlagen.");
-    if(!body?.access_token||!body?.user) throw new Error("Supabase hat keine vollständige Sitzung zurückgegeben.");
-    currentAccessToken=body.access_token;
-    supabaseClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY,{
-      auth:{persistSession:false,autoRefreshToken:false,detectSessionInUrl:false},
-      global:{headers:{Authorization:"Bearer "+body.access_token}}
+    const {data,error}=await supabaseClient.auth.signInWithPassword({
+      email:usernameEmail(name),
+      password:pw
     });
-    currentUser=body.user;
+    if(error)throw error;
+    if(!data?.user||!data?.session)throw new Error("Supabase hat keine gültige Sitzung zurückgegeben.");
+    currentAccessToken=data.session.access_token||"";
+    currentUser=data.user;
     authMsg("Schritt 3/3: Anmeldung erfolgreich – Kontoprofil wird geladen …");
     await loadProfile();
     authMsg("Schritt 3/3: Kontoprofil geladen – Spielstand wird geladen …");
-    if(currentAccountType==="parent")await setupParentSession();else await loadOnline();
+    if(currentAccountType==="parent")await setupParentSession();
+    else await loadOnline();
     enterApp();
   }catch(e){
-    console.error("GAP direkter Supabase Login:",e);
+    console.error("GAP Anmeldung:",e);
     authMsg("Anmeldung konnte nicht abgeschlossen werden: "+(e?.message||e),true);
-    currentAccessToken="";
-    supabaseClient=createAnonClient();
   }
 }
 async function bootAuth(){
-  document.getElementById("showSignup").onclick=()=>setAuthMode(true);document.getElementById("showLogin").onclick=()=>setAuthMode(false);document.getElementById("loginForm").addEventListener("submit",e=>{e.preventDefault();signIn()});document.getElementById("signupForm").addEventListener("submit",e=>{e.preventDefault();signUp()});document.getElementById("logoutBtn").onclick=logout;
+  document.getElementById("showSignup").onclick=()=>setAuthMode(true);
+  document.getElementById("showLogin").onclick=()=>setAuthMode(false);
+  document.getElementById("loginForm").addEventListener("submit",async e=>{e.preventDefault();await signIn()});
+  document.getElementById("signupForm").addEventListener("submit",async e=>{e.preventDefault();await signUp()});
+  document.getElementById("logoutBtn").onclick=logout;
   if(!supabaseConfigured){authMsg("Noch nicht eingerichtet: Supabase-Projekt erstellen und die beiden Werte oben in der Datei eintragen.",true);return}
-  const {data}=await supabaseClient.auth.getSession();
-  if(data.session){
-    currentUser=data.session.user;
-    try{await loadProfile();if(currentAccountType==="parent")await setupParentSession();else await loadOnline();enterApp()}catch(e){await supabaseClient.auth.signOut();authMsg("Kontoprofil konnte nicht geladen werden: "+e.message,true)}
+  try{
+    const {data,error}=await supabaseClient.auth.getSession();
+    if(error)throw error;
+    if(data.session){
+      currentUser=data.session.user;
+      currentAccessToken=data.session.access_token||"";
+      try{
+        await loadProfile();
+        if(currentAccountType==="parent")await setupParentSession();
+        else await loadOnline();
+        enterApp();
+      }catch(e){
+        console.error("GAP gespeicherte Sitzung:",e);
+        await supabaseClient.auth.signOut().catch(()=>{});
+        currentUser=null;
+        authMsg("Gespeicherte Sitzung konnte nicht geladen werden: "+(e?.message||e),true);
+      }
+    }
+  }catch(e){
+    console.error("GAP Sitzung:",e);
+    authMsg("Sitzung konnte nicht geprüft werden: "+(e?.message||e),true);
   }
 }
 document.querySelectorAll("nav button").forEach(b=>b.addEventListener("click",()=>showPage(b.dataset.page)));
