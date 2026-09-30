@@ -36,12 +36,12 @@
 <section id="updates" class="page"><div class="card"><h2>GAP-Updates</h2><p class="muted">Hier werden die bisher veröffentlichten und die geplanten Updates von GAP gesammelt. Entfernte oder zurückgerollte Funktionen werden nicht als aktuelle Updates aufgeführt.</p><h3>Bereits umgesetzt</h3><div id="updateListDone"></div></div><div class="card"><h2>Zukünftige Updates</h2><div id="updateListFuture"></div></div></section>
 
 <section id="settings" class="page">
-<div class="card"><h2>Einstellungen</h2><p class="muted">Hier werden Konto, GAP-System, Erinnerungen, Darstellung, Fortschritt und Daten verwaltet.</p>
+<div class="card"><h2>Einstellungen</h2><p class="muted">Konto, Darstellung, Tutorials und Daten verwalten.</p>
 
 </div>
 
 <div class="card" id="parentLinkSettings" style="display:none"><h2>Kinderkonto verknüpfen</h2>
-<p class="muted">Verknüpfe hier ein Kinderkonto mit dem Elternkonto. Der Verknüpfungscode wird vom Kinderkonto bereitgestellt.</p>
+<p class="muted">Kinderkonto per Verknüpfungscode hinzufügen.</p>
 <form id="parentLinkForm"><div class="form-grid"><input id="parentLinkCode" placeholder="Verknüpfungscode" maxlength="8" autocomplete="off"><button class="btn primary">Kinderkonto verknüpfen</button></div></form>
 <div id="parentLinkStatus" class="meta"></div>
 </div>
@@ -59,14 +59,8 @@
 <div class="item"><div class="item-title">Animationen</div><div class="actions"><button class="btn" id="animationBtn">Animationen: EIN</button></div></div>
 <div class="item"><div class="item-title">Kompakte Ansicht</div><div class="actions"><button class="btn" id="compactBtn">Kompakte Ansicht: AUS</button></div></div>
 </div>
-<div class="card" id="childTutorialProgressSettings"><h2>Fortschritt</h2>
-<div class="item"><div class="item-title">Tutorial</div><div class="meta">Zeigt den Fortschritt des Gesamttutorials und der einzelnen Bereiche.</div><div class="actions"><button class="btn primary" data-act="open-overall-tutorial">Gesamttutorial starten</button></div></div>
-<div class="item"><div class="item-title">Rangsystem</div><div class="meta">Rangstufen und XP-Grenzen können weiterhin unter „Ränge“ eingesehen werden.</div></div>
-<div class="item"><div class="item-title">Wochenbilanz und Leaderboard</div><div class="meta">Die Wochenbilanz und der XP-Vergleich bleiben über die entsprechenden Bereiche erreichbar.</div></div>
-</div>
-
-<div class="card" id="childTutorialSettings"><h2>Tutorial</h2><p class="muted">Alle interaktiven Tutorials und das Gesamttutorial befinden sich jetzt direkt in den Einstellungen.</p>
-<div class="card"><h2>Gesamtes Tutorial</h2><p class="muted">Das Gesamttutorial führt dich durch alle wichtigen Bereiche von GAP und zählt deinen Gesamtfortschritt.</p><div id="overallTutorialStatus" class="meta"></div><div class="actions"><button class="btn primary" data-act="open-overall-tutorial">Gesamttutorial starten</button></div></div><div class="card"><h2>GALAKTOGON-Tutorials</h2><p class="muted">Jede Seite hat ihr eigenes interaktives Tutorial. Wähle nur den Bereich aus, den du erklärt bekommen möchtest.</p></div>
+<div class="card" id="childTutorialSettings"><h2>Tutorial</h2><p class="muted">Hier findest du das Gesamttutorial und kurze Anleitungen für die einzelnen Bereiche.</p>
+<p class="muted">Das Gesamttutorial führt dich kompakt durch die wichtigsten Bereiche.</p><div id="overallTutorialStatus" class="meta"></div><div class="actions"><button class="btn primary" data-act="open-overall-tutorial">Gesamttutorial starten</button></div><div class="card"><h2>GALAKTOGON-Tutorials</h2><p class="muted">Jede Seite hat ihr eigenes interaktives Tutorial. Wähle nur den Bereich aus, den du erklärt bekommen möchtest.</p></div>
 <div class="grid">
 <div class="card"><h2>Dashboard</h2><p class="muted">Rang, XP, Modifikator und Tagesübersicht.</p><button class="btn primary" data-act="open-tutorial" data-tour="dashboard">Dashboard-Tutorial</button></div>
 <div class="card"><h2>Sektoraufgaben</h2><p class="muted">Aufgaben anlegen und verwalten.</p><button class="btn primary" data-act="open-tutorial" data-tour="tasks">Sektoraufgaben-Tutorial</button></div>
@@ -74,7 +68,7 @@
 <div class="card"><h2>Quests</h2><p class="muted">Persönliche Aufgaben verwalten.</p><button class="btn purple" data-act="open-tutorial" data-tour="quests">Quest-Tutorial</button></div>
 <div class="card"><h2>Daueraufträge</h2><p class="muted">Wiederkehrende Aufgaben einrichten.</p><button class="btn primary" data-act="open-tutorial" data-tour="recurring">Daueraufträge-Tutorial</button></div>
 <div class="card"><h2>Aktivitäten</h2><p class="muted">Favoriten und Aktivitätslog.</p><button class="btn primary" data-act="open-tutorial" data-tour="activities">Aktivitäten-Tutorial</button></div>
-<div class="card"><h2>Fortschritt</h2><p class="muted">XP-, Abschluss- und Löschprotokolle.</p><button class="btn primary" data-act="open-tutorial" data-tour="progress">Fortschritt-Tutorial</button></div>
+
 <div class="card"><h2>Ränge</h2><p class="muted">Rangstufen und XP-Grenzen.</p><button class="btn primary" data-act="open-tutorial" data-tour="ranks">Ränge-Tutorial</button></div>
 <div class="card"><h2>Leaderboard</h2><p class="muted">Zeitbereiche und Rangliste.</p><button class="btn primary" data-act="open-tutorial" data-tour="leaderboard">Leaderboard-Tutorial</button></div>
 <div class="card"><h2>Elternmodus</h2><p class="muted">Vertrauen, Eltern-Quests und Effekte.</p><button class="btn purple" data-act="open-tutorial" data-tour="parents">Elternmodus-Tutorial</button></div>
@@ -85,7 +79,7 @@
 <div class="item"><div class="item-title">Konto löschen</div><div class="meta">Das vollständige Löschen eines Supabase-Kontos benötigt eine serverseitig abgesicherte Kontofunktion.</div></div>
 </div>
 
-<div class="card"><h2>Über GAP</h2><div class="meta">GAP 2.4 beta · Aufgaben-, Prüfungs- und Fortschrittsprotokoll</div><div class="actions"><button class="btn" data-page-jump="updates">Versionsverlauf öffnen</button></div></div>
+
 </section>
 <section id="dashboard" class="page active">
 <div class="grid"><div class="card"><div class="muted">RANG</div><div class="stat" id="dashRank">Kadett</div></div><div class="card"><div class="muted">XP</div><div class="stat" id="dashXP">0</div><div class="progress"><div id="dashBar" class="progress-bar"></div></div><div id="dashNext" class="meta"></div></div><div class="card"><div class="muted">XP-MODIFIKATOR</div><div class="stat" id="dashModifier">100%</div><div id="dashModifierInfo" class="meta"></div></div><div class="card"><div class="muted">OFFENE AUFGABEN HEUTE</div><div class="stat" id="dashToday">0</div></div></div>
@@ -722,7 +716,7 @@ const SETTINGS_KEY="gap_settings";
 const DEFAULT_SETTINGS={normalXP:10,largeXP:20,presentationXP:30,questXP:0,learningXP:10,recurringXP:10,taskReminder:true,examReminder:true,questReminder:true,reminderTime:"18:00",fontSize:"normal",animations:true,compact:false};
 function getSettings(){try{return {...DEFAULT_SETTINGS,...JSON.parse(localStorage.getItem(SETTINGS_KEY)||"{}")}}catch(e){return {...DEFAULT_SETTINGS}}}
 function saveSettings(s){localStorage.setItem(SETTINGS_KEY,JSON.stringify(s))}
-const NAV_LABELS={dashboard:["Dashboard","Übersicht"],tutorial:["Tutorial","Anleitung"],updates:["Updates","Änderungen"],tasks:["Sektoraufgaben","Aufgaben"],exams:["Sektorprüfungen","Prüfungen"],quests:["Quests","Persönliche Aufgaben"],recurring:["Daueraufträge","Wiederkehrende Aufgaben"],activities:["Aktivitäten","Aktivitäten"],progress:["Fortschritt","Statistiken"],ranks:["Ränge","Rangstufen"],leaderboard:["Leaderboard","Vergleich"],parents:["Elternmodus","Elternbereich"],settings:["Einstellungen","Einstellungen"]};
+const NAV_LABELS={dashboard:["Dashboard","Übersicht"],updates:["Updates","Änderungen"],tasks:["Sektoraufgaben","Aufgaben"],exams:["Sektorprüfungen","Prüfungen"],quests:["Quests","Persönliche Aufgaben"],recurring:["Daueraufträge","Wiederkehrende Aufgaben"],activities:["Aktivitäten","Aktivitäten"],progress:["Fortschritt","Statistiken"],ranks:["Ränge","Rangstufen"],leaderboard:["Leaderboard","Vergleich"],parents:["Elternmodus","Elternbereich"],settings:["Einstellungen","Einstellungen"]};
 function applyViewMode(){
  const serious=localStorage.getItem(SERIOUS_MODE_KEY)==="1";
  const light=localStorage.getItem(THEME_KEY)==="light";
