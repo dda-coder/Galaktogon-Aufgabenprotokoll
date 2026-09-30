@@ -344,7 +344,11 @@ function load(){
  let raw=null;
  try{raw=localStorage.getItem(KEY)}catch(e){console.warn("Lokaler Speicher konnte nicht gelesen werden:",e)}
  if(raw){try{return normalize(JSON.parse(raw))}catch(e){console.error(e)}}
- for(const k of OLD_KEYS){raw=localStorage.getItem(k);if(raw){try{const d=normalize(JSON.parse(raw));if(!d.fixed20){d.xp=Math.max(0,d.xp-20);d.xpLog.unshift({id:uid(),amount:-20,reason:"V7-Systemkorrektur: einmalig 20 XP entfernt",date:new Date().toISOString()});d.fixed20=true}localStorage.setItem(KEY,JSON.stringify(d));return d}catch(e){console.error(e)}}}
+ for(const k of OLD_KEYS){
+   raw=null;
+   try{raw=localStorage.getItem(k)}catch(e){console.warn("Lokaler Speicher konnte nicht gelesen werden:",e);break}
+   if(raw){try{const d=normalize(JSON.parse(raw));if(!d.fixed20){d.xp=Math.max(0,d.xp-20);d.xpLog.unshift({id:uid(),amount:-20,reason:"V7-Systemkorrektur: einmalig 20 XP entfernt",date:new Date().toISOString()});d.fixed20=true}localStorage.setItem(KEY,JSON.stringify(d));return d}catch(e){console.error(e)}}
+ }
  const d=fresh();d.fixed20=true;saveRaw(d);return d;
 }
 function saveRaw(d,ownerId=null){
