@@ -29,7 +29,7 @@
 <header>
 <div class="header-inner"><div><div class="logo" id="appLogo">GALAKTOGON AUFGABENPROTOKOLL</div><div class="version">GAP // 2.4 beta</div></div><div class="xp-mini"><div id="headerRank">Kadett</div><div id="headerXP">0 XP</div><button class="btn small" id="logoutBtn" style="margin-top:6px">Abmelden</button></div></div>
 <nav>
-<button data-page="dashboard">Dashboard</button><button data-page="tutorial">Tutorial</button><button data-page="updates">Updates</button><button data-page="tasks">Sektoraufgaben</button><button data-page="exams">Sektorprüfungen</button><button data-page="quests">Quests</button><button data-page="recurring">Daueraufträge</button><button data-page="activities">Aktivitäten</button><button data-page="progress">Fortschritt</button><button data-page="ranks">Ränge</button><button data-page="leaderboard">Leaderboard</button><button data-page="parents">Elternmodus</button><button data-page="settings">Einstellungen</button>
+<button data-page="dashboard">Dashboard</button><button data-page="updates">Updates</button><button data-page="tasks">Sektoraufgaben</button><button data-page="exams">Sektorprüfungen</button><button data-page="quests">Quests</button><button data-page="recurring">Daueraufträge</button><button data-page="activities">Aktivitäten</button><button data-page="progress">Fortschritt</button><button data-page="ranks">Ränge</button><button data-page="leaderboard">Leaderboard</button><button data-page="parents">Elternmodus</button><button data-page="settings">Einstellungen</button>
 </nav>
 </header>
 <main>
@@ -75,23 +75,7 @@
 <div class="item"><div class="item-title">Wochenbilanz und Leaderboard</div><div class="meta">Die Wochenbilanz und der XP-Vergleich bleiben über die entsprechenden Bereiche erreichbar.</div></div>
 </div>
 
-<div class="card"><h2>Datenschutz & Daten</h2>
-<div class="item"><div class="item-title">Online-Spielstand</div><div id="settingsSyncInfo" class="meta">Status wird geladen.</div><div class="actions"><button class="btn primary" id="syncNowBtn">Jetzt synchronisieren</button></div></div>
-<div class="item"><div class="item-title">Lokale Daten</div><div class="meta">Setzt den lokalen GAP-Spielstand dieses Geräts zurück. Online gespeicherte Daten werden dadurch nicht automatisch gelöscht.</div><div class="actions"><button class="btn danger" id="resetLocalDataBtn">Lokale Daten zurücksetzen</button></div></div>
-<div class="item"><div class="item-title">Konto löschen</div><div class="meta">Das vollständige Löschen eines Supabase-Kontos benötigt eine serverseitig abgesicherte Kontofunktion.</div></div>
-</div>
-
-<div class="card"><h2>Über GAP</h2><div class="meta">GAP 2.4 beta · Aufgaben-, Prüfungs- und Fortschrittsprotokoll</div><div class="actions"><button class="btn" data-page-jump="updates">Versionsverlauf öffnen</button><button class="btn" data-page-jump="tutorial">Tutorial öffnen</button></div></div>
-</section>
-<section id="dashboard" class="page active">
-<div class="grid"><div class="card"><div class="muted">RANG</div><div class="stat" id="dashRank">Kadett</div></div><div class="card"><div class="muted">XP</div><div class="stat" id="dashXP">0</div><div class="progress"><div id="dashBar" class="progress-bar"></div></div><div id="dashNext" class="meta"></div></div><div class="card"><div class="muted">XP-MODIFIKATOR</div><div class="stat" id="dashModifier">100%</div><div id="dashModifierInfo" class="meta"></div></div><div class="card"><div class="muted">OFFENE AUFGABEN HEUTE</div><div class="stat" id="dashToday">0</div></div></div>
-<div class="card"><h2>Aktive Buffs & Debuffs</h2><div id="dashboardEffects"></div></div>
-<div class="card"><h2>Heutige Mission</h2><div id="dashboardToday"></div></div>
-<div class="card"><h2>Offene Quests</h2><div id="dashboardQuests"></div></div>
-<div class="card"><h2>Nächste Prüfungen</h2><div id="dashboardExams"></div></div>
-</section>
-
-<section id="tutorial" class="page">
+<div class="card"><h2>Tutorial</h2><p class="muted">Alle interaktiven Tutorials und das Gesamttutorial befinden sich jetzt direkt in den Einstellungen.</p>
 <div class="card"><h2>Gesamtes Tutorial</h2><p class="muted">Das Gesamttutorial führt dich durch alle wichtigen Bereiche von GAP und zählt deinen Gesamtfortschritt.</p><div id="overallTutorialStatus" class="meta"></div><div class="actions"><button class="btn primary" data-act="open-overall-tutorial">Gesamttutorial starten</button></div></div><div class="card"><h2>GALAKTOGON-Tutorials</h2><p class="muted">Jede Seite hat ihr eigenes interaktives Tutorial. Wähle nur den Bereich aus, den du erklärt bekommen möchtest.</p></div>
 <div class="grid">
 <div class="card"><h2>Dashboard</h2><p class="muted">Rang, XP, Modifikator und Tagesübersicht.</p><button class="btn primary" data-act="open-tutorial" data-tour="dashboard">Dashboard-Tutorial</button></div>
@@ -105,7 +89,23 @@
 <div class="card"><h2>Leaderboard</h2><p class="muted">Zeitbereiche und Rangliste.</p><button class="btn primary" data-act="open-tutorial" data-tour="leaderboard">Leaderboard-Tutorial</button></div>
 <div class="card"><h2>Elternmodus</h2><p class="muted">Vertrauen, Eltern-Quests und Effekte.</p><button class="btn purple" data-act="open-tutorial" data-tour="parents">Elternmodus-Tutorial</button></div>
 </div>
+</div>\n\n<div class="card"><h2>Datenschutz & Daten</h2>
+<div class="item"><div class="item-title">Online-Spielstand</div><div id="settingsSyncInfo" class="meta">Status wird geladen.</div><div class="actions"><button class="btn primary" id="syncNowBtn">Jetzt synchronisieren</button></div></div>
+<div class="item"><div class="item-title">Lokale Daten</div><div class="meta">Setzt den lokalen GAP-Spielstand dieses Geräts zurück. Online gespeicherte Daten werden dadurch nicht automatisch gelöscht.</div><div class="actions"><button class="btn danger" id="resetLocalDataBtn">Lokale Daten zurücksetzen</button></div></div>
+<div class="item"><div class="item-title">Konto löschen</div><div class="meta">Das vollständige Löschen eines Supabase-Kontos benötigt eine serverseitig abgesicherte Kontofunktion.</div></div>
+</div>
+
+<div class="card"><h2>Über GAP</h2><div class="meta">GAP 2.4 beta · Aufgaben-, Prüfungs- und Fortschrittsprotokoll</div><div class="actions"><button class="btn" data-page-jump="updates">Versionsverlauf öffnen</button><button class="btn" data-page-jump="tutorial">Tutorial öffnen</button></div></div>
 </section>
+<section id="dashboard" class="page active">
+<div class="grid"><div class="card"><div class="muted">RANG</div><div class="stat" id="dashRank">Kadett</div></div><div class="card"><div class="muted">XP</div><div class="stat" id="dashXP">0</div><div class="progress"><div id="dashBar" class="progress-bar"></div></div><div id="dashNext" class="meta"></div></div><div class="card"><div class="muted">XP-MODIFIKATOR</div><div class="stat" id="dashModifier">100%</div><div id="dashModifierInfo" class="meta"></div></div><div class="card"><div class="muted">OFFENE AUFGABEN HEUTE</div><div class="stat" id="dashToday">0</div></div></div>
+<div class="card"><h2>Aktive Buffs & Debuffs</h2><div id="dashboardEffects"></div></div>
+<div class="card"><h2>Heutige Mission</h2><div id="dashboardToday"></div></div>
+<div class="card"><h2>Offene Quests</h2><div id="dashboardQuests"></div></div>
+<div class="card"><h2>Nächste Prüfungen</h2><div id="dashboardExams"></div></div>
+<div class="card"><h2>Protokolle</h2><p class="muted">Alle wichtigen Logs sind hier gesammelt.</p><div class="item"><div class="item-title">Aktivitätslog</div><div id="activityLog"></div></div><div class="item"><div class="item-title">Buff- & Debuff-Protokoll</div><div id="effectLog"></div></div><div class="item"><div class="item-title">XP-Protokoll</div><div id="xpLog"></div></div><div class="item"><div class="item-title">Erledigte Aufgaben & Quests</div><div id="completionLog"></div></div><div class="item"><div class="item-title">Gelöschte Einträge</div><div id="deleteLog"></div></div></div></section>
+
+
 <section id="tasks" class="page">
 <div class="card"><h2>Neue Sektoraufgabe</h2><form id="taskForm"><input id="taskTitle" placeholder="Aufgabe" required><div class="form-grid"><input id="taskSubject" placeholder="Fach"><input id="taskDue" type="datetime-local"><input id="taskLatePenalty" type="number" min="0" max="100" value="0" placeholder="Verspätungs-Debuff (%)" title="XP-Abzug bei verspäteter Erledigung"><select id="taskType"><option value="normal">Normale Aufgabe (+10 XP)</option><option value="vocabulary">Vokabeln (+10 XP)</option><option value="large">Große Aufgabe (+20 XP)</option><option value="presentation">Präsentation (+30 XP)</option><option value="learning">Lernen (+10 XP)</option></select></div><textarea id="taskNote" placeholder="Notiz"></textarea><button class="btn primary">Sektoraufgabe hinzufügen</button></form></div>
 <div class="card"><h2>Offene Sektoraufgaben</h2><div id="taskList"></div></div>
@@ -134,10 +134,10 @@
 <section id="ranks" class="page"><div class="card"><h2>Alle Ränge</h2><p class="muted">Hier siehst du alle Rangstufen und die exakt benötigte XP-Grenze.</p><div id="rankList"></div></div></section><section id="leaderboard" class="page"><div class="card"><h2>Leaderboard</h2><p class="muted">Vergleicht die gespeicherte XP-Leistung der GAP-Accounts.</p><div class="actions"><button class="btn primary" data-period="day">Tag</button><button class="btn" data-period="week">Woche</button><button class="btn" data-period="month">Monat</button><button class="btn" data-period="all">Immer</button></div><div id="leaderboardList" style="margin-top:12px"></div></div></section><section id="progress" class="page">
 <div class="card"><h2>Gesamttutorial</h2><div id="tutorialProgress"></div><div class="progress"><div id="tutorialBar" class="progress-bar"></div></div><div id="tutorialProgressMeta" class="meta"></div><div class="actions"><button class="btn primary" data-act="open-overall-tutorial">Gesamttutorial öffnen</button></div></div>
 <div class="card"><h2>XP & Rang</h2><div id="progressRank"></div><div class="progress"><div id="progressBar" class="progress-bar"></div></div><div id="progressNext" class="meta"></div></div>
-<div class="card"><h2>Buff- & Debuff-Protokoll</h2><div id="effectLog"></div></div>
-<div class="card"><h2>XP-Protokoll</h2><div id="xpLog"></div></div>
-<div class="card"><h2>Erledigte Aufgaben & Quests</h2><div id="completionLog"></div></div>
-<div class="card"><h2>Gelöschte Einträge</h2><div id="deleteLog"></div></div>
+
+
+
+
 </section>
 
 <section id="parents" class="page">
