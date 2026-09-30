@@ -16,9 +16,9 @@
 .tour-target{position:relative!important;z-index:1002!important;outline:3px solid var(--accent)!important;box-shadow:0 0 0 5px rgba(105,184,255,.22),0 0 28px rgba(105,184,255,.55)!important;border-radius:10px}
 .tour-card{position:fixed;z-index:1004;width:min(390px,calc(100vw - 24px));background:var(--panel);border:1px solid var(--accent);border-radius:12px;padding:16px;box-shadow:0 12px 45px rgba(0,0,0,.55)}
 .tour-card h2{margin:0 0 8px}.tour-card p{margin:0;line-height:1.45}.tour-progress{color:var(--muted);font-size:12px;margin-bottom:8px}.tour-actions{display:flex;gap:7px;justify-content:space-between;margin-top:14px;flex-wrap:wrap}
-</style>
+.serious-mode{--bg:#f4f6f8;--panel:#ffffff;--panel2:#eef1f4;--line:#d2d8de;--text:#1f2933;--muted:#66717d;--accent:#2563eb;--green:#198754;--yellow:#b7791f;--red:#c53030;--purple:#6b46c1}.serious-mode header{background:#fff}.serious-mode input,.serious-mode select,.serious-mode textarea{background:#fff;color:#1f2933}.serious-mode .progress{background:#dfe4e8}.serious-mode .day,.serious-mode .favorite-btn{background:#f8fafb}.serious-mode .logo{letter-spacing:0}.serious-mode nav button{background:#eef1f4;color:#1f2933}.serious-mode nav button.active{background:#2563eb;color:#fff}.serious-mode .btn{background:#e2e7eb;color:#1f2933}.serious-mode .btn.primary{background:#2563eb;color:#fff}.serious-mode .btn.success{background:#198754;color:#fff}.serious-mode .btn.warning{background:#b7791f;color:#fff}.serious-mode .btn.danger{background:#c53030;color:#fff}.serious-mode .btn.purple{background:#6b46c1;color:#fff}</style>
 </head>
-<body>
+<body id="appBody">
 <div id="authScreen" style="position:fixed;inset:0;background:#0f151c;color:#f3f6f9;z-index:999;display:flex;align-items:center;justify-content:center;padding:18px">
 <div class="card" style="width:min(440px,100%);margin:0"><div class="logo">GALAKTOGON</div><div class="version" style="margin-bottom:18px">ONLINE-KONTO // V9</div>
 <div id="authLogin"><h2>Anmelden</h2><p class="muted">Dein GALAKTOGON-Spielstand wird online gespeichert und ist auf Handy, iPad und Laptop verfügbar.</p><form id="loginForm"><input id="loginName" placeholder="Benutzername" autocomplete="username" required><input id="loginPassword" type="password" placeholder="Passwort" autocomplete="current-password" required><button class="btn primary">Anmelden</button></form><p class="small muted">Noch kein Konto? <button class="btn" type="button" id="showSignup">Konto erstellen</button></p></div>
@@ -26,14 +26,22 @@
 <div id="authMessage" class="small" style="margin-top:10px"></div></div></div>
 
 <header>
-<div class="header-inner"><div><div class="logo">GALAKTOGON AUFGABENPROTOKOLL</div><div class="version">GAP // 2.4 beta</div></div><div class="xp-mini"><div id="headerRank">Kadett</div><div id="headerXP">0 XP</div><button class="btn small" id="logoutBtn" style="margin-top:6px">Abmelden</button></div></div>
+<div class="header-inner"><div><div class="logo" id="appLogo">GALAKTOGON AUFGABENPROTOKOLL</div><div class="version">GAP // 2.4 beta</div></div><div class="xp-mini"><div id="headerRank">Kadett</div><div id="headerXP">0 XP</div><button class="btn small" id="logoutBtn" style="margin-top:6px">Abmelden</button></div></div>
 <nav>
-<button data-page="dashboard">Dashboard</button><button data-page="tutorial">Tutorial</button><button data-page="updates">Updates</button><button data-page="tasks">Sektoraufgaben</button><button data-page="exams">Sektorprüfungen</button><button data-page="quests">Quests</button><button data-page="recurring">Daueraufträge</button><button data-page="activities">Aktivitäten</button><button data-page="progress">Fortschritt</button><button data-page="ranks">Ränge</button><button data-page="leaderboard">Leaderboard</button><button data-page="parents">Elternmodus</button>
+<button data-page="dashboard">Dashboard</button><button data-page="tutorial">Tutorial</button><button data-page="updates">Updates</button><button data-page="tasks">Sektoraufgaben</button><button data-page="exams">Sektorprüfungen</button><button data-page="quests">Quests</button><button data-page="recurring">Daueraufträge</button><button data-page="activities">Aktivitäten</button><button data-page="progress">Fortschritt</button><button data-page="ranks">Ränge</button><button data-page="leaderboard">Leaderboard</button><button data-page="parents">Elternmodus</button><button data-page="settings">Einstellungen</button>
 </nav>
 </header>
 <main>
 <section id="updates" class="page"><div class="card"><h2>GAP-Updates</h2><p class="muted">Hier werden die bisher veröffentlichten und die geplanten Updates von GAP gesammelt. Entfernte oder zurückgerollte Funktionen werden nicht als aktuelle Updates aufgeführt.</p><h3>Bereits umgesetzt</h3><div id="updateListDone"></div></div><div class="card"><h2>Zukünftige Updates</h2><div id="updateListFuture"></div></div></section>
 
+<section id="settings" class="page">
+<div class="card"><h2>Einstellungen</h2><p class="muted">Passe Darstellung und Verhalten von GAP an.</p>
+<div class="item"><div class="item-title">Darstellung</div><div class="meta">Wähle zwischen der GALAKTOGON-Ansicht und einer neutralen, seriösen Ansicht.</div><div class="actions"><button class="btn" id="seriousModeBtn">Seriöse Ansicht aktivieren</button></div><div id="viewModeStatus" class="meta"></div></div>
+<div class="item"><div class="item-title">Konto</div><div class="meta">Angemeldetes Konto verwalten.</div><div class="actions"><button class="btn" id="settingsLogoutBtn">Abmelden</button></div></div>
+<div class="item"><div class="item-title">Tutorial</div><div class="meta">Das Gesamttutorial kann jederzeit erneut gestartet werden.</div><div class="actions"><button class="btn primary" data-act="open-overall-tutorial">Gesamttutorial starten</button></div></div>
+</div>
+<div class="card"><h2>Über GAP</h2><p class="muted">GAP ist ein Aufgaben-, Prüfungs- und Fortschrittsprotokoll. Die neutrale Ansicht verwendet sachliche Begriffe und verzichtet auf die GALAKTOGON-Bezeichnungen.</p><div class="meta">Version GAP 2.4 beta</div></div>
+</section>
 <section id="dashboard" class="page active">
 <div class="grid"><div class="card"><div class="muted">RANG</div><div class="stat" id="dashRank">Kadett</div></div><div class="card"><div class="muted">XP</div><div class="stat" id="dashXP">0</div><div class="progress"><div id="dashBar" class="progress-bar"></div></div><div id="dashNext" class="meta"></div></div><div class="card"><div class="muted">XP-MODIFIKATOR</div><div class="stat" id="dashModifier">100%</div><div id="dashModifierInfo" class="meta"></div></div><div class="card"><div class="muted">OFFENE AUFGABEN HEUTE</div><div class="stat" id="dashToday">0</div></div></div>
 <div class="card"><h2>Aktive Buffs & Debuffs</h2><div id="dashboardEffects"></div></div>
@@ -496,6 +504,19 @@ const GAP_UPDATES_FUTURE=[
 ["2 · Weitere Verbesserungen","Neue Wünsche und Verbesserungen werden hier ergänzt, sobald sie festgelegt sind."]
 ];
 function renderUpdates(){const done=el("updateListDone"),future=el("updateListFuture");if(done)done.innerHTML=GAP_UPDATES_DONE.map(x=>'<div class="item"><div class="item-title">'+esc(x[0])+'</div><div class="meta">'+esc(x[1])+'</div></div>').join("");if(future)future.innerHTML=GAP_UPDATES_FUTURE.map(x=>'<div class="item"><div class="item-title">'+esc(x[0])+'</div><div class="meta">'+esc(x[1])+'</div></div>').join("")}
+const SERIOUS_MODE_KEY="gap_serious_mode";
+const NAV_LABELS={
+dashboard:["Dashboard","Übersicht"],tutorial:["Tutorial","Anleitung"],updates:["Updates","Änderungen"],tasks:["Sektoraufgaben","Aufgaben"],exams:["Sektorprüfungen","Prüfungen"],quests:["Quests","Persönliche Aufgaben"],recurring:["Daueraufträge","Wiederkehrende Aufgaben"],activities:["Aktivitäten","Aktivitäten"],progress:["Fortschritt","Statistiken"],ranks:["Ränge","Rangstufen"],leaderboard:["Leaderboard","Vergleich"],parents:["Elternmodus","Elternbereich"],settings:["Einstellungen","Einstellungen"]
+};
+function applyViewMode(){
+ const serious=localStorage.getItem(SERIOUS_MODE_KEY)==="1";
+ document.body.classList.toggle("serious-mode",serious);
+ const logo=el("appLogo"); if(logo) logo.textContent=serious?"GAP Aufgabenverwaltung":"GALAKTOGON AUFGABENPROTOKOLL";
+ document.querySelectorAll("nav button[data-page]").forEach(b=>{const k=b.dataset.page;if(NAV_LABELS[k])b.textContent=serious?NAV_LABELS[k][1]:NAV_LABELS[k][0]});
+ const status=el("viewModeStatus");if(status)status.textContent=serious?"Aktiv: seriöse Ansicht":"Aktiv: GALAKTOGON-Ansicht";
+ const btn=el("seriousModeBtn");if(btn)btn.textContent=serious?"GALAKTOGON-Ansicht aktivieren":"Seriöse Ansicht aktivieren";
+}
+function toggleSeriousMode(){localStorage.setItem(SERIOUS_MODE_KEY,localStorage.getItem(SERIOUS_MODE_KEY)==="1"?"0":"1");applyViewMode()}
 function setupForms(){
  el("taskForm").addEventListener("submit",e=>{e.preventDefault();db.tasks.push({id:uid(),title:el("taskTitle").value.trim(),subject:el("taskSubject").value.trim(),due:el("taskDue").value,latePenalty:Math.max(0,Math.min(100,Number(el("taskLatePenalty").value)||0)),type:el("taskType").value,note:el("taskNote").value.trim()});e.target.reset();save();renderAll()});
  el("examForm").addEventListener("submit",e=>{e.preventDefault();db.exams.push({id:uid(),subject:el("examSubject").value.trim(),title:el("examTitle").value.trim(),date:el("examDate").value,size:el("examSize").value,target:Number(el("examTarget").value)});e.target.reset();el("examTarget").value="2";save();renderAll()});
@@ -507,7 +528,7 @@ el("buffForm").addEventListener("submit",e=>{e.preventDefault();const kind=el("b
 el("recurringForm").addEventListener("submit",e=>{e.preventDefault();const days=[...document.querySelectorAll("#weekdayInputs input:checked")].map(x=>Number(x.value));if(!days.length){alert("Bitte mindestens einen Wochentag auswählen.");return}db.recurring.push({id:uid(),title:el("recurringTitle").value.trim(),subject:el("recurringSubject").value.trim(),due:el("recurringDue").value,latePenalty:Math.max(0,Math.min(100,Number(el("recurringLatePenalty").value)||0)),xp:Number(el("recurringXP").value)||0,days,doneDates:[],active:true});e.target.reset();renderAll()});
 }
 function setupDays(){document.getElementById("weekdayInputs").innerHTML=DAYS.map((d,i)=>`<label class="day"><input type="checkbox" value="${i}" ${i>0&&i<6?"checked":""}>${d}</label>`).join("")}
-setupDays();decorateFields();setupForms();renderUpdates();bootAuth();
+setupDays();decorateFields();setupForms();renderUpdates();applyViewMode();if(el("seriousModeBtn"))el("seriousModeBtn").addEventListener("click",toggleSeriousMode);if(el("settingsLogoutBtn"))el("settingsLogoutBtn").addEventListener("click",()=>el("logoutBtn").click());bootAuth();
 </script>
 </body>
 </html>
