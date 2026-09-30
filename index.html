@@ -40,6 +40,11 @@
 
 </div>
 
+<div class="card" id="parentLinkSettings" style="display:none"><h2>Kinderkonto verknüpfen</h2>
+<p class="muted">Verknüpfe hier ein Kinderkonto mit dem Elternkonto. Der Verknüpfungscode wird vom Kinderkonto bereitgestellt.</p>
+<form id="parentLinkForm"><div class="form-grid"><input id="parentLinkCode" placeholder="Verknüpfungscode" maxlength="8" autocomplete="off"><button class="btn primary">Kinderkonto verknüpfen</button></div></form>
+<div id="parentLinkStatus" class="meta"></div>
+</div>
 <div class="card"><h2>Konto</h2>
 <div class="item"><div class="item-title">Benutzerkonto</div><div id="settingsAccountInfo" class="meta">Angemeldetes Konto</div><div id="settingsPairingInfo" class="meta"></div><div class="actions"><button class="btn" id="copyPairingBtn">Verknüpfungscode kopieren</button><button class="btn" id="settingsLogoutBtn">Abmelden</button></div></div>
 <div class="item"><div class="item-title">Passwort</div><div class="meta">Das Passwort kann über die Kontofunktionen geändert werden.</div><div class="actions"><button class="btn" id="settingsPasswordBtn">Passwort ändern</button></div></div>
@@ -138,12 +143,20 @@
 <section id="parents" class="page">
 <div class="card"><h2>Elternbereich</h2>
 <p class="muted">Das Elternkonto ist vom Kinderkonto getrennt. Zuerst ein Kinderkonto mit seinem Verknüpfungscode verbinden.</p>
-<form id="parentLinkForm"><div class="form-grid"><input id="parentLinkCode" placeholder="Verknüpfungscode" maxlength="8" autocomplete="off"><button class="btn primary">Kinderkonto verknüpfen</button></div></form>
-<div id="parentLinkStatus" class="meta"></div>
+
 </div>
 <div class="card"><h2>Aktives Kinderkonto</h2>
 <div class="item"><div class="item-title">Kinderkonto auswählen</div><div class="actions"><select id="parentChildSelect"></select></div></div>
 <div id="parentChildInfo"></div>
+<div id="parentManagementArea">
+<div class="card"><h3>Fortschritt</h3><div id="parentProgress"></div></div>
+<div class="card"><h3>Offene Sektoraufgaben</h3><div id="parentTaskList"></div></div>
+<div class="card"><h3>Offene Sektorprüfungen</h3><div id="parentExamList"></div></div>
+<div class="card"><h3>Offene Quests</h3><div id="parentQuestList"></div></div>
+<div class="card"><h3>Aktivitäten</h3><div id="parentActivityLog"></div></div>
+<div class="card"><h3>Erledigungen & Fortschrittsprotokoll</h3><div id="parentCompletionLog"></div></div>
+<div class="card"><h3>XP-Protokoll</h3><div id="parentXPLog"></div></div>
+</div>
 </div>
 <div class="card"><h2>Eltern-Tutorial</h2>
 <p class="muted">Der Rundgang erklärt den getrennten Elternbereich und seine Verwaltungsfunktionen.</p>
@@ -279,6 +292,7 @@ function applyAccountView(){
     const allowed=parent?["parents","settings"].includes(b.dataset.page):b.dataset.page!=="parents";
     b.style.display=allowed?"":"none";
   });
+  const linkBox=el("parentLinkSettings");if(linkBox)linkBox.style.display=parent?"block":"none";
 }
 async function selectParentChild(childId){
   if(currentAccountType!=="parent")return;
@@ -468,7 +482,9 @@ let leaderboardPeriod="week";
 async function renderLeaderboard(){const box=document.getElementById("leaderboardList");if(!supabaseClient||!currentUser){box.innerHTML="<div class=\"empty\">Leaderboard erst nach Anmeldung verfügbar.</div>";return}box.innerHTML="<div class=\"muted\">Lade Leaderboard…</div>";const {data,error}=await supabaseClient.from("gap_leaderboard_public").select("username,day_xp,week_xp,month_xp,all_xp").order(leaderboardPeriod+"_xp",{ascending:false}).limit(50);if(error){box.innerHTML="<div class=\"empty\">Leaderboard konnte nicht geladen werden.</div>";console.error(error);return}const key=leaderboardPeriod+"_xp";box.innerHTML=data.length?data.map((x,i)=>"<div class=\"item\"><strong>#"+(i+1)+" · "+esc(x.username)+"</strong><div class=\"meta\">"+Number(x[key]||0).toLocaleString("de-DE")+" XP · "+leaderboardPeriodLabel(leaderboardPeriod)+"</div></div>").join(""):"<div class=\"empty\">Noch keine Accounts im Leaderboard.</div>"}
 function leaderboardPeriodLabel(p){return p==="day"?"heute":p==="week"?"diese Woche":p==="month"?"diesen Monat":"insgesamt"}
 function renderParents(){
-  if(currentAccountType!=="parent")return;
+  const parent=currentAccountType==="parent";
+  const linkBox=el("parentLinkSettings");if(linkBox)linkBox.style.display=parent?"block":"none";
+  if(!parent)return;
   const select=el("parentChildSelect");
   if(select){
     select.innerHTML=linkedChildren.length?linkedChildren.map(x=>'<option value="'+esc(x.user_id)+'">'+esc(x.username)+'</option>').join(""):'<option value="">Noch kein Kinderkonto verknüpft</option>';
@@ -477,26 +493,26 @@ function renderParents(){
   }
   const linked=Boolean(activeChildId);
   const info=el("parentChildInfo");
-  if(!info)return;
+  const area=el("parentManagementArea");
+  if(area)area.style.display=linked?"block":"none";
   if(!linked){
-    info.innerHTML='<div class="empty">Noch kein Kinderkonto ausgewählt. Ein Kinderkonto kann über den Verknüpfungscode hinzugefügt werden.</div>';
+    if(info)info.innerHTML='<div class="empty">Noch kein Kinderkonto ausgewählt. Die Verknüpfung erfolgt jetzt über Einstellungen.</div>';
     return;
   }
   const r=rank(),n=nextRank(),pct=n?Math.max(0,Math.min(100,(db.xp-r.x)/(n.x-r.x)*100)):100;
-  const recentActivities=(db.activityLog||[]).slice(0,10).map(l=>'<div class="log"><strong>'+esc(l.title)+'</strong> · +'+Number(l.earned||0)+' XP<div class="small muted">'+new Date(l.date).toLocaleString("de-DE")+'</div></div>').join("")||'<div class="empty">Noch keine Aktivitäten.</div>';
-  const completions=(db.completionLog||[]).slice(0,15).map(l=>'<div class="log"><strong>'+esc(l.title)+'</strong> · +'+Number(l.earned||0)+' XP<div class="small muted">'+esc(l.type||"")+' · '+new Date(l.date).toLocaleString("de-DE")+'</div></div>').join("")||'<div class="empty">Noch keine Erledigungen.</div>';
-  info.innerHTML=
-    '<div class="item"><strong>'+esc(activeChildUsername)+'</strong><div class="meta">'+Number(db.xp||0).toLocaleString("de-DE")+' XP · Rang '+esc(r.n)+' · '+Math.round(modifier()*100)+'% XP-Modifikator</div><div class="progress"><div class="progress-bar" style="width:'+pct+'%"></div></div><div class="meta">'+(n?(n.x-db.xp)+' XP bis '+esc(n.n):'Maximaler Rang')+'</div></div>'+
-    '<div class="card"><h3>Offene Sektoraufgaben</h3><div id="parentTaskList">'+db.tasks.map(taskHTML).join("")||'<div class="empty">Keine offenen Sektoraufgaben.</div>'+'</div></div>'+
-    '<div class="card"><h3>Offene Sektorprüfungen</h3><div id="parentExamList">'+db.exams.slice().sort((a,b)=>(a.date||"").localeCompare(b.date||"")).map(examHTML).join("")||'<div class="empty">Keine offenen Sektorprüfungen.</div>'+'</div></div>'+
-    '<div class="card"><h3>Offene Quests</h3><div id="parentQuestList">'+db.quests.map(questHTML).join("")||'<div class="empty">Keine offenen Quests.</div>'+'</div></div>'+
-    '<div class="card"><h3>Was das Kind zuletzt gemacht hat</h3>'+recentActivities+'</div>'+
-    '<div class="card"><h3>Erledigungen</h3>'+completions+'</div>';
+  if(info)info.innerHTML='<div class="item"><strong>'+esc(activeChildUsername)+'</strong><div class="meta">'+Number(db.xp||0).toLocaleString("de-DE")+' XP · Rang '+esc(r.n)+' · '+Math.round(modifier()*100)+'% XP-Modifikator</div></div>';
+  const pp=el("parentProgress");
+  if(pp)pp.innerHTML='<div class="stat">'+Number(db.xp||0).toLocaleString("de-DE")+' XP</div><div class="meta">Rang: '+esc(r.n)+' · Offene Aufgaben: '+db.tasks.length+' · Prüfungen: '+db.exams.length+' · Quests: '+db.quests.length+'</div><div class="progress"><div class="progress-bar" style="width:'+pct+'%"></div></div><div class="meta">'+(n?(n.x-db.xp)+' XP bis '+esc(n.n):'Maximaler Rang')+'</div>';
+  const pt=el("parentTaskList");if(pt)pt.innerHTML=db.tasks.map(taskHTML).join("")||'<div class="empty">Keine offenen Sektoraufgaben.</div>';
+  const pe=el("parentExamList");if(pe)pe.innerHTML=db.exams.slice().sort((a,b)=>(a.date||"").localeCompare(b.date||"")).map(examHTML).join("")||'<div class="empty">Keine offenen Sektorprüfungen.</div>';
+  const pq=el("parentQuestList");if(pq)pq.innerHTML=db.quests.map(questHTML).join("")||'<div class="empty">Keine offenen Quests.</div>';
+  const pa=el("parentActivityLog");if(pa)pa.innerHTML=(db.activityLog||[]).slice(0,15).map(l=>'<div class="log"><strong>'+esc(l.title)+'</strong> · +'+Number(l.earned||0)+' XP<div class="small muted">'+new Date(l.date).toLocaleString("de-DE")+'</div></div>').join("")||'<div class="empty">Noch keine Aktivitäten.</div>';
+  const pc=el("parentCompletionLog");if(pc)pc.innerHTML=(db.completionLog||[]).slice(0,20).map(l=>'<div class="log"><strong>'+esc(l.title)+'</strong> · +'+Number(l.earned||0)+' XP<div class="small muted">'+esc(l.type||"")+' · '+new Date(l.date).toLocaleString("de-DE")+'</div></div>').join("")||'<div class="empty">Noch keine Erledigungen.</div>';
+  const px=el("parentXPLog");if(px)px.innerHTML=(db.xpLog||[]).slice(0,20).map(l=>'<div class="log"><strong>'+Number(l.amount||0)+' XP</strong> · '+esc(l.reason||"")+'<div class="small muted">'+new Date(l.date).toLocaleString("de-DE")+'</div></div>').join("")||'<div class="empty">Noch kein XP-Protokoll.</div>';
   ["trustForm","parentQuestForm","buffForm"].forEach(id=>{const x=el(id);if(x)x.style.display="grid"});
-  const tw=trustWeeklyModifier(),trust=el("trustStatus");
-  if(trust)trust.value=db.trust;
-  const ti=el("trustInfo");if(ti)ti.innerHTML='<div class="item"><strong>Aktuelle Vertrauenswirkung: '+(tw>=0?"+":"")+tw+'% XP</strong><div class="meta">A: +20 % · B: +5 % · C: −5 % · D: −20 %</div></div>';
-  const pe=el("parentEffects");if(pe)pe.innerHTML=effectsHTML()||'<div class="empty">Keine aktiven Effekte.</div>';
+  const trust=el("trustStatus");if(trust)trust.value=db.trust;
+  const tw=trustWeeklyModifier(),ti=el("trustInfo");if(ti)ti.innerHTML='<div class="item"><strong>Aktuelle Vertrauenswirkung: '+(tw>=0?"+":"")+tw+'% XP</strong><div class="meta">A: +20 % · B: +5 % · C: −5 % · D: −20 %</div></div>';
+  const effects=el("parentEffects");if(effects)effects.innerHTML=effectsHTML()||'<div class="empty">Keine aktiven Effekte.</div>';
   const wr=el("weeklyReview");if(wr)wr.innerHTML=parentWeeklyReviewHTML();
 }
 function renderAll(){renderDashboard();renderTasks();renderExams();renderQuests();renderRecurring();renderActivities();renderProgress();renderParents();renderWeeklyReview();renderRanks();if(document.getElementById("leaderboard").classList.contains("active"))renderLeaderboard()}
