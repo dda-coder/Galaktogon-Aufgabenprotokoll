@@ -414,9 +414,22 @@ async function loadLinkedChildren(){
   if(!activeChildId||!linkedChildren.some(x=>x.user_id===activeChildId))activeChildId=linkedChildren[0].user_id;
 }
 async function setupParentSession(){
-  await loadLinkedChildren();
-  if(activeChildId)await loadChildOwner(activeChildId);
-  else db=normalize(fresh());
+  linkedChildren=[];activeChildId=null;activeChildUsername="";
+  try{
+    await loadLinkedChildren();
+  }catch(e){
+    console.error("GAP Elternkonto – Kinderkonten konnten nicht geladen werden:",e);
+  }
+  db=normalize(fresh());
+  if(activeChildId){
+    try{
+      const loaded=await loadChildOwner(activeChildId);
+      if(!loaded)db=normalize(fresh());
+    }catch(e){
+      console.error("GAP Elternkonto – Spielstand des Kinderkontos konnte nicht geladen werden:",e);
+      db=normalize(fresh());
+    }
+  }
 }
 function applyAccountView(){
   const parent=currentAccountType==="parent";
