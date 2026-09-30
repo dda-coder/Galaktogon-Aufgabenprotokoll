@@ -23,7 +23,7 @@
 <div id="authScreen" style="position:fixed;inset:0;background:#0f151c;color:#f3f6f9;z-index:999;display:flex;align-items:center;justify-content:center;padding:18px">
 <div class="card" style="width:min(440px,100%);margin:0"><div class="logo">GALAKTOGON</div><div class="version" style="margin-bottom:18px">ONLINE-KONTO // V9</div>
 <div id="authLogin"><h2>Anmelden</h2><p class="muted">Dein GALAKTOGON-Spielstand wird online gespeichert und ist auf Handy, iPad und Laptop verfügbar.</p><form id="loginForm"><input id="loginName" placeholder="Benutzername" autocomplete="username" required><input id="loginPassword" type="password" placeholder="Passwort" autocomplete="current-password" required><button class="btn primary">Anmelden</button></form><p class="small muted">Noch kein Konto? <button class="btn" type="button" id="showSignup">Konto erstellen</button></p></div>
-<div id="authSignup" style="display:none"><h2>Konto erstellen</h2><p class="muted">Du brauchst nur einen Benutzernamen und ein Passwort. Jeder Benutzer bekommt einen eigenen GALAKTOGON-Spielstand.</p><form id="signupForm"><input id="signupName" placeholder="Benutzername" autocomplete="username" minlength="3" maxlength="20" required><input id="signupPassword" type="password" placeholder="Passwort (mind. 6 Zeichen)" autocomplete="new-password" minlength="6" required><input id="signupPassword2" type="password" placeholder="Passwort wiederholen" autocomplete="new-password" minlength="6" required><button class="btn primary">Konto erstellen</button></form><p class="small muted">Bereits ein Konto? <button class="btn" type="button" id="showLogin">Zur Anmeldung</button></p></div>
+<div id="authSignup" style="display:none"><h2>Konto erstellen</h2><p class="muted">Du brauchst nur einen Benutzernamen und ein Passwort. Jeder Benutzer bekommt einen eigenen GALAKTOGON-Spielstand.</p><form id="signupForm"><input id="signupName" placeholder="Benutzername" autocomplete="username" minlength="3" maxlength="20" required><input id="signupPassword" type="password" placeholder="Passwort (mind. 6 Zeichen)" autocomplete="new-password" minlength="6" required><input id="signupPassword2" type="password" placeholder="Passwort wiederholen" autocomplete="new-password" minlength="6" required><select id="signupType" required><option value="child">Kinderkonto</option><option value="parent">Elternkonto</option></select><button class="btn primary">Konto erstellen</button></form><p class="small muted">Bereits ein Konto? <button class="btn" type="button" id="showLogin">Zur Anmeldung</button></p></div>
 <div id="authMessage" class="small" style="margin-top:10px"></div></div></div>
 
 <header>
@@ -41,7 +41,7 @@
 </div>
 
 <div class="card"><h2>Konto</h2>
-<div class="item"><div class="item-title">Benutzerkonto</div><div id="settingsAccountInfo" class="meta">Angemeldetes Konto</div><div class="actions"><button class="btn" id="settingsLogoutBtn">Abmelden</button></div></div>
+<div class="item"><div class="item-title">Benutzerkonto</div><div id="settingsAccountInfo" class="meta">Angemeldetes Konto</div><div id="settingsPairingInfo" class="meta"></div><div class="actions"><button class="btn" id="copyPairingBtn">Verknüpfungscode kopieren</button><button class="btn" id="settingsLogoutBtn">Abmelden</button></div></div>
 <div class="item"><div class="item-title">Passwort</div><div class="meta">Das Passwort kann über die Kontofunktionen geändert werden.</div><div class="actions"><button class="btn" id="settingsPasswordBtn">Passwort ändern</button></div></div>
 </div>
 
@@ -136,19 +136,25 @@
 </section>
 
 <section id="parents" class="page">
-<div class="card"><h2>Eltern-Tutorial</h2>
-<p class="muted">Starten Sie den interaktiven Rundgang, wenn Sie GAP zum ersten Mal nutzen. Er erklärt die Elternseite Schritt für Schritt.</p>
-<div class="actions"><button class="btn purple" data-act="open-parent-tutorial">Eltern-Tutorial starten</button></div>
-<hr>
-<h3>Kurz erklärt</h3>
-<p><strong>Vertrauensstatus:</strong> A bis D beeinflusst den XP-Modifikator. <strong>Eltern-Quests:</strong> Aufgaben können mit eigener XP-Belohnung vergeben werden. <strong>Buffs & Debuffs:</strong> zeitlich begrenzte Veränderungen für zukünftige XP-Vergaben. <strong>Fortschritt:</strong> Protokolle machen Änderungen nachvollziehbar.</p>
-<p class="small muted">Die Regeln sollten gemeinsam vereinbart werden. GAP ist ein Protokoll- und Motivationssystem, kein Ersatz für Gespräche.</p>
+<div class="card"><h2>Elternbereich</h2>
+<p class="muted">Das Elternkonto ist vom Kinderkonto getrennt. Zuerst ein Kinderkonto mit seinem Verknüpfungscode verbinden.</p>
+<form id="parentLinkForm"><div class="form-grid"><input id="parentLinkCode" placeholder="Verknüpfungscode" maxlength="8" autocomplete="off"><button class="btn primary">Kinderkonto verknüpfen</button></div></form>
+<div id="parentLinkStatus" class="meta"></div>
 </div>
-<div class="card"><h2>Wochenbilanz</h2><div id="weeklyReview"></div></div><div class="card"><h2>Elternmodus</h2><p class="muted">Hier können Vertrauensstatus, Eltern-Quests sowie zeitlich begrenzte Buffs und Debuffs verwaltet werden.</p><form id="trustForm"><select id="trustStatus"><option value="A">A – Vereinbarungen zuverlässig eingehalten</option><option value="B">B – meistens eingehalten</option><option value="C">C – mehrere Probleme</option><option value="D">D – Vereinbarung funktioniert aktuell nicht</option></select><button class="btn primary">Vertrauensstatus speichern</button></form><div id="trustInfo"></div></div>
+<div class="card"><h2>Aktives Kinderkonto</h2>
+<div class="item"><div class="item-title">Kinderkonto auswählen</div><div class="actions"><select id="parentChildSelect"></select></div></div>
+<div id="parentChildInfo"></div>
+</div>
+<div class="card"><h2>Eltern-Tutorial</h2>
+<p class="muted">Der Rundgang erklärt den getrennten Elternbereich und seine Verwaltungsfunktionen.</p>
+<div class="actions"><button class="btn purple" data-act="open-parent-tutorial">Eltern-Tutorial starten</button></div>
+</div>
+<div class="card"><h2>Wochenbilanz</h2><div id="weeklyReview"></div></div>
+<div class="card"><h2>Elternmodus</h2><p class="muted">Hier können Vertrauensstatus, Eltern-Quests sowie zeitlich begrenzte Buffs und Debuffs für das ausgewählte Kinderkonto verwaltet werden.</p><form id="trustForm"><select id="trustStatus"><option value="A">A – Vereinbarungen zuverlässig eingehalten</option><option value="B">B – meistens eingehalten</option><option value="C">C – mehrere Probleme</option><option value="D">D – Vereinbarung funktioniert aktuell nicht</option></select><button class="btn primary">Vertrauensstatus speichern</button></form><div id="trustInfo"></div></div>
 <div class="card"><h2>Eltern-Quest mit XP</h2><form id="parentQuestForm"><input id="parentQuestTitle" placeholder="z. B. Zimmer bis Samstag ordentlich halten" required><div class="form-grid"><input id="parentQuestDue" type="date"><input id="parentQuestLatePenalty" type="number" min="0" max="100" value="0" placeholder="Verspätungs-Debuff (%)" title="XP-Abzug bei verspäteter Erledigung"><input id="parentQuestXP" type="number" min="0" value="20" placeholder="XP"></div><textarea id="parentQuestNote" placeholder="Was soll gemacht werden?"></textarea><button class="btn purple">Eltern-Quest vergeben</button></form></div>
 <div class="card"><h2>Buff / Debuff vergeben</h2><p class="muted">Eltern können einen zeitlich begrenzten Buff oder Debuff für zukünftige XP-Vergaben vergeben.</p><form id="buffForm"><input id="buffName" placeholder="z. B. Sehr gute Klassenarbeit" required><div class="form-grid"><select id="buffKind"><option value="buff">Buff (+)</option><option value="debuff">Debuff (−)</option></select><input id="buffPercent" type="number" min="1" max="100" value="20" placeholder="Stärke %"><input id="buffUses" type="number" min="1" value="3" placeholder="Anzahl XP-Vergaben"></div><button class="btn success">Effekt aktivieren</button></form></div>
 <div class="card"><h2>Aktive Effekte</h2><div id="parentEffects"></div></div>
-</section>
+</section>>
 <div id="editModal" class="tour-overlay" aria-hidden="true"><div id="editCard" class="tour-card" style="top:50%;left:50%;transform:translate(-50%,-50%);width:min(440px,calc(100vw - 24px))"><div class="tour-progress" id="editModeLabel">EINTRAG BEARBEITEN</div><h2 id="editTitle">Eintrag bearbeiten</h2><form id="editForm"><div id="editFields"></div><div class="tour-actions"><button type="button" class="btn" id="editCancel">Abbrechen</button><button type="submit" class="btn primary">Speichern</button></div></form></div></div><div id="tourOverlay" class="tour-overlay" aria-hidden="true"><div id="tourCard" class="tour-card"><div id="tourProgress" class="tour-progress"></div><h2 id="tourTitle"></h2><p id="tourText"></p><div class="tour-actions"><button class="btn" id="tourSkip">Überspringen</button><div class="actions" style="margin:0"><button class="btn" id="tourBack">Zurück</button><button class="btn primary" id="tourNext">Weiter</button></div></div></div></div></main>
 <footer>GALAKTOGON // Haus-KI // V9</footer>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -195,35 +201,156 @@ function load(){
  for(const k of OLD_KEYS){raw=localStorage.getItem(k);if(raw){try{const d=normalize(JSON.parse(raw));if(!d.fixed20){d.xp=Math.max(0,d.xp-20);d.xpLog.unshift({id:uid(),amount:-20,reason:"V7-Systemkorrektur: einmalig 20 XP entfernt",date:new Date().toISOString()});d.fixed20=true}localStorage.setItem(KEY,JSON.stringify(d));return d}catch(e){console.error(e)}}}
  const d=fresh();d.fixed20=true;saveRaw(d);return d;
 }
-function saveRaw(d){localStorage.setItem(KEY,JSON.stringify(d))}
-let db=load();
-let currentUser=null;
-let currentUsername="";
-let saveTimer=null;
+function saveRaw(d,ownerId=null){localStorage.setItem(ownerId?(KEY+"_"+ownerId):KEY,JSON.stringify(d))}
+function userDataOwnerId(){return currentAccountType==="parent"?activeChildId:(currentUser?.id||null)}
 async function save(){
-  saveRaw(db);
-  if(!currentUser||!supabaseClient)return;
+  const ownerId=userDataOwnerId();
+  saveRaw(db,ownerId);
+  if(!ownerId||!currentUser||!supabaseClient)return;
   clearTimeout(saveTimer);
   saveTimer=setTimeout(async()=>{
-    const {error}=await supabaseClient.from("galaktogon_data").upsert({user_id:currentUser.id,username:currentUsername,data:db,updated_at:new Date().toISOString()});
-    const now=new Date();const day=periodXP("day"),week=periodXP("week"),month=periodXP("month");await supabaseClient.from("gap_leaderboard_public").upsert({user_id:currentUser.id,username:currentUsername||"Unbekannt",xp:db.xp,day_xp:day,week_xp:week,month_xp:month,all_xp:db.xp,updated_at:now.toISOString()});
+    const {error}=await supabaseClient.from("galaktogon_data").upsert({user_id:ownerId,username:currentAccountType==="parent"?activeChildUsername:currentUsername,data:db,updated_at:new Date().toISOString()});
+    if(currentAccountType!=="parent"){
+      const now=new Date();const day=periodXP("day"),week=periodXP("week"),month=periodXP("month");
+      await supabaseClient.from("gap_leaderboard_public").upsert({user_id:ownerId,username:currentUsername||"Unbekannt",xp:db.xp,day_xp:day,week_xp:week,month_xp:month,all_xp:db.xp,updated_at:now.toISOString()});
+    }
     if(error) console.error("Online-Speicher:",error);
   },150);
 }
 async function saveNow(){
-  saveRaw(db);
-  if(!currentUser||!supabaseClient)return;
-  const {error}=await supabaseClient.from("galaktogon_data").upsert({user_id:currentUser.id,username:currentUsername,data:db,updated_at:new Date().toISOString()});
+  const ownerId=userDataOwnerId();
+  saveRaw(db,ownerId);
+  if(!ownerId||!currentUser||!supabaseClient)return;
+  const {error}=await supabaseClient.from("galaktogon_data").upsert({user_id:ownerId,username:currentAccountType==="parent"?activeChildUsername:currentUsername,data:db,updated_at:new Date().toISOString()});
   if(error) throw error;
+}
+async function loadProfile(){
+  const {data,error}=await supabaseClient.from("gap_profiles").select("user_id,username,account_type,pairing_code").eq("user_id",currentUser.id).single();
+  if(error) throw error;
+  currentProfile=data;
+  currentUsername=data.username||currentUsername;
+  currentAccountType=data.account_type||"child";
 }
 async function loadOnline(){
-  const {data,error}=await supabaseClient.from("galaktogon_data").select("data,username").eq("user_id",currentUser.id).maybeSingle();
+  const ownerId=currentUser.id;
+  activeChildId=currentAccountType==="parent"?null:ownerId;
+  activeChildUsername=currentAccountType==="parent"?"":currentUsername;
+  const {data,error}=await supabaseClient.from("galaktogon_data").select("data,username").eq("user_id",ownerId).maybeSingle();
   if(error) throw error;
-  if(data&&data.data){db=normalize(data.data);currentUsername=data.username||currentUsername;saveRaw(db)}
+  if(data&&data.data){db=normalize(data.data);currentUsername=data.username||currentUsername;saveRaw(db,ownerId)}
   else {db=normalize(fresh());await saveNow()}
 }
+async function loadChildOwner(childId){
+  if(!childId)return false;
+  const {data,error}=await supabaseClient.from("galaktogon_data").select("data,username").eq("user_id",childId).maybeSingle();
+  if(error) throw error;
+  if(!data||!data.data)return false;
+  activeChildId=childId;
+  activeChildUsername=data.username||linkedChildren.find(x=>x.user_id===childId)?.username||"";
+  db=normalize(data.data);
+  saveRaw(db,childId);
+  return true;
+}
+async function loadLinkedChildren(){
+  const {data:links,error:linkError}=await supabaseClient.from("gap_parent_children").select("child_user_id").eq("parent_user_id",currentUser.id);
+  if(linkError) throw linkError;
+  const ids=(links||[]).map(x=>x.child_user_id);
+  if(!ids.length){linkedChildren=[];activeChildId=null;activeChildUsername="";return}
+  const {data:profiles,error:profileError}=await supabaseClient.from("gap_profiles").select("user_id,username").in("user_id",ids).order("username");
+  if(profileError) throw profileError;
+  linkedChildren=profiles||[];
+  if(!activeChildId||!linkedChildren.some(x=>x.user_id===activeChildId))activeChildId=linkedChildren[0].user_id;
+}
+async function setupParentSession(){
+  await loadLinkedChildren();
+  if(activeChildId)await loadChildOwner(activeChildId);
+  else db=normalize(fresh());
+}
+function applyAccountView(){
+  const parent=currentAccountType==="parent";
+  document.querySelectorAll("nav button[data-page]").forEach(b=>{
+    const allowed=parent?["parents","settings"].includes(b.dataset.page):b.dataset.page!=="parents";
+    b.style.display=allowed?"":"none";
+  });
+}
+async function selectParentChild(childId){
+  if(currentAccountType!=="parent")return;
+  if(!linkedChildren.some(x=>x.user_id===childId))return;
+  await loadChildOwner(childId);
+  renderAll();
+}
+async function linkParentChild(code){
+  const clean=(code||"").trim().toUpperCase();
+  if(!clean){authMsg("");return}
+  const {data,error}=await supabaseClient.rpc("link_parent_to_child",{p_code:clean});
+  if(error)throw error;
+  await loadLinkedChildren();
+  const linked=data?.[0];
+  if(linked?.child_user_id)activeChildId=linked.child_user_id;
+  if(activeChildId)await loadChildOwner(activeChildId);
+  return linkedChildren.find(x=>x.user_id===activeChildId)?.username||linked?.child_username||"";
+}
+function enterApp(){
+  document.getElementById("authScreen").style.display="none";
+  applyAccountView();
+  applyViewMode();
+  renderAll();
+  showPage(currentAccountType==="parent"?"parents":"dashboard");
+}
+async function logout(){
+  await saveNow().catch(()=>{});
+  if(supabaseClient)await supabaseClient.auth.signOut();
+  currentUser=null;currentUsername="";currentAccountType="child";currentProfile=null;activeChildId=null;activeChildUsername="";linkedChildren=[];
+  document.getElementById("authScreen").style.display="flex";
+  setAuthMode(false);
+  document.getElementById("loginPassword").value="";
+  authMsg("");
+}
+async function signUp(){
+  if(!supabaseConfigured){authMsg("Die Supabase-Daten fehlen noch. URL und Publishable Key in der index.html eintragen.",true);return}
+  const name=document.getElementById("signupName").value.trim();const pw=document.getElementById("signupPassword").value;const pw2=document.getElementById("signupPassword2").value;const accountType=document.getElementById("signupType").value;
+  if(!validUsername(name)){authMsg("Benutzername: 3–20 Zeichen, nur Buchstaben, Zahlen, _ oder -.",true);return}
+  if(pw!==pw2){authMsg("Die Passwörter stimmen nicht überein.",true);return}
+  authMsg("Konto wird erstellt …");
+  const {data,error}=await supabaseClient.auth.signUp({email:usernameEmail(name),password:pw,options:{data:{username:name,account_type:accountType}}});
+  if(error){authMsg("Konto konnte nicht erstellt werden: "+error.message,true);return}
+  if(!data.session){authMsg("Konto erstellt. Bitte ggf. die E-Mail-Bestätigung abschließen und danach anmelden.");return}
+  currentUser=data.user;currentUsername=name;
+  try{await loadProfile();if(currentAccountType==="parent")await setupParentSession();else await loadOnline();enterApp()}catch(e){authMsg("Konto wurde erstellt, aber die Kontodaten konnten nicht geladen werden: "+e.message,true)}
+}
+async function signIn(){
+  if(!supabaseConfigured){authMsg("Die Supabase-Daten fehlen noch. URL und Publishable Key in der index.html eintragen.",true);return}
+  const name=document.getElementById("loginName").value.trim();const pw=document.getElementById("loginPassword").value;
+  if(!validUsername(name)){authMsg("Ungültiger Benutzername.",true);return}
+  authMsg("Anmeldung …");
+  const {data,error}=await supabaseClient.auth.signInWithPassword({email:usernameEmail(name),password:pw});
+  if(error){authMsg("Anmeldung fehlgeschlagen. Benutzername oder Passwort prüfen.",true);return}
+  currentUser=data.user;
+  try{await loadProfile();if(currentAccountType==="parent")await setupParentSession();else await loadOnline();enterApp()}catch(e){await supabaseClient.auth.signOut();authMsg("Kontoprofil konnte nicht geladen werden: "+e.message,true)}
+}
+async function bootAuth(){
+  document.getElementById("showSignup").onclick=()=>setAuthMode(true);document.getElementById("showLogin").onclick=()=>setAuthMode(false);document.getElementById("loginForm").addEventListener("submit",e=>{e.preventDefault();signIn()});document.getElementById("signupForm").addEventListener("submit",e=>{e.preventDefault();signUp()});document.getElementById("logoutBtn").onclick=logout;
+  if(!supabaseConfigured){authMsg("Noch nicht eingerichtet: Supabase-Projekt erstellen und die beiden Werte oben in der Datei eintragen.",true);return}
+  const {data}=await supabaseClient.auth.getSession();
+  if(data.session){
+    currentUser=data.session.user;
+    try{await loadProfile();if(currentAccountType==="parent")await setupParentSession();else await loadOnline();enterApp()}catch(e){await supabaseClient.auth.signOut();authMsg("Kontoprofil konnte nicht geladen werden: "+e.message,true)}
+  }
+}
+document.querySelectorAll("nav button").forEach(b=>b.addEventListener("click",()=>showPage(b.dataset.page)));
+document.querySelectorAll("[data-period]").forEach(b=>b.addEventListener("click",()=>{leaderboardPeriod=b.dataset.period;document.querySelectorAll("[data-period]").forEach(x=>x.classList.toggle("primary",x===b));renderLeaderboard()}));
+
+function showPage(p){
+  if(currentAccountType==="parent"&&!["parents","settings"].includes(p))p="parents";
+  if(currentAccountType!=="parent"&&p==="parents")p="dashboard";
+  document.querySelectorAll(".page").forEach(x=>x.classList.remove("active"));
+  const target=document.getElementById(p);if(!target)return;
+  target.classList.add("active");
+  document.querySelectorAll("nav button").forEach(x=>x.classList.toggle("active",x.dataset.page===p));
+  renderAll();
+}
 function el(id){return document.getElementById(id)}
-const FIELD_LABELS={loginName:"Benutzername",loginPassword:"Passwort",signupName:"Benutzername",signupPassword:"Passwort",signupPassword2:"Passwort wiederholen",taskTitle:"Aufgabe",taskSubject:"Fach",taskDue:"Deadline (Datum & Uhrzeit)",taskLatePenalty:"Verspätungs-Debuff (%)",taskType:"Aufgabentyp",taskNote:"Notiz",examSubject:"Fach",examTitle:"Prüfung",examDate:"Datum",examSize:"Prüfungsgröße",examTarget:"Zielnote",questTitle:"Quest",questDue:"Deadline (Datum & Uhrzeit)",questLatePenalty:"Verspätungs-Debuff (%)",questXP:"XP-Belohnung",questNote:"Notiz",recurringTitle:"Dauerauftrag",recurringSubject:"Fach",recurringXP:"XP-Belohnung",recurringDue:"Uhrzeit (optional)",recurringLatePenalty:"Verspätungs-Debuff (%)",activityTitle:"Aktivität",activityXP:"XP-Belohnung",parentQuestTitle:"Quest",parentQuestDue:"Deadline (Datum)",parentQuestLatePenalty:"Verspätungs-Debuff (%)",parentQuestXP:"XP-Belohnung",parentQuestNote:"Beschreibung",buffName:"Effektname",buffKind:"Effektart",buffPercent:"Stärke (%)",buffUses:"Anzahl XP-Vergaben",trustStatus:"Vertrauensstatus"};
+const FIELD_LABELS={loginName:"Benutzername",loginPassword:"Passwort",signupName:"Benutzername",signupPassword:"Passwort",signupPassword2:"Passwort wiederholen",signupType:"Kontotyp",taskTitle:"Aufgabe",taskSubject:"Fach",taskDue:"Deadline (Datum & Uhrzeit)",taskLatePenalty:"Verspätungs-Debuff (%)",taskType:"Aufgabentyp",taskNote:"Notiz",examSubject:"Fach",examTitle:"Prüfung",examDate:"Datum",examSize:"Prüfungsgröße",examTarget:"Zielnote",questTitle:"Quest",questDue:"Deadline (Datum & Uhrzeit)",questLatePenalty:"Verspätungs-Debuff (%)",questXP:"XP-Belohnung",questNote:"Notiz",recurringTitle:"Dauerauftrag",recurringSubject:"Fach",recurringXP:"XP-Belohnung",recurringDue:"Uhrzeit (optional)",recurringLatePenalty:"Verspätungs-Debuff (%)",activityTitle:"Aktivität",activityXP:"XP-Belohnung",parentQuestTitle:"Quest",parentQuestDue:"Deadline (Datum)",parentQuestLatePenalty:"Verspätungs-Debuff (%)",parentQuestXP:"XP-Belohnung",parentQuestNote:"Beschreibung",buffName:"Effektname",buffKind:"Effektart",buffPercent:"Stärke (%)",buffUses:"Anzahl XP-Vergaben",trustStatus:"Vertrauensstatus"};
 function decorateFields(root=document){root.querySelectorAll("input:not([type=checkbox]):not([type=hidden]),select,textarea").forEach(x=>{if(x.dataset.labeled)return;const label=FIELD_LABELS[x.id]||x.getAttribute("placeholder")||x.getAttribute("title");if(!label)return;const wrap=document.createElement("div");wrap.className="field-wrap";const l=document.createElement("label");l.className="field-label";l.textContent=label;l.htmlFor=x.id;x.parentNode.insertBefore(wrap,x);wrap.appendChild(l);wrap.appendChild(x);x.dataset.labeled="1"})}
 function checkForgotten(){
  const t=today();
@@ -324,7 +451,24 @@ function renderRanks(){const r=rank();document.getElementById("rankList").innerH
 let leaderboardPeriod="week";
 async function renderLeaderboard(){const box=document.getElementById("leaderboardList");if(!supabaseClient||!currentUser){box.innerHTML="<div class=\"empty\">Leaderboard erst nach Anmeldung verfügbar.</div>";return}box.innerHTML="<div class=\"muted\">Lade Leaderboard…</div>";const {data,error}=await supabaseClient.from("gap_leaderboard_public").select("username,day_xp,week_xp,month_xp,all_xp").order(leaderboardPeriod+"_xp",{ascending:false}).limit(50);if(error){box.innerHTML="<div class=\"empty\">Leaderboard konnte nicht geladen werden.</div>";console.error(error);return}const key=leaderboardPeriod+"_xp";box.innerHTML=data.length?data.map((x,i)=>"<div class=\"item\"><strong>#"+(i+1)+" · "+esc(x.username)+"</strong><div class=\"meta\">"+Number(x[key]||0).toLocaleString("de-DE")+" XP · "+leaderboardPeriodLabel(leaderboardPeriod)+"</div></div>").join(""):"<div class=\"empty\">Noch keine Accounts im Leaderboard.</div>"}
 function leaderboardPeriodLabel(p){return p==="day"?"heute":p==="week"?"diese Woche":p==="month"?"diesen Monat":"insgesamt"}
-function renderParents(){document.getElementById("trustStatus").value=db.trust;const tw=trustWeeklyModifier();document.getElementById("trustInfo").innerHTML=`<div class="item"><strong>Aktuelle Vertrauenswirkung: ${tw>=0?"+":""}${tw}% XP</strong><div class="meta">A: +20 % · B: +5 % · C: −5 % · D: −20 %</div><div class="meta">Eine Änderung des Status wirkt direkt bei der nächsten XP-Vergabe.</div><div class="meta">Aktueller Status: ${esc(db.trust)}</div></div>`;document.getElementById("parentEffects").innerHTML=effectsHTML()||'<div class="empty">Keine aktiven Effekte.</div>'}
+function renderParents(){
+  if(currentAccountType!=="parent")return;
+  const select=el("parentChildSelect");
+  if(select){
+    select.innerHTML=linkedChildren.length?linkedChildren.map(x=>'<option value="'+esc(x.user_id)+'">'+esc(x.username)+'</option>').join(""):'<option value="">Noch kein Kinderkonto verknüpft</option>';
+    select.disabled=!linkedChildren.length;
+    if(activeChildId)select.value=activeChildId;
+  }
+  const info=el("parentChildInfo");
+  if(info)info.innerHTML=activeChildId?'<div class="item"><strong>'+esc(activeChildUsername)+'</strong><div class="meta">Ausgewähltes Kinderkonto · '+Number(db.xp||0).toLocaleString("de-DE")+' XP · Rang '+esc(rank().n)+'</div></div>':'<div class="empty">Noch kein Kinderkonto ausgewählt. Ein Kinderkonto kann über den Verknüpfungscode hinzugefügt werden.</div>';
+  const linked=Boolean(activeChildId);
+  ["trustForm","parentQuestForm","buffForm"].forEach(id=>{const x=el(id);if(x)x.style.display=linked?"grid":"none"});
+  const tw=linked?trustWeeklyModifier():0;
+  const trust=el("trustStatus");if(trust&&linked)trust.value=db.trust;
+  const ti=el("trustInfo");if(ti)ti.innerHTML=linked?'<div class="item"><strong>Aktuelle Vertrauenswirkung: '+(tw>=0?"+":"")+tw+'% XP</strong><div class="meta">A: +20 % · B: +5 % · C: −5 % · D: −20 %</div><div class="meta">Aktueller Status: '+esc(db.trust)+'</div></div>':'';
+  const pe=el("parentEffects");if(pe)pe.innerHTML=linked?(effectsHTML()||'<div class="empty">Keine aktiven Effekte.</div>'):'';
+  const wr=el("weeklyReview");if(wr)wr.innerHTML=linked?weeklyReviewHTML():'<div class="empty">Noch kein Kinderkonto ausgewählt.</div>';
+}
 function renderAll(){renderDashboard();renderTasks();renderExams();renderQuests();renderRecurring();renderActivities();renderProgress();renderParents();renderWeeklyReview();renderRanks();if(document.getElementById("leaderboard").classList.contains("active"))renderLeaderboard()}
 
 function deleteLog(type,obj){db.deleteLog.unshift({id:uid(),type,title:obj.title||obj.name||"Eintrag",date:new Date().toISOString()})}
@@ -473,18 +617,15 @@ parents:[
 ]
 };
 const PARENT_TOUR_STEPS=[
-{page:"parents",selector:"#parents .card:nth-child(1)",title:"1 · Elternseite",text:"Auf dieser Seite finden Eltern die wichtigsten Verwaltungsfunktionen. Der obere Bereich erklärt kurz die Idee und startet diesen Rundgang erneut."},
-{page:"parents",selector:"#trustForm",title:"2 · Vertrauensstatus",text:"Hier kann der aktuelle Status A bis D gespeichert werden. Der Status verändert den XP-Faktor: A +20 %, B +5 %, C −5 %, D −20 %."},
-{page:"parents",selector:"#trustInfo",title:"3 · Wirkung prüfen",text:"Direkt unter dem Formular wird angezeigt, welcher XP-Effekt aktuell durch den Vertrauensstatus entsteht."},
-{page:"parents",selector:"#parentQuestForm",title:"4 · Eltern-Quest vergeben",text:"Hier können Eltern eine zusätzliche Quest mit Titel, Fälligkeit, XP-Belohnung und Notiz vergeben. Sie erscheint danach beim Kind unter Quests."},
-{page:"parents",selector:"#buffForm",title:"5 · Buff oder Debuff",text:"Ein Buff erhöht zukünftige XP-Vergaben, ein Debuff verringert sie. Name, Stärke und Anzahl der betroffenen XP-Vergaben können festgelegt werden."},
-{page:"parents",selector:"#parentEffects",title:"6 · Aktive Effekte",text:"Hier sehen Eltern, welche Effekte gerade aktiv sind und wie viele XP-Vergaben noch betroffen sind."},
-{page:"progress",selector:"#progress .card:nth-child(4)",title:"7 · XP-Protokoll",text:"Im Fortschritt kann nachvollzogen werden, wann XP vergeben wurden, aus welchem Grund und welcher Modifikator dabei verwendet wurde."},
-{page:"progress",selector:"#progress .card:nth-child(5)",title:"8 · Abschlussprotokoll",text:"Hier sieht man erledigte Aufgaben, Prüfungen und Quests. So lässt sich der Verlauf gemeinsam nachvollziehen."},
-{page:"progress",selector:"#progress .card:nth-child(6)",title:"9 · Löschprotokoll",text:"Gelöschte Einträge werden ebenfalls protokolliert. Dadurch bleiben wichtige Änderungen sichtbar."},
-{page:"parents",selector:'nav button[data-page="parents"]',title:"10 · Grundregel",text:"GAP soll klare, gemeinsam vereinbarte Regeln unterstützen. XP, Vertrauensstatus und Effekte sollten deshalb vorher gemeinsam abgesprochen werden."}
+{page:"parents",selector:"#parentLinkForm",title:"1 · Kinderkonto verknüpfen",text:"Hier wird der Verknüpfungscode des Kinderkontos eingegeben."},
+{page:"parents",selector:"#parentChildSelect",title:"2 · Kinderkonto auswählen",text:"Bei mehreren Kindern kannst du das aktive Kinderkonto auswählen."},
+{page:"parents",selector:"#parentChildInfo",title:"3 · Übersicht",text:"Hier werden Name, XP und Rang des ausgewählten Kinderkontos angezeigt."},
+{page:"parents",selector:"#trustForm",title:"4 · Vertrauensstatus",text:"Hier kann der aktuelle Status A bis D gespeichert werden."},
+{page:"parents",selector:"#parentQuestForm",title:"5 · Eltern-Quest",text:"Hier können Eltern eine zusätzliche Quest mit eigener XP-Belohnung vergeben."},
+{page:"parents",selector:"#buffForm",title:"6 · Buff / Debuff",text:"Hier können zeitlich begrenzte XP-Effekte vergeben werden."},
+{page:"parents",selector:"#parentEffects",title:"7 · Aktive Effekte",text:"Hier werden die aktuell aktiven Effekte des ausgewählten Kinderkontos angezeigt."}
 ];
-const OVERALL_TUTORIAL_ORDER=["dashboard","tasks","exams","quests","recurring","activities","progress","ranks","leaderboard","parents"];
+const OVERALL_TUTORIAL_ORDER=["dashboard","tasks","exams","quests","recurring","activities","progress","ranks","leaderboard"];
 const OVERALL_TUTORIAL_STEPS=[
 {page:"dashboard",selector:"#dashboard",title:"1 · Dashboard",text:"Hier siehst du Rang, XP, Modifikator und was heute ansteht."},
 {page:"tasks",selector:"#taskForm",title:"2 · Sektoraufgaben",text:"Hier legst du Schulaufgaben an, setzt Termine und markierst sie später mit Datum und Uhrzeit als erledigt."},
@@ -494,8 +635,7 @@ const OVERALL_TUTORIAL_STEPS=[
 {page:"activities",selector:"#favoriteActivities",title:"6 · Aktivitäten",text:"Favoriten lassen sich schnell ausführen und werden im Aktivitätslog gespeichert."},
 {page:"progress",selector:"#progress",title:"7 · Fortschritt",text:"Hier siehst du Tutorialfortschritt, Rang, XP und die Protokolle."},
 {page:"ranks",selector:"#rankList",title:"8 · Ränge",text:"Hier findest du alle Rangstufen und ihre XP-Grenzen."},
-{page:"leaderboard",selector:"#leaderboard",title:"9 · Leaderboard",text:"Hier kannst du die gespeicherte XP-Leistung nach Zeitraum vergleichen."},
-{page:"parents",selector:"#parents",title:"10 · Elternmodus",text:"Hier werden Vertrauensstatus, Eltern-Quests sowie Buffs und Debuffs verwaltet."}
+{page:"leaderboard",selector:"#leaderboard",title:"9 · Leaderboard",text:"Hier kannst du die gespeicherte XP-Leistung nach Zeitraum vergleichen."}
 ];
 function tutorialCompletedCount(){return OVERALL_TUTORIAL_ORDER.filter(k=>db.tutorialSectionsDone.includes(k)).length}
 function tutorialProgressPercent(){return Math.round(tutorialCompletedCount()/OVERALL_TUTORIAL_ORDER.length*100)}
@@ -552,7 +692,7 @@ function applyViewMode(){
  const light=localStorage.getItem(THEME_KEY)==="light";
  document.body.classList.toggle("light-mode",light);
  document.body.classList.toggle("serious-mode",serious);
- const logo=el("appLogo");if(logo)logo.textContent=serious?"GAP Aufgabenverwaltung":"GALAKTOGON AUFGABENPROTOKOLL";
+ const logo=el("appLogo");if(logo)logo.textContent=serious?(currentAccountType==="parent"?"GAP Elternverwaltung":"GAP Aufgabenverwaltung"):(currentAccountType==="parent"?"GALAKTOGON ELTERNKONTO":"GALAKTOGON AUFGABENPROTOKOLL");
  document.querySelectorAll("nav button[data-page]").forEach(b=>{const k=b.dataset.page;if(NAV_LABELS[k])b.textContent=serious?NAV_LABELS[k][1]:NAV_LABELS[k][0]});
  const status=el("viewModeStatus");if(status)status.textContent=serious?"Aktiv: seriöse Ansicht":"Aktiv: GALAKTOGON-Ansicht";
  const btn=el("seriousModeBtn");if(btn)btn.textContent=serious?"GALAKTOGON-Ansicht aktivieren":"Seriöse Ansicht aktivieren";
@@ -562,6 +702,7 @@ function applyViewMode(){
 function toggleSeriousMode(){localStorage.setItem(SERIOUS_MODE_KEY,localStorage.getItem(SERIOUS_MODE_KEY)==="1"?"0":"1");applyViewMode()}
 function toggleTheme(){localStorage.setItem(THEME_KEY,localStorage.getItem(THEME_KEY)==="light"?"dark":"light");applyViewMode()}
 function renderSettings(){
+ const accountInfo=el("settingsAccountInfo");if(accountInfo)accountInfo.innerHTML="<strong>"+esc(currentUsername)+"</strong> · "+(currentAccountType==="parent"?"Elternkonto":"Kinderkonto");const pairing=el("settingsPairingInfo");if(pairing){pairing.textContent=currentAccountType==="child"?(currentProfile?.pairing_code?"Verknüpfungscode: "+currentProfile.pairing_code:"Verknüpfungscode wird geladen."):"Kinderkonten werden im Elternbereich über einen Verknüpfungscode verknüpft."}const copyBtn=el("copyPairingBtn");if(copyBtn)copyBtn.style.display=currentAccountType==="child"?"inline-block":"none";
  const s=getSettings();
  const fields={settingsNormalXP:s.normalXP,settingsLargeXP:s.largeXP,settingsPresentationXP:s.presentationXP,settingsQuestXP:s.questXP,settingsLearningXP:s.learningXP,settingsRecurringXP:s.recurringXP,settingsReminderTime:s.reminderTime,settingsFontSize:s.fontSize};
  Object.entries(fields).forEach(([id,v])=>{const x=el(id);if(x)x.value=v});
@@ -572,7 +713,7 @@ function renderSettings(){
 }
 function setupSettings(){
  const toggleSetting=(key,btnId)=>{const s=getSettings();s[key]=!s[key];saveSettings(s);renderSettings()};
- el("seriousModeBtn")?.addEventListener("click",toggleSeriousMode);
+ el("seriousModeBtn")?.addEventListener("click",toggleSeriousMode);el("copyPairingBtn")?.addEventListener("click",async()=>{const code=currentProfile?.pairing_code;if(!code)return;try{await navigator.clipboard.writeText(code);el("settingsPairingInfo").textContent="Verknüpfungscode kopiert: "+code}catch(e){el("settingsPairingInfo").textContent="Verknüpfungscode: "+code}});
 el("themeBtn")?.addEventListener("click",toggleTheme);
  el("settingsLogoutBtn")?.addEventListener("click",()=>el("logoutBtn").click());
  el("settingsPasswordBtn")?.addEventListener("click",async()=>{const next=prompt("Neues Passwort (mindestens 6 Zeichen):");if(!next)return;if(next.length<6){alert("Das Passwort muss mindestens 6 Zeichen haben.");return}try{if(window.supabaseClient?.auth?.updateUser){const r=await window.supabaseClient.auth.updateUser({password:next});if(r.error)throw r.error;alert("Passwort wurde geändert.")}else alert("Die Kontofunktion ist in dieser Version nicht verfügbar.")}catch(e){alert("Passwort konnte nicht geändert werden: "+e.message)}});
@@ -583,9 +724,13 @@ el("themeBtn")?.addEventListener("click",toggleTheme);
  el("animationBtn")?.addEventListener("click",()=>toggleSetting("animations","animationBtn"));el("compactBtn")?.addEventListener("click",()=>toggleSetting("compact","compactBtn"));
  el("settingsFontSize")?.addEventListener("change",()=>{const s=getSettings();s.fontSize=el("settingsFontSize").value;saveSettings(s);renderSettings()});
  el("syncNowBtn")?.addEventListener("click",()=>{try{save();alert("Synchronisierung wurde angestoßen.")}catch(e){alert("Synchronisierung konnte nicht gestartet werden.")}});
- el("resetLocalDataBtn")?.addEventListener("click",()=>{if(confirm("Lokale GAP-Daten wirklich zurücksetzen? Online gespeicherte Daten bleiben erhalten.")){localStorage.removeItem(KEY);location.reload()}});
+ el("resetLocalDataBtn")?.addEventListener("click",()=>{if(confirm("Lokale GAP-Daten wirklich zurücksetzen? Online gespeicherte Daten bleiben erhalten.")){localStorage.removeItem(KEY);if(currentUser)localStorage.removeItem(KEY+"_"+currentUser.id);if(activeChildId)localStorage.removeItem(KEY+"_"+activeChildId);location.reload()}});
  document.querySelectorAll("[data-page-jump]").forEach(b=>b.addEventListener("click",()=>showPage(b.dataset.pageJump)));
  renderSettings();
+}
+function setupParentControls(){
+ el("parentChildSelect")?.addEventListener("change",async()=>{try{await selectParentChild(el("parentChildSelect").value)}catch(e){alert("Kinderkonto konnte nicht geladen werden: "+e.message)}});
+ el("parentLinkForm")?.addEventListener("submit",async e=>{e.preventDefault();if(currentAccountType!=="parent")return;const status=el("parentLinkStatus");try{status.textContent="Verknüpfe Kinderkonto …";const name=await linkParentChild(el("parentLinkCode").value);el("parentLinkCode").value="";status.textContent=name?"Kinderkonto verknüpft: "+name:"Kinderkonto wurde verknüpft.";renderAll()}catch(e){status.textContent=e.message||"Verknüpfung fehlgeschlagen.";status.style.color="#ff7474"}});
 }
 function setupForms(){
  el("taskForm").addEventListener("submit",e=>{e.preventDefault();db.tasks.push({id:uid(),title:el("taskTitle").value.trim(),subject:el("taskSubject").value.trim(),due:el("taskDue").value,latePenalty:Math.max(0,Math.min(100,Number(el("taskLatePenalty").value)||0)),type:el("taskType").value,note:el("taskNote").value.trim()});e.target.reset();save();renderAll()});
@@ -598,7 +743,7 @@ el("buffForm").addEventListener("submit",e=>{e.preventDefault();const kind=el("b
 el("recurringForm").addEventListener("submit",e=>{e.preventDefault();const days=[...document.querySelectorAll("#weekdayInputs input:checked")].map(x=>Number(x.value));if(!days.length){alert("Bitte mindestens einen Wochentag auswählen.");return}db.recurring.push({id:uid(),title:el("recurringTitle").value.trim(),subject:el("recurringSubject").value.trim(),due:el("recurringDue").value,latePenalty:Math.max(0,Math.min(100,Number(el("recurringLatePenalty").value)||0)),xp:Number(el("recurringXP").value)||getSettings().recurringXP,days,doneDates:[],active:true});e.target.reset();renderAll()});
 }
 function setupDays(){document.getElementById("weekdayInputs").innerHTML=DAYS.map((d,i)=>`<label class="day"><input type="checkbox" value="${i}" ${i>0&&i<6?"checked":""}>${d}</label>`).join("")}
-setupDays();decorateFields();setupForms();renderUpdates();applyViewMode();setupSettings();bootAuth();
+setupDays();decorateFields();setupParentControls();setupForms();renderUpdates();applyViewMode();setupSettings();bootAuth();
 </script>
 </body>
 </html>
