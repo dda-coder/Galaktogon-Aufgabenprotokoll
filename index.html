@@ -177,7 +177,7 @@ function uid(){return "id_"+Date.now().toString(36)+"_"+Math.random().toString(3
 function esc(v){return String(v==null?"":v).replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;").replaceAll("'","&#039;")}
 function today(){const d=new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")}
 function dateText(s){if(!s)return "Kein Termin";const d=new Date(s.includes("T")?s:s+"T00:00:00");if(isNaN(d))return s;return s.includes("T")?d.toLocaleString("de-DE",{dateStyle:"short",timeStyle:"short"}):d.toLocaleDateString("de-DE")}
-function taskXP(t){return t==="large"?20:t==="presentation"?30:10}
+function taskXP(t){const s=getSettings();return t==="large"?s.largeXP:t==="presentation"?s.presentationXP:t==="learning"?s.learningXP:t==="vocabulary"?s.normalXP:s.normalXP}
 function lateMultiplier(item,completedAt){if(!item?.due)return 1;const due=new Date(item.due),done=new Date(completedAt);if(isNaN(due)||isNaN(done)||done<=due)return 1;const penalty=Math.max(0,Math.min(100,Number(item.latePenalty)||0));return 1-penalty/100}
 function rank(){let r=RANKS[0];RANKS.forEach(v=>{if(db.xp>=v.x)r=v});return r}
 function nextRank(){return RANKS.find(v=>db.xp<v.x)||null}
@@ -568,7 +568,7 @@ function renderSettings(){
  Object.entries(fields).forEach(([id,v])=>{const x=el(id);if(x)x.value=v});
  const toggle=(id,on,label)=>{const x=el(id);if(x)x.textContent=label+": "+(on?"EIN":"AUS")};
  toggle("taskReminderBtn",s.taskReminder,"Erinnerungen für Aufgaben");toggle("examReminderBtn",s.examReminder,"Erinnerungen für Prüfungen");toggle("questReminderBtn",s.questReminder,"Erinnerungen für Quests");toggle("animationBtn",s.animations,"Animationen");toggle("compactBtn",s.compact,"Kompakte Ansicht");
- document.body.classList.toggle("settings-compact",s.compact);document.body.classList.toggle("font-small",s.fontSize==="small");document.body.classList.toggle("font-large",s.fontSize==="large");document.body.classList.toggle("animations-off",!s.animations);
+ document.body.classList.toggle("settings-compact",s.compact);document.body.classList.toggle("font-small",s.fontSize==="small");document.body.classList.toggle("font-large",s.fontSize==="large");document.body.classList.toggle("animations-off",!s.animations); const type=el("taskType");if(type){const labels={normal:"Normale Aufgabe",vocabulary:"Vokabeln",large:"Große Aufgabe",presentation:"Präsentation",learning:"Lernen"};[...type.options].forEach(o=>{const xp=o.value==="large"?s.largeXP:o.value==="presentation"?s.presentationXP:o.value==="learning"?s.learningXP:s.normalXP;o.textContent=labels[o.value]+" (+"+xp+" XP)"})}
  const sync=el("settingsSyncInfo");if(sync)sync.textContent=typeof save==="function"?"Online-Spielstand ist über das aktuelle GAP-Konto verbunden.":"Online-Synchronisierung wird geladen.";
 }
 function setupSettings(){
