@@ -444,11 +444,21 @@ async function linkParentChild(code){
   return linkedChildren.find(x=>x.user_id===activeChildId)?.username||linked?.child_username||"";
 }
 function enterApp(){
+  const auth=document.getElementById("authScreen");
+  auth.style.display="none";
   applyAccountView();
   applyViewMode();
-  renderAll();
-  showPage(currentAccountType==="parent"?"parents":"dashboard");
-  document.getElementById("authScreen").style.display="none";
+  const page=currentAccountType==="parent"?"parents":"dashboard";
+  try{
+    showPage(page,false);
+    renderAll();
+  }catch(e){
+    console.error("GAP App-Initialisierung:",e);
+    if(currentAccountType==="parent"){
+      const info=el("parentChildInfo");
+      if(info)info.innerHTML='<div class="item"><strong>Elternkonto geladen</strong><div class="meta">Die Anmeldung war erfolgreich, aber ein Bereich der Elternverwaltung konnte nicht dargestellt werden. Fehler: '+esc(e?.message||e)+'</div></div>';
+    }
+  }
 }
 async function logout(){
   await saveNow().catch(()=>{});
@@ -532,14 +542,14 @@ async function bootAuth(){
 document.querySelectorAll("nav button").forEach(b=>b.addEventListener("click",()=>showPage(b.dataset.page)));
 document.querySelectorAll("[data-period]").forEach(b=>b.addEventListener("click",()=>{leaderboardPeriod=b.dataset.period;document.querySelectorAll("[data-period]").forEach(x=>x.classList.toggle("primary",x===b));renderLeaderboard()}));
 
-function showPage(p){
+function showPage(p,render=true){
   if(currentAccountType==="parent"&&!["parents","settings"].includes(p))p="parents";
   if(currentAccountType!=="parent"&&p==="parents")p="dashboard";
   document.querySelectorAll(".page").forEach(x=>x.classList.remove("active"));
   const target=document.getElementById(p);if(!target)return;
   target.classList.add("active");
   document.querySelectorAll("nav button").forEach(x=>x.classList.toggle("active",x.dataset.page===p));
-  renderAll();
+  if(render)renderAll();
 }
 function el(id){return document.getElementById(id)}
 const FIELD_LABELS={loginName:"Benutzername",loginPassword:"Passwort",signupName:"Benutzername",signupPassword:"Passwort",signupPassword2:"Passwort wiederholen",signupType:"Kontotyp",taskTitle:"Aufgabe",taskSubject:"Fach",taskDue:"Deadline (Datum & Uhrzeit)",taskLatePenalty:"Verspätungs-Debuff (%)",taskType:"Aufgabentyp",taskNote:"Notiz",examSubject:"Fach",examTitle:"Prüfung",examDate:"Datum",examSize:"Prüfungsgröße",examTarget:"Zielnote",questTitle:"Quest",questDue:"Deadline (Datum & Uhrzeit)",questLatePenalty:"Verspätungs-Debuff (%)",questXP:"XP-Belohnung",questNote:"Notiz",recurringTitle:"Dauerauftrag",recurringSubject:"Fach",recurringXP:"XP-Belohnung",recurringDue:"Uhrzeit (optional)",recurringLatePenalty:"Verspätungs-Debuff (%)",activityTitle:"Aktivität",activityXP:"XP-Belohnung",parentQuestTitle:"Quest",parentQuestDue:"Deadline (Datum)",parentQuestLatePenalty:"Verspätungs-Debuff (%)",parentQuestXP:"XP-Belohnung",parentQuestNote:"Beschreibung",buffName:"Effektname",buffKind:"Effektart",buffPercent:"Stärke (%)",buffUses:"Anzahl XP-Vergaben",trustStatus:"Vertrauensstatus"};
