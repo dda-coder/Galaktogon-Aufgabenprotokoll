@@ -29,7 +29,7 @@
 <header>
 <div class="header-inner"><div><div class="logo" id="appLogo">GALAKTOGON AUFGABENPROTOKOLL</div><div class="version">GAP // 2.4 beta</div></div><div class="xp-mini"><div id="headerRank">Kadett</div><div id="headerXP">0 XP</div><button class="btn small" id="logoutBtn" style="margin-top:6px">Abmelden</button></div></div>
 <nav>
-<button data-page="dashboard">Dashboard</button><button data-page="updates">Updates</button><button data-page="tasks">Sektoraufgaben</button><button data-page="exams">Sektorprüfungen</button><button data-page="quests">Quests</button><button data-page="recurring">Daueraufträge</button><button data-page="activities">Aktivitäten</button><button data-page="progress">Fortschritt</button><button data-page="ranks">Ränge</button><button data-page="leaderboard">Leaderboard</button><button data-page="parents">Elternmodus</button><button data-page="settings">Einstellungen</button>
+<button data-page="dashboard">Dashboard</button><button data-page="updates">Updates</button><button data-page="tasks">Sektoraufgaben</button><button data-page="exams">Sektorprüfungen</button><button data-page="quests">Quests</button><button data-page="recurring">Daueraufträge</button><button data-page="activities">Aktivitäten</button><button data-page="progress">Fortschritt</button><button data-page="ranks">Ränge</button><button data-page="leaderboard">Leaderboard</button><button data-page="parents">Elternübersicht</button><button data-page="parentTasks">SA</button><button data-page="parentExams">SP</button><button data-page="parentQuests">Quests</button><button data-page="parentEffects">Buffs & Debuffs</button><button data-page="parentLogs">Logs</button><button data-page="settings">Einstellungen</button>
 </nav>
 </header>
 <main>
@@ -87,7 +87,7 @@
 <div class="card"><h2>Heutige Mission</h2><div id="dashboardToday"></div></div>
 <div class="card"><h2>Offene Quests</h2><div id="dashboardQuests"></div></div>
 <div class="card"><h2>Nächste Prüfungen</h2><div id="dashboardExams"></div></div>
-<div class="card"><h2>Protokolle</h2><p class="muted">Alle wichtigen Logs sind hier gesammelt.</p><div class="item"><div class="item-title">Aktivitätslog</div><div id="activityLog"></div></div><div class="item"><div class="item-title">Buff- & Debuff-Protokoll</div><div id="effectLog"></div></div><div class="item"><div class="item-title">XP-Protokoll</div><div id="xpLog"></div></div><div class="item"><div class="item-title">Erledigte Aufgaben & Quests</div><div id="completionLog"></div></div><div class="item"><div class="item-title">Gelöschte Einträge</div><div id="deleteLog"></div></div></div></section>
+</section>
 
 
 <section id="tasks" class="page">
@@ -125,28 +125,44 @@
 </section>
 
 <section id="parents" class="page">
-<div class="card"><h2>Elternbereich</h2>
-<p class="muted">Das Elternkonto ist vom Kinderkonto getrennt. Zuerst ein Kinderkonto mit seinem Verknüpfungscode verbinden.</p>
-
-</div>
-<div class="card"><h2>Aktives Kinderkonto</h2>
+<div class="card"><h2>Elternübersicht</h2>
+<p class="muted">Übersicht über das ausgewählte Kinderkonto. Die Detailbereiche sind jetzt auf eigene Seiten aufgeteilt.</p>
 <div class="item"><div class="item-title">Kinderkonto auswählen</div><div class="actions"><select id="parentChildSelect"></select></div></div>
 <div id="parentChildInfo"></div>
+</div>
 <div id="parentManagementArea">
-<div class="card"><h3>Fortschritt</h3><div id="parentProgress"></div></div>
-<div class="card"><h3>Offene Sektoraufgaben</h3><div id="parentTaskList"></div></div>
-<div class="card"><h3>Offene Sektorprüfungen</h3><div id="parentExamList"></div></div>
-<div class="card"><h3>Offene Quests</h3><div id="parentQuestList"></div></div>
-<div class="card"><h3>Aktivitäten</h3><div id="parentActivityLog"></div></div>
-<div class="card"><h3>Erledigungen & Fortschrittsprotokoll</h3><div id="parentCompletionLog"></div></div>
-<div class="card"><h3>XP-Protokoll</h3><div id="parentXPLog"></div></div>
-</div>
-</div>
+<div class="card"><h2>Fortschritt</h2><div id="parentProgress"></div></div>
 <div class="card"><h2>Wochenbilanz</h2><div id="weeklyReview"></div></div>
-<div class="card"><h2>Elternmodus</h2><p class="muted">Hier können Vertrauensstatus, Eltern-Quests sowie zeitlich begrenzte Buffs und Debuffs für das ausgewählte Kinderkonto verwaltet werden.</p><form id="trustForm"><select id="trustStatus"><option value="A">A – Vereinbarungen zuverlässig eingehalten</option><option value="B">B – meistens eingehalten</option><option value="C">C – mehrere Probleme</option><option value="D">D – Vereinbarung funktioniert aktuell nicht</option></select><button class="btn primary">Vertrauensstatus speichern</button></form><div id="trustInfo"></div></div>
-<div class="card"><h2>Eltern-Quest mit XP</h2><form id="parentQuestForm"><input id="parentQuestTitle" placeholder="z. B. Zimmer bis Samstag ordentlich halten" required><div class="form-grid"><input id="parentQuestDue" type="date"><input id="parentQuestLatePenalty" type="number" min="0" max="100" value="0" placeholder="Verspätungs-Debuff (%)" title="XP-Abzug bei verspäteter Erledigung"><input id="parentQuestXP" type="number" min="0" value="20" placeholder="XP"></div><textarea id="parentQuestNote" placeholder="Was soll gemacht werden?"></textarea><button class="btn purple">Eltern-Quest vergeben</button></form></div>
-<div class="card"><h2>Buff / Debuff vergeben</h2><p class="muted">Eltern können einen zeitlich begrenzten Buff oder Debuff für zukünftige XP-Vergaben vergeben.</p><form id="buffForm"><input id="buffName" placeholder="z. B. Sehr gute Klassenarbeit" required><div class="form-grid"><select id="buffKind"><option value="buff">Buff (+)</option><option value="debuff">Debuff (−)</option></select><input id="buffPercent" type="number" min="1" max="100" value="20" placeholder="Stärke %"><input id="buffUses" type="number" min="1" value="3" placeholder="Anzahl XP-Vergaben"></div><button class="btn success">Effekt aktivieren</button></form></div>
-<div class="card"><h2>Aktive Effekte</h2><div id="parentEffects"></div></div>
+</div>
+</section>
+
+<section id="parentTasks" class="page">
+<div class="card"><h2>Sektoraufgaben des Kinderkontos</h2><p class="muted">Hier siehst du nur die offenen Sektoraufgaben des ausgewählten Kinderkontos.</p><div id="parentTaskList"></div></div>
+</section>
+
+<section id="parentExams" class="page">
+<div class="card"><h2>Sektorprüfungen des Kinderkontos</h2><p class="muted">Hier siehst du die offenen Sektorprüfungen und deren Zielnoten.</p><div id="parentExamList"></div></div>
+</section>
+
+<section id="parentQuests" class="page">
+<div class="card"><h2>Quests des Kinderkontos</h2><div id="parentQuestList"></div></div>
+<div class="card"><h2>Eltern-Quest vergeben</h2><form id="parentQuestForm"><input id="parentQuestTitle" placeholder="z. B. Zimmer bis Samstag ordentlich halten" required><div class="form-grid"><input id="parentQuestDue" type="date"><input id="parentQuestLatePenalty" type="number" min="0" max="100" value="0" placeholder="Verspätungs-Debuff (%)" title="XP-Abzug bei verspäteter Erledigung"><input id="parentQuestXP" type="number" min="0" value="20" placeholder="XP"></div><textarea id="parentQuestNote" placeholder="Was soll gemacht werden?"></textarea><button class="btn purple">Eltern-Quest vergeben</button></form></div>
+</section>
+
+<section id="parentEffects" class="page">
+<div class="card"><h2>Vertrauensstatus</h2><p class="muted">Der Vertrauensstatus beeinflusst den XP-Modifikator des Kinderkontos.</p><form id="trustForm"><select id="trustStatus"><option value="A">A – Vereinbarungen zuverlässig eingehalten</option><option value="B">B – meistens eingehalten</option><option value="C">C – mehrere Probleme</option><option value="D">D – Vereinbarung funktioniert aktuell nicht</option></select><button class="btn primary">Vertrauensstatus speichern</button></form><div id="trustInfo"></div></div>
+<div class="card"><h2>Buff / Debuff vergeben</h2><p class="muted">Zeitlich begrenzte Effekte für zukünftige XP-Vergaben.</p><form id="buffForm"><input id="buffName" placeholder="z. B. Sehr gute Klassenarbeit" required><div class="form-grid"><select id="buffKind"><option value="buff">Buff (+)</option><option value="debuff">Debuff (−)</option></select><input id="buffPercent" type="number" min="1" max="100" value="20" placeholder="Stärke %"><input id="buffUses" type="number" min="1" value="3" placeholder="Anzahl XP-Vergaben"></div><button class="btn success">Effekt aktivieren</button></form></div>
+<div class="card"><h2>Aktive Effekte</h2><div id="parentEffectsList"></div></div>
+</section>
+
+<section id="parentLogs" class="page">
+<div class="card"><h2>Protokolle des Kinderkontos</h2><p class="muted">Die Protokolle sind nur im Elternbereich sichtbar.</p>
+<div class="item"><div class="item-title">Aktivitätslog</div><div id="parentActivityLog"></div></div>
+<div class="item"><div class="item-title">Buff- & Debuff-Protokoll</div><div id="effectLog"></div></div>
+<div class="item"><div class="item-title">Erledigungen & Fortschrittsprotokoll</div><div id="parentCompletionLog"></div></div>
+<div class="item"><div class="item-title">XP-Protokoll</div><div id="parentXPLog"></div></div>
+<div class="item"><div class="item-title">Gelöschte Einträge</div><div id="deleteLog"></div></div>
+</div>
 </section>>
 <div id="editModal" class="tour-overlay" aria-hidden="true"><div id="editCard" class="tour-card" style="top:50%;left:50%;transform:translate(-50%,-50%);width:min(440px,calc(100vw - 24px))"><div class="tour-progress" id="editModeLabel">EINTRAG BEARBEITEN</div><h2 id="editTitle">Eintrag bearbeiten</h2><form id="editForm"><div id="editFields"></div><div class="tour-actions"><button type="button" class="btn" id="editCancel">Abbrechen</button><button type="submit" class="btn primary">Speichern</button></div></form></div></div><div id="tourOverlay" class="tour-overlay" aria-hidden="true"><div id="tourCard" class="tour-card"><div id="tourProgress" class="tour-progress"></div><h2 id="tourTitle"></h2><p id="tourText"></p><div class="tour-actions"><button class="btn" id="tourSkip">Überspringen</button><div class="actions" style="margin:0"><button class="btn" id="tourBack">Zurück</button><button class="btn primary" id="tourNext">Weiter</button></div></div></div></div></main>
 <footer>GALAKTOGON // Haus-KI // V9</footer>
@@ -311,7 +327,7 @@ async function setupParentSession(){
 function applyAccountView(){
   const parent=currentAccountType==="parent";
   document.querySelectorAll("nav button[data-page]").forEach(b=>{
-    const allowed=parent?["parents","settings"].includes(b.dataset.page):b.dataset.page!=="parents";
+    const allowed=parent?["parents","parentTasks","parentExams","parentQuests","parentEffects","parentLogs","settings"].includes(b.dataset.page):b.dataset.page!=="parents"&&!b.dataset.page.startsWith("parent");
     b.style.display=allowed?"":"none";
   });
   const linkBox=el("parentLinkSettings");if(linkBox)linkBox.style.display=parent?"block":"none";
@@ -435,7 +451,7 @@ document.querySelectorAll("nav button").forEach(b=>b.addEventListener("click",()
 document.querySelectorAll("[data-period]").forEach(b=>b.addEventListener("click",()=>{leaderboardPeriod=b.dataset.period;document.querySelectorAll("[data-period]").forEach(x=>x.classList.toggle("primary",x===b));renderLeaderboard()}));
 
 function showPage(p,render=true){
-  if(currentAccountType==="parent"&&!["parents","settings"].includes(p))p="parents";
+  if(currentAccountType==="parent"&&!["parents","parentTasks","parentExams","parentQuests","parentEffects","parentLogs","settings"].includes(p))p="parents";
   if(currentAccountType!=="parent"&&p==="parents")p="dashboard";
   document.querySelectorAll(".page").forEach(x=>x.classList.remove("active"));
   const target=document.getElementById(p);if(!target)return;
@@ -546,7 +562,7 @@ function renderParents(){
   ["trustForm","parentQuestForm","buffForm"].forEach(id=>{const x=el(id);if(x)x.style.display="grid"});
   const trust=el("trustStatus");if(trust)trust.value=db.trust;
   const tw=trustWeeklyModifier(),ti=el("trustInfo");if(ti)ti.innerHTML='<div class="item"><strong>Aktuelle Vertrauenswirkung: '+(tw>=0?"+":"")+tw+'% XP</strong><div class="meta">A: +20 % · B: +5 % · C: −5 % · D: −20 %</div></div>';
-  const effects=el("parentEffects");if(effects)effects.innerHTML=effectsHTML()||'<div class="empty">Keine aktiven Effekte.</div>';
+  const effects=el("parentEffectsList");if(effects)effects.innerHTML=effectsHTML()||'<div class="empty">Keine aktiven Effekte.</div>';
   const wr=el("weeklyReview");if(wr)wr.innerHTML=parentWeeklyReviewHTML();
 }
 function renderAll(){renderDashboard();renderTasks();renderExams();renderQuests();renderRecurring();renderActivities();renderProgress();renderParents();renderWeeklyReview();renderRanks();if(document.getElementById("leaderboard").classList.contains("active"))renderLeaderboard()}
