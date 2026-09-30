@@ -322,8 +322,20 @@ async function signIn(){
   if(!supabaseConfigured){authMsg("Die Supabase-Daten fehlen noch. URL und Publishable Key in der index.html eintragen.",true);return}
   const name=document.getElementById("loginName").value.trim();const pw=document.getElementById("loginPassword").value;
   if(!validUsername(name)){authMsg("Ungültiger Benutzername.",true);return}
-  authMsg("Schritt 2/3: Login-Anfrage wird gestartet …");
+  authMsg("Schritt 2/3: Supabase-Erreichbarkeit wird geprüft …");
   console.log("GAP Login Schritt 2: signIn() erreicht");
+  try{
+    const probe=await Promise.race([
+      fetch(SUPABASE_URL+"/auth/v1/settings",{method:"GET",headers:{apikey:SUPABASE_KEY}}),
+      new Promise((_,reject)=>setTimeout(()=>reject(new Error("Supabase-Erreichbarkeitstest: Zeitüberschreitung nach 8 Sekunden.")),8000))
+    ]);
+    if(!probe.ok) throw new Error("Supabase antwortet mit HTTP "+probe.status+".");
+    authMsg("Schritt 2/3: Supabase erreichbar – Login-Anfrage wird gesendet …");
+  }catch(e){
+    console.error("GAP Supabase Erreichbarkeit:",e);
+    authMsg("Schritt 2/3 fehlgeschlagen: "+(e?.message||e),true);
+    return;
+  }
   let loginResult;
   try{
     loginResult=await Promise.race([
