@@ -166,7 +166,7 @@
 const SUPABASE_URL="https://tkbopzdurmejcwawtswa.supabase.co";
 const SUPABASE_KEY="sb_publishable_NaSGbCf_A8HrrPV6O9D0ig_0tiFPA6D";
 const supabaseConfigured=SUPABASE_URL.startsWith("https://")&&SUPABASE_KEY.length>20;
-const supabaseClient=supabaseConfigured?window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY,{auth:{persistSession:true,autoRefreshToken:true}}):null;
+const supabaseClient=supabaseConfigured?window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY,{auth:{persistSession:false,autoRefreshToken:false,detectSessionInUrl:false}}):null;
 const KEY="galaktogon_v9";
 const OLD_KEYS=["galaktogon_v6","galaktogon_v52","galaktogon_v51","galaktogon_v5"];
 const DAYS=["So","Mo","Di","Mi","Do","Fr","Sa"];
