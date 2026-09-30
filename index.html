@@ -50,17 +50,7 @@
 <div class="item"><div class="item-title">Passwort</div><div class="meta">Das Passwort kann über die Kontofunktionen geändert werden.</div><div class="actions"><button class="btn" id="settingsPasswordBtn">Passwort ändern</button></div></div>
 </div>
 
-<div class="card"><h2>GAP-System</h2>
-<div class="item"><div class="item-title">XP-System</div><div class="meta">Das XP-System bleibt aktiv und verwendet die festgelegten GAP-Regeln.</div></div>
-<div class="form-grid">
-<div class="field-wrap"><label class="field-label" for="settingsNormalXP">Normale Sektoraufgabe (XP)</label><input id="settingsNormalXP" type="number" min="0" value="10"></div>
-<div class="field-wrap"><label class="field-label" for="settingsLargeXP">Große Sektoraufgabe (XP)</label><input id="settingsLargeXP" type="number" min="0" value="20"></div>
-<div class="field-wrap"><label class="field-label" for="settingsPresentationXP">Präsentation (XP)</label><input id="settingsPresentationXP" type="number" min="0" value="30"></div>
-<div class="field-wrap"><label class="field-label" for="settingsQuestXP">Standard-Quest (XP)</label><input id="settingsQuestXP" type="number" min="0" value="0"></div>
-<div class="field-wrap"><label class="field-label" for="settingsLearningXP">Lernen pro 20 Minuten (XP)</label><input id="settingsLearningXP" type="number" min="0" value="10"></div><div class="field-wrap"><label class="field-label" for="settingsRecurringXP">Wiederkehrende Aufgabe (XP)</label><input id="settingsRecurringXP" type="number" min="0" value="10"></div>
-</div>
-<div class="actions"><button class="btn primary" id="saveSystemSettingsBtn">GAP-System speichern</button><button class="btn" id="resetSystemSettingsBtn">Standardwerte</button></div>
-</div>
+
 
 <div class="card"><h2>Darstellung</h2>
 <div class="item"><div class="item-title">Ansicht</div><div class="meta">Wechsle zwischen der GALAKTOGON-Ansicht und einer neutralen, sachlichen Darstellung.</div><div class="actions"><button class="btn" id="seriousModeBtn">Seriöse Ansicht aktivieren</button></div><div id="viewModeStatus" class="meta"></div></div>
@@ -69,13 +59,13 @@
 <div class="item"><div class="item-title">Animationen</div><div class="actions"><button class="btn" id="animationBtn">Animationen: EIN</button></div></div>
 <div class="item"><div class="item-title">Kompakte Ansicht</div><div class="actions"><button class="btn" id="compactBtn">Kompakte Ansicht: AUS</button></div></div>
 </div>
-<div class="card"><h2>Fortschritt</h2>
+<div class="card" id="childTutorialProgressSettings"><h2>Fortschritt</h2>
 <div class="item"><div class="item-title">Tutorial</div><div class="meta">Zeigt den Fortschritt des Gesamttutorials und der einzelnen Bereiche.</div><div class="actions"><button class="btn primary" data-act="open-overall-tutorial">Gesamttutorial starten</button></div></div>
 <div class="item"><div class="item-title">Rangsystem</div><div class="meta">Rangstufen und XP-Grenzen können weiterhin unter „Ränge“ eingesehen werden.</div></div>
 <div class="item"><div class="item-title">Wochenbilanz und Leaderboard</div><div class="meta">Die Wochenbilanz und der XP-Vergleich bleiben über die entsprechenden Bereiche erreichbar.</div></div>
 </div>
 
-<div class="card"><h2>Tutorial</h2><p class="muted">Alle interaktiven Tutorials und das Gesamttutorial befinden sich jetzt direkt in den Einstellungen.</p>
+<div class="card" id="childTutorialSettings"><h2>Tutorial</h2><p class="muted">Alle interaktiven Tutorials und das Gesamttutorial befinden sich jetzt direkt in den Einstellungen.</p>
 <div class="card"><h2>Gesamtes Tutorial</h2><p class="muted">Das Gesamttutorial führt dich durch alle wichtigen Bereiche von GAP und zählt deinen Gesamtfortschritt.</p><div id="overallTutorialStatus" class="meta"></div><div class="actions"><button class="btn primary" data-act="open-overall-tutorial">Gesamttutorial starten</button></div></div><div class="card"><h2>GALAKTOGON-Tutorials</h2><p class="muted">Jede Seite hat ihr eigenes interaktives Tutorial. Wähle nur den Bereich aus, den du erklärt bekommen möchtest.</p></div>
 <div class="grid">
 <div class="card"><h2>Dashboard</h2><p class="muted">Rang, XP, Modifikator und Tagesübersicht.</p><button class="btn primary" data-act="open-tutorial" data-tour="dashboard">Dashboard-Tutorial</button></div>
@@ -95,7 +85,7 @@
 <div class="item"><div class="item-title">Konto löschen</div><div class="meta">Das vollständige Löschen eines Supabase-Kontos benötigt eine serverseitig abgesicherte Kontofunktion.</div></div>
 </div>
 
-<div class="card"><h2>Über GAP</h2><div class="meta">GAP 2.4 beta · Aufgaben-, Prüfungs- und Fortschrittsprotokoll</div><div class="actions"><button class="btn" data-page-jump="updates">Versionsverlauf öffnen</button><button class="btn" data-page-jump="tutorial">Tutorial öffnen</button></div></div>
+<div class="card"><h2>Über GAP</h2><div class="meta">GAP 2.4 beta · Aufgaben-, Prüfungs- und Fortschrittsprotokoll</div><div class="actions"><button class="btn" data-page-jump="updates">Versionsverlauf öffnen</button></div></div>
 </section>
 <section id="dashboard" class="page active">
 <div class="grid"><div class="card"><div class="muted">RANG</div><div class="stat" id="dashRank">Kadett</div></div><div class="card"><div class="muted">XP</div><div class="stat" id="dashXP">0</div><div class="progress"><div id="dashBar" class="progress-bar"></div></div><div id="dashNext" class="meta"></div></div><div class="card"><div class="muted">XP-MODIFIKATOR</div><div class="stat" id="dashModifier">100%</div><div id="dashModifierInfo" class="meta"></div></div><div class="card"><div class="muted">OFFENE AUFGABEN HEUTE</div><div class="stat" id="dashToday">0</div></div></div>
@@ -748,9 +738,11 @@ function applyViewMode(){
 function toggleSeriousMode(){localStorage.setItem(SERIOUS_MODE_KEY,localStorage.getItem(SERIOUS_MODE_KEY)==="1"?"0":"1");applyViewMode()}
 function toggleTheme(){localStorage.setItem(THEME_KEY,localStorage.getItem(THEME_KEY)==="light"?"dark":"light");applyViewMode()}
 function renderSettings(){
+ const childOnlyTutorial= currentAccountType==="child";
+ ["childTutorialProgressSettings","childTutorialSettings"].forEach(id=>{const x=el(id);if(x)x.style.display=childOnlyTutorial?"block":"none"});
  const accountInfo=el("settingsAccountInfo");if(accountInfo)accountInfo.innerHTML="<strong>"+esc(currentUsername)+"</strong> · "+(currentAccountType==="parent"?"Elternkonto":"Kinderkonto");const pairing=el("settingsPairingInfo");if(pairing){pairing.textContent=currentAccountType==="child"?(currentProfile?.pairing_code?"Verknüpfungscode: "+currentProfile.pairing_code:"Verknüpfungscode wird geladen."):"Kinderkonten werden im Elternbereich über einen Verknüpfungscode verknüpft."}const copyBtn=el("copyPairingBtn");if(copyBtn)copyBtn.style.display=currentAccountType==="child"?"inline-block":"none";
  const s=getSettings();
- const fields={settingsNormalXP:s.normalXP,settingsLargeXP:s.largeXP,settingsPresentationXP:s.presentationXP,settingsQuestXP:s.questXP,settingsLearningXP:s.learningXP,settingsRecurringXP:s.recurringXP,settingsReminderTime:s.reminderTime,settingsFontSize:s.fontSize};
+ const fields={settingsReminderTime:s.reminderTime,settingsFontSize:s.fontSize};
  Object.entries(fields).forEach(([id,v])=>{const x=el(id);if(x)x.value=v});
  const toggle=(id,on,label)=>{const x=el(id);if(x)x.textContent=label+": "+(on?"EIN":"AUS")};
  toggle("taskReminderBtn",s.taskReminder,"Erinnerungen für Aufgaben");toggle("examReminderBtn",s.examReminder,"Erinnerungen für Prüfungen");toggle("questReminderBtn",s.questReminder,"Erinnerungen für Quests");toggle("animationBtn",s.animations,"Animationen");toggle("compactBtn",s.compact,"Kompakte Ansicht");
@@ -763,8 +755,7 @@ function setupSettings(){
 el("themeBtn")?.addEventListener("click",toggleTheme);
  el("settingsLogoutBtn")?.addEventListener("click",()=>el("logoutBtn").click());
  el("settingsPasswordBtn")?.addEventListener("click",async()=>{const next=prompt("Neues Passwort (mindestens 6 Zeichen):");if(!next)return;if(next.length<6){alert("Das Passwort muss mindestens 6 Zeichen haben.");return}try{if(window.supabaseClient?.auth?.updateUser){const r=await window.supabaseClient.auth.updateUser({password:next});if(r.error)throw r.error;alert("Passwort wurde geändert.")}else alert("Die Kontofunktion ist in dieser Version nicht verfügbar.")}catch(e){alert("Passwort konnte nicht geändert werden: "+e.message)}});
- el("saveSystemSettingsBtn")?.addEventListener("click",()=>{const s=getSettings();s.normalXP=Math.max(0,Number(el("settingsNormalXP").value)||0);s.largeXP=Math.max(0,Number(el("settingsLargeXP").value)||0);s.presentationXP=Math.max(0,Number(el("settingsPresentationXP").value)||0);s.questXP=Math.max(0,Number(el("settingsQuestXP").value)||0);s.learningXP=Math.max(0,Number(el("settingsLearningXP").value)||0);s.recurringXP=Math.max(0,Number(el("settingsRecurringXP").value)||0);saveSettings(s);alert("GAP-System gespeichert.");renderSettings()});
- el("resetSystemSettingsBtn")?.addEventListener("click",()=>{const s=getSettings();Object.assign(s,{normalXP:10,largeXP:20,presentationXP:30,questXP:0,learningXP:10,recurringXP:10});saveSettings(s);renderSettings()});
+
  [["taskReminder","taskReminderBtn"],["examReminder","examReminderBtn"],["questReminder","questReminderBtn"]].forEach(([k,b])=>el(b)?.addEventListener("click",()=>toggleSetting(k,b)));
  el("saveReminderSettingsBtn")?.addEventListener("click",()=>{const s=getSettings();s.reminderTime=el("settingsReminderTime").value||"18:00";saveSettings(s);const n=el("notificationStatus");if("Notification" in window&&Notification.permission==="default")Notification.requestPermission().then(x=>{n.textContent="Benachrichtigungsberechtigung: "+x});else n.textContent="Erinnerungseinstellungen gespeichert.";renderSettings()});
  el("animationBtn")?.addEventListener("click",()=>toggleSetting("animations","animationBtn"));el("compactBtn")?.addEventListener("click",()=>toggleSetting("compact","compactBtn"));
