@@ -74,6 +74,7 @@
 <div class="card"><h2>Sektorprüfungen</h2><p class="muted">Prüfungen und Zielnoten verwalten.</p><button class="btn primary" data-act="open-tutorial" data-tour="exams">Sektorprüfungen-Tutorial</button></div>
 <div class="card"><h2>Quests</h2><p class="muted">Persönliche Aufgaben verwalten.</p><button class="btn purple" data-act="open-tutorial" data-tour="quests">Quest-Tutorial</button></div>
 <div class="card"><h2>Daueraufträge</h2><p class="muted">Wiederkehrende Aufgaben einrichten.</p><button class="btn primary" data-act="open-tutorial" data-tour="recurring">Daueraufträge-Tutorial</button></div>
+<div class="card"><h2>Termine</h2><p class="muted">Termine mit Datum, Uhrzeit und Push-Erinnerung verwalten.</p><button class="btn primary" data-act="open-tutorial" data-tour="appointments">Termine-Tutorial</button></div>
 <div class="card"><h2>Aktivitäten</h2><p class="muted">Favoriten und Aktivitätslog.</p><button class="btn primary" data-act="open-tutorial" data-tour="activities">Aktivitäten-Tutorial</button></div>
 
 <div class="card"><h2>Ränge</h2><p class="muted">Rangstufen und XP-Grenzen.</p><button class="btn primary" data-act="open-tutorial" data-tour="ranks">Ränge-Tutorial</button></div>
@@ -798,13 +799,14 @@ const PARENT_TOUR_STEPS=[
 {page:"parents",selector:"#buffForm",title:"6 · Buff / Debuff",text:"Hier können zeitlich begrenzte XP-Effekte vergeben werden."},
 {page:"parents",selector:"#parentEffects",title:"7 · Aktive Effekte",text:"Hier werden die aktuell aktiven Effekte des ausgewählten Kinderkontos angezeigt."}
 ];
-const OVERALL_TUTORIAL_ORDER=["dashboard","tasks","exams","quests","recurring","activities","progress","ranks","leaderboard"];
+const OVERALL_TUTORIAL_ORDER=["dashboard","tasks","exams","quests","recurring","appointments","activities","progress","ranks","leaderboard"];
 const OVERALL_TUTORIAL_STEPS=[
 {page:"dashboard",selector:"#dashboard",title:"1 · Dashboard",text:"Hier siehst du Rang, XP, Modifikator und was heute ansteht."},
 {page:"tasks",selector:"#taskForm",title:"2 · Sektoraufgaben",text:"Hier legst du Schulaufgaben an, setzt Termine und markierst sie später mit Datum und Uhrzeit als erledigt."},
 {page:"exams",selector:"#examForm",title:"3 · Sektorprüfungen",text:"Hier verwaltest du Prüfungen, Termine, Größe und Zielnote."},
 {page:"quests",selector:"#questForm",title:"4 · Quests",text:"Quests sind persönliche Aufgaben mit eigener XP-Belohnung."},
 {page:"recurring",selector:"#recurringForm",title:"5 · Daueraufträge",text:"Daueraufträge erscheinen automatisch an den von dir gewählten Wochentagen."},
+{page:"appointments",selector:"#appointmentForm",title:"6 · Termine",text:"Hier legst du Termine mit Datum, Uhrzeit und einer frei wählbaren Erinnerung an. Wenn Push aktiviert ist, kommt die Erinnerung auch außerhalb von GAP."},
 {page:"activities",selector:"#favoriteActivities",title:"6 · Aktivitäten",text:"Favoriten lassen sich schnell ausführen und werden im Aktivitätslog gespeichert."},
 {page:"progress",selector:"#progress",title:"7 · Fortschritt",text:"Hier siehst du Tutorialfortschritt, Rang, XP und die Protokolle."},
 {page:"ranks",selector:"#rankList",title:"8 · Ränge",text:"Hier findest du alle Rangstufen und ihre XP-Grenzen."},
@@ -857,7 +859,7 @@ const GAP_UPDATES_DONE=[
 ["28 · Termin-Push-Benachrichtigungen","GAP kann Termine zum eingestellten Erinnerungszeitpunkt per Push an registrierte Geräte melden – auch wenn GAP nicht geöffnet ist."],
 ];
 const GAP_UPDATES_FUTURE=[
-["27 · Nächstes Update","Hier wird automatisch das nächste noch nicht umgesetzte Update vorbereitet."]
+["29 · Nächstes Update","Das nächste GAP-Update wird vorbereitet."]
 ];
 function renderUpdates(){const done=el("updateListDone"),future=el("updateListFuture");if(done)done.innerHTML=GAP_UPDATES_DONE.map(x=>'<div class="item"><div class="item-title">'+esc(x[0])+'</div><div class="meta">'+esc(x[1])+'</div></div>').join("");if(future)future.innerHTML=GAP_UPDATES_FUTURE.map(x=>'<div class="item"><div class="item-title">'+esc(x[0])+'</div><div class="meta">'+esc(x[1])+'</div></div>').join("")}
 const SERIOUS_MODE_KEY="gap_serious_mode";
