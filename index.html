@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>GAP projekt 2.0 beta</title>
 
- <link rel="icon" type="image/svg+xml" href="favicon.svg">
+ <link rel="icon" type="image/svg+xml" href="favicon.svg">\n<link rel="manifest" href="manifest.webmanifest">
  
 <style>
 :root{--bg:#0f151c;--panel:#18222d;--panel2:#202c38;--line:#344455;--text:#f3f6f9;--muted:#aeb9c4;--accent:#69b8ff;--green:#68d69a;--yellow:#ffd166;--red:#ff7474;--purple:#b795ff}
@@ -27,7 +27,7 @@
 <div id="authMessage" class="small" style="margin-top:10px"></div></div></div>
 
 <header>
-<div class="header-inner"><div><div class="logo" id="appLogo">GALAKTOGON AUFGABENPROTOKOLL</div><div class="version">GAP // 2.4 beta</div></div><div class="xp-mini"><div id="headerRank">Kadett</div><div id="headerXP">0 XP</div><button class="btn small" id="logoutBtn" style="margin-top:6px">Abmelden</button></div></div>
+<div class="header-inner"><div><div class="logo" id="appLogo">GALAKTOGON AUFGABENPROTOKOLL</div><div class="version">GAP // 2.5 beta</div></div><div class="xp-mini"><div id="headerRank">Kadett</div><div id="headerXP">0 XP</div><button class="btn small" id="logoutBtn" style="margin-top:6px">Abmelden</button></div></div>
 <nav>
 <button data-page="dashboard">Dashboard</button><button data-page="updates">Updates</button><button data-page="tasks">Sektoraufgaben</button><button data-page="exams">Sektorprüfungen</button><button data-page="quests">Quests</button><button data-page="recurring">Daueraufträge</button><button data-page="appointments">Termine</button><button data-page="activities">Aktivitäten</button><button data-page="progress">Fortschritt</button><button data-page="ranks">Ränge</button><button data-page="leaderboard">Leaderboard</button><button data-page="parents">Elternübersicht</button><button data-page="parentTasks">Sektoraufgaben</button><button data-page="parentExams">Sektorprüfungen</button><button data-page="parentQuests">Quests</button><button data-page="parentEffects">Buffs & Debuffs</button><button data-page="parentLogs">Logs</button><button data-page="parentReview">Wochenbericht</button><button data-page="settings">Einstellungen</button>
 </nav>
@@ -52,6 +52,12 @@
 
 
 
+<div class="card" id="pushSettingsCard">
+<div class="item"><div class="item-title">Push-Benachrichtigungen</div>
+<div class="meta">Jeden Tag um 18:00 Uhr erinnert GAP an offene Sektoraufgaben mit Abgabe heute, offene Quests und fällige Daueraufträge. Die Benachrichtigung wird an jedes registrierte Gerät gesendet.</div>
+<div class="actions"><button class="btn primary" id="enablePushBtn">Push-Benachrichtigungen aktivieren</button><button class="btn" id="disablePushBtn">Dieses Gerät deaktivieren</button></div>
+<div id="pushStatus" class="meta">Status wird geladen.</div></div>
+</div>
 <div class="card"><h2>Darstellung</h2>
 <div class="item"><div class="item-title">Ansicht</div><div class="meta">Wechsle zwischen der GALAKTOGON-Ansicht und einer neutralen, sachlichen Darstellung.</div><div class="actions"><button class="btn" id="seriousModeBtn">Seriöse Ansicht aktivieren</button></div><div id="viewModeStatus" class="meta"></div></div>
 <div class="item"><div class="item-title">Farbschema</div><div class="meta">White Mode und Black Mode sind unabhängig von der seriösen Ansicht.</div><div class="actions"><button class="btn" id="themeBtn">White Mode aktivieren</button></div><div id="themeStatus" class="meta"></div></div>
@@ -890,9 +896,56 @@ function renderSettings(){
  document.body.classList.toggle("settings-compact",s.compact);document.body.classList.toggle("font-small",s.fontSize==="small");document.body.classList.toggle("font-large",s.fontSize==="large");document.body.classList.toggle("animations-off",!s.animations); const type=el("taskType");if(type){const labels={normal:"Normale Aufgabe",vocabulary:"Vokabeln",large:"Große Aufgabe",presentation:"Präsentation",learning:"Lernen"};[...type.options].forEach(o=>{const xp=o.value==="large"?s.largeXP:o.value==="presentation"?s.presentationXP:o.value==="learning"?s.learningXP:s.normalXP;o.textContent=labels[o.value]+" (+"+xp+" XP)"})}
  const sync=el("settingsSyncInfo");if(sync)sync.textContent=typeof save==="function"?"Online-Spielstand ist über das aktuelle GAP-Konto verbunden.":"Online-Synchronisierung wird geladen.";
 }
+const GAP_VAPID_PUBLIC_KEY="BJajfYUVRSwA70jm71eBt5gP8gqCaog3XEiYz1lBvL4SnxesUwJRtQmUV2L8bAHYo3a-7QKKY--oKrarBDIc4so";
+function pushSupported(){return "serviceWorker" in navigator&&"PushManager" in window&&"Notification" in window}
+function pushKeyBytes(base64){const pad="=".repeat((4-base64.length%4)%4);const s=(base64+pad).replace(/-/g,"+").replace(/_/g,"/");const raw=atob(s);return Uint8Array.from(raw,c=>c.charCodeAt(0))}
+async function refreshPushStatus(){
+ const box=el("pushSettingsCard"),status=el("pushStatus");if(!box||!status)return;
+ if(currentAccountType!=="child"){box.style.display="none";return}
+ box.style.display="block";
+ if(!pushSupported()){status.textContent="Push-Benachrichtigungen werden auf diesem Browser nicht unterstützt.";return}
+ const permission=Notification.permission;
+ if(permission==="denied"){status.textContent="Benachrichtigungen wurden im Browser blockiert. Bitte in den Browser-Einstellungen erlauben.";return}
+ try{
+   const {data,error}=await supabaseClient.functions.invoke("gap-push?action=status");
+   if(error)throw error;
+   status.textContent="Berechtigung: "+(permission==="granted"?"erteilt":"noch nicht erteilt")+" · Registrierte Geräte: "+(data?.devices||0);
+ }catch(e){status.textContent="Push-Status konnte nicht geladen werden."}
+}
+async function enablePushNotifications(){
+ if(currentAccountType!=="child")return;
+ if(!pushSupported()){alert("Dieser Browser unterstützt keine Web-Push-Benachrichtigungen.");return}
+ try{
+   const permission=await Notification.requestPermission();
+   if(permission!=="granted"){await refreshPushStatus();return}
+   const registration=await navigator.serviceWorker.register("/sw.js",{scope:"/"});
+   let subscription=await registration.pushManager.getSubscription();
+   if(!subscription)subscription=await registration.pushManager.subscribe({userVisibleOnly:true,applicationServerKey:pushKeyBytes(GAP_VAPID_PUBLIC_KEY)});
+   const {error}=await supabaseClient.functions.invoke("gap-push?action=subscribe",{body:subscription.toJSON()});
+   if(error)throw error;
+   await refreshPushStatus();
+   alert("Push-Benachrichtigungen sind für dieses Gerät aktiviert.");
+ }catch(e){
+   console.error("GAP Push:",e);
+   alert("Push-Benachrichtigungen konnten nicht aktiviert werden: "+(e?.message||e));
+ }
+}
+async function disablePushNotifications(){
+ if(!pushSupported())return;
+ try{
+   const registration=await navigator.serviceWorker.getRegistration("/");
+   const subscription=registration?await registration.pushManager.getSubscription():null;
+   if(subscription){
+     const {error}=await supabaseClient.functions.invoke("gap-push?action=unsubscribe",{body:{endpoint:subscription.endpoint}});
+     if(error)throw error;
+     await subscription.unsubscribe();
+   }
+   await refreshPushStatus();
+ }catch(e){alert("Push-Benachrichtigungen konnten nicht deaktiviert werden: "+(e?.message||e))}
+}
 function setupSettings(){
  const toggleSetting=(key,btnId)=>{const s=getSettings();s[key]=!s[key];saveSettings(s);renderSettings()};
- el("seriousModeBtn")?.addEventListener("click",toggleSeriousMode);el("copyPairingBtn")?.addEventListener("click",async()=>{const code=currentProfile?.pairing_code;if(!code)return;try{await navigator.clipboard.writeText(code);el("settingsPairingInfo").textContent="Verknüpfungscode kopiert: "+code}catch(e){el("settingsPairingInfo").textContent="Verknüpfungscode: "+code}});
+ el("seriousModeBtn")?.addEventListener("click",toggleSeriousMode);\n el("enablePushBtn")?.addEventListener("click",enablePushNotifications);el("disablePushBtn")?.addEventListener("click",disablePushNotifications);el("copyPairingBtn")?.addEventListener("click",async()=>{const code=currentProfile?.pairing_code;if(!code)return;try{await navigator.clipboard.writeText(code);el("settingsPairingInfo").textContent="Verknüpfungscode kopiert: "+code}catch(e){el("settingsPairingInfo").textContent="Verknüpfungscode: "+code}});
 el("themeBtn")?.addEventListener("click",toggleTheme);
  el("settingsLogoutBtn")?.addEventListener("click",()=>el("logoutBtn").click());
  el("settingsPasswordBtn")?.addEventListener("click",async()=>{const next=prompt("Neues Passwort (mindestens 6 Zeichen):");if(!next)return;if(next.length<6){alert("Das Passwort muss mindestens 6 Zeichen haben.");return}try{if(window.supabaseClient?.auth?.updateUser){const r=await window.supabaseClient.auth.updateUser({password:next});if(r.error)throw r.error;alert("Passwort wurde geändert.")}else alert("Die Kontofunktion ist in dieser Version nicht verfügbar.")}catch(e){alert("Passwort konnte nicht geändert werden: "+e.message)}});
