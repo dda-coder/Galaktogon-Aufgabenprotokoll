@@ -56,7 +56,7 @@
 <div class="card" id="pushSettingsCard">
 <div class="item"><div class="item-title">Push-Benachrichtigungen</div>
 <div class="meta">Jeden Tag um 18:00 Uhr erinnert GAP an offene Sektoraufgaben mit Abgabe heute, offene Quests und fällige Daueraufträge. Die Benachrichtigung wird an jedes registrierte Gerät gesendet.</div>
-<div class="actions"><button class="btn primary" id="enablePushBtn">Push-Benachrichtigungen aktivieren</button><button class="btn" id="testPushBtn">Test-Benachrichtigung senden</button><button class="btn" id="disablePushBtn">Dieses Gerät deaktivieren</button></div>
+<div class="actions"><button class="btn primary" id="enablePushBtn">Push-Benachrichtigungen aktivieren</button><button class="btn" id="disablePushBtn">Dieses Gerät deaktivieren</button></div>
 <div id="pushStatus" class="meta">Status wird geladen.</div></div>
 </div>
 <div class="card"><h2>Darstellung</h2>
@@ -932,7 +932,7 @@ async function enablePushNotifications(){
    alert("Push-Benachrichtigungen konnten nicht aktiviert werden: "+(e?.message||e));
  }
 }
-async function testPushNotification(){if(currentAccountType!=="child")return;if(!pushSupported()){alert("Dieser Browser unterstützt keine Web-Push-Benachrichtigungen.");return}try{const {data,error}=await supabaseClient.functions.invoke("gap-push?action=test");if(error)throw error;if(!data?.messages)throw new Error(data?.error||"Kein registriertes Push-Gerät gefunden.");alert("Test-Push wurde gesendet.");}catch(e){alert("Test-Push fehlgeschlagen: "+(e?.message||e))}}async function disablePushNotifications(){
+async function disablePushNotifications(){
  if(!pushSupported())return;
  try{
    const registration=await navigator.serviceWorker.getRegistration("/");
@@ -948,7 +948,7 @@ async function testPushNotification(){if(currentAccountType!=="child")return;if(
 function setupSettings(){
  const toggleSetting=(key,btnId)=>{const s=getSettings();s[key]=!s[key];saveSettings(s);renderSettings()};
  el("seriousModeBtn")?.addEventListener("click",toggleSeriousMode);
- el("enablePushBtn")?.addEventListener("click",enablePushNotifications);el("testPushBtn")?.addEventListener("click",testPushNotification);el("disablePushBtn")?.addEventListener("click",disablePushNotifications);el("copyPairingBtn")?.addEventListener("click",async()=>{const code=currentProfile?.pairing_code;if(!code)return;try{await navigator.clipboard.writeText(code);el("settingsPairingInfo").textContent="Verknüpfungscode kopiert: "+code}catch(e){el("settingsPairingInfo").textContent="Verknüpfungscode: "+code}});
+ el("enablePushBtn")?.addEventListener("click",enablePushNotifications);el("disablePushBtn")?.addEventListener("click",disablePushNotifications);el("copyPairingBtn")?.addEventListener("click",async()=>{const code=currentProfile?.pairing_code;if(!code)return;try{await navigator.clipboard.writeText(code);el("settingsPairingInfo").textContent="Verknüpfungscode kopiert: "+code}catch(e){el("settingsPairingInfo").textContent="Verknüpfungscode: "+code}});
 el("themeBtn")?.addEventListener("click",toggleTheme);
  el("settingsLogoutBtn")?.addEventListener("click",()=>el("logoutBtn").click());
  el("settingsPasswordBtn")?.addEventListener("click",async()=>{const next=prompt("Neues Passwort (mindestens 6 Zeichen):");if(!next)return;if(next.length<6){alert("Das Passwort muss mindestens 6 Zeichen haben.");return}try{if(window.supabaseClient?.auth?.updateUser){const r=await window.supabaseClient.auth.updateUser({password:next});if(r.error)throw r.error;alert("Passwort wurde geändert.")}else alert("Die Kontofunktion ist in dieser Version nicht verfügbar.")}catch(e){alert("Passwort konnte nicht geändert werden: "+e.message)}});
