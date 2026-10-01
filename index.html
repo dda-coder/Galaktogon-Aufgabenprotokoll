@@ -55,7 +55,7 @@
 
 <div class="card" id="pushSettingsCard">
 <div class="item"><div class="item-title">Push-Benachrichtigungen</div>
-<div class="meta">Jeden Tag um 18:00 Uhr erinnert GAP an offene Sektoraufgaben mit Abgabe heute, offene Quests und fällige Daueraufträge. Die Benachrichtigung wird an jedes registrierte Gerät gesendet.</div>
+<div class="meta">Jeden Tag um 18:00 Uhr erinnert GAP an offene Sektoraufgaben mit Abgabe heute, offene Quests und fällige Daueraufträge. Zusätzlich können Termine zum eingestellten Erinnerungszeitpunkt per Push gemeldet werden. Die Benachrichtigungen werden an jedes registrierte Gerät gesendet.</div>
 <div class="actions"><button class="btn primary" id="enablePushBtn">Push-Benachrichtigungen aktivieren</button><button class="btn" id="disablePushBtn">Dieses Gerät deaktivieren</button></div>
 <div id="pushStatus" class="meta">Status wird geladen.</div></div>
 </div>
@@ -854,6 +854,7 @@ const GAP_UPDATES_DONE=[
 ["24 · Geteilte Aufgaben","Kinder können Sektoraufgaben, Sektorprüfungen, Quests und Daueraufträge an andere Kinderkonten senden."],
 ["25 · Termine","Eigene Termine können mit Datum, Uhrzeit und einer frei wählbaren Erinnerung gespeichert werden."],
 ["26 · Web-Push-Benachrichtigungen","GAP kann offene Aufgaben um 18:00 Uhr per Push an registrierte Geräte melden – auch wenn GAP nicht geöffnet ist."],
+["28 · Termin-Push-Benachrichtigungen","GAP kann Termine zum eingestellten Erinnerungszeitpunkt per Push an registrierte Geräte melden – auch wenn GAP nicht geöffnet ist."],
 ];
 const GAP_UPDATES_FUTURE=[
 ["27 · Nächstes Update","Hier wird automatisch das nächste noch nicht umgesetzte Update vorbereitet."]
@@ -974,8 +975,15 @@ document.addEventListener("click",async e=>{
 });
 function completeAppointment(id){const a=db.appointments.find(x=>x.id===id);if(!a)return;a.completed=true;save();renderAll()}
 function deleteAppointment(id){const i=db.appointments.findIndex(x=>x.id===id);if(i<0)return;const a=db.appointments[i];if(!confirm("Termin löschen?\n\n"+a.title))return;db.appointments.splice(i,1);save();renderAll()}
-function checkAppointmentReminders(){
+async function checkAppointmentReminders(){
  if(!("Notification" in window)||Notification.permission!=="granted")return;
+ if(pushSupported()){
+   try{
+     const registration=await navigator.serviceWorker.getRegistration("/");
+     const subscription=registration?await registration.pushManager.getSubscription():null;
+     if(subscription)return;
+   }catch(e){}
+ }
  const now=Date.now();
  db.appointments.forEach(a=>{if(a.completed||a.reminded)return;const at=appointmentDateTime(a).getTime();const remindAt=at-Math.max(0,Number(a.reminder)||0)*60000;if(now>=remindAt&&now<at+60000){new Notification("GAP – Termin", {body:a.title+" · "+dateText(a.date+"T"+a.time)});a.reminded=true;save()}})
 }
