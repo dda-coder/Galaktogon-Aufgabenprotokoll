@@ -1,11 +1,28 @@
 {
-  "name":"GALAKTOGON Aufgabenprotokoll",
-  "short_name":"GAP",
-  "start_url":"/",
-  "display":"standalone",
-  "background_color":"#0f151c",
-  "theme_color":"#141c25",
-  "icons":[
-    {"src":"/favicon.png","sizes":"192x192","type":"image/png","purpose":"any maskable"},{"src":"/favicon.png","sizes":"512x512","type":"image/png","purpose":"any maskable"}
+  "id": "/",
+  "name": "GALAKTOGON Aufgabenprotokoll",
+  "short_name": "GAP",
+  "lang": "de-DE",
+  "dir": "ltr",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#0f151c",
+  "theme_color": "#141c25",
+  "prefer_related_applications": false,
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "/favicon.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
   ]
 }
