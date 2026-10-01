@@ -900,7 +900,7 @@ function setupParentControls(){
 document.addEventListener("click",async e=>{
  const b=e.target.closest("[data-share-action]");
  if(b){try{await respondShare(b.dataset.shareId,b.dataset.shareAction==="accept")}catch(err){console.error(err);alert("Aktion fehlgeschlagen: "+err.message)}return}
- const a=e.target.closest("[data-act^="share-"]");
+ const a=e.target.closest("[data-act^='share-']");
  if(a){try{await shareItem(a.dataset.act.slice(6),a.dataset.id)}catch(err){console.error(err);alert("Teilen fehlgeschlagen: "+err.message)}}
 });
 function setupForms(){
