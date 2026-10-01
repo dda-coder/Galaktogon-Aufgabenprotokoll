@@ -780,10 +780,14 @@ const GAP_UPDATES_DONE=[
 ["15 · Feldüberschriften & Daueraufträge","Eingabefelder wurden mit sichtbaren Überschriften versehen. Daueraufträge erhielten ebenfalls den Verspätungs-Debuff."],
 ["16 · Daueraufträge bearbeiten","Der Verspätungs-Debuff von Daueraufträgen kann im Bearbeiten-Dialog geändert werden."],
 ["17 · Debuff-Beschriftung","Das Debuff-Feld im Bearbeiten-Dialog der Daueraufträge ist jetzt eindeutig mit „Verspätungs-Debuff (%)“ beschriftet."],
+["18 · Elternverwaltung neu strukturiert","Die Elternseite wurde in eigene Bereiche für Übersicht, Sektoraufgaben, Sektorprüfungen, Quests, Buffs & Debuffs, Logs, Wochenbericht und Einstellungen aufgeteilt."],
+["19 · Kinderkonto-Verknüpfung repariert","Die Verknüpfung eines Kinderkontos wurde nach der Elternseiten-Umstrukturierung wiederhergestellt und robuster gegen Ladefehler gemacht."],
+["20 · Elternmodus & seriöse Ansicht","Die Überschriften im Elternmodus wurden ausgeschrieben und die seriöse Ansicht erhielt eigene Bezeichnungen sowie eine standardmäßige Aktivierung für Elternkonten."],
+["21 · Einstellungen & Quest-Zähler","Die Kinderkonto-Verknüpfung wurde in die Einstellungen verschoben. Auf dem Dashboard zeigt eine neue Kachel die Anzahl der offenen Quests."],
 ];
 const GAP_UPDATES_FUTURE=[
-["1 · Nächstes Update","Platzhalter für die nächste geplante GAP-Funktion."],
-["2 · Weitere Verbesserungen","Neue Wünsche und Verbesserungen werden hier ergänzt, sobald sie festgelegt sind."]
+["22 · Nächstes Update","Hier wird automatisch das nächste noch nicht umgesetzte Update vorbereitet."],
+["23 · Weitere Verbesserungen","Neue festgelegte Funktionen werden fortlaufend mit der nächsten freien Nummer ergänzt."]
 ];
 function renderUpdates(){const done=el("updateListDone"),future=el("updateListFuture");if(done)done.innerHTML=GAP_UPDATES_DONE.map(x=>'<div class="item"><div class="item-title">'+esc(x[0])+'</div><div class="meta">'+esc(x[1])+'</div></div>').join("");if(future)future.innerHTML=GAP_UPDATES_FUTURE.map(x=>'<div class="item"><div class="item-title">'+esc(x[0])+'</div><div class="meta">'+esc(x[1])+'</div></div>').join("")}
 const SERIOUS_MODE_KEY="gap_serious_mode";
