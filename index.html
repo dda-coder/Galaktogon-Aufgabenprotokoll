@@ -947,7 +947,8 @@ async function disablePushNotifications(){
 }
 function setupSettings(){
  const toggleSetting=(key,btnId)=>{const s=getSettings();s[key]=!s[key];saveSettings(s);renderSettings()};
- el("seriousModeBtn")?.addEventListener("click",toggleSeriousMode);\n el("enablePushBtn")?.addEventListener("click",enablePushNotifications);el("disablePushBtn")?.addEventListener("click",disablePushNotifications);el("copyPairingBtn")?.addEventListener("click",async()=>{const code=currentProfile?.pairing_code;if(!code)return;try{await navigator.clipboard.writeText(code);el("settingsPairingInfo").textContent="Verknüpfungscode kopiert: "+code}catch(e){el("settingsPairingInfo").textContent="Verknüpfungscode: "+code}});
+ el("seriousModeBtn")?.addEventListener("click",toggleSeriousMode);
+ el("enablePushBtn")?.addEventListener("click",enablePushNotifications);el("disablePushBtn")?.addEventListener("click",disablePushNotifications);el("copyPairingBtn")?.addEventListener("click",async()=>{const code=currentProfile?.pairing_code;if(!code)return;try{await navigator.clipboard.writeText(code);el("settingsPairingInfo").textContent="Verknüpfungscode kopiert: "+code}catch(e){el("settingsPairingInfo").textContent="Verknüpfungscode: "+code}});
 el("themeBtn")?.addEventListener("click",toggleTheme);
  el("settingsLogoutBtn")?.addEventListener("click",()=>el("logoutBtn").click());
  el("settingsPasswordBtn")?.addEventListener("click",async()=>{const next=prompt("Neues Passwort (mindestens 6 Zeichen):");if(!next)return;if(next.length<6){alert("Das Passwort muss mindestens 6 Zeichen haben.");return}try{if(window.supabaseClient?.auth?.updateUser){const r=await window.supabaseClient.auth.updateUser({password:next});if(r.error)throw r.error;alert("Passwort wurde geändert.")}else alert("Die Kontofunktion ist in dieser Version nicht verfügbar.")}catch(e){alert("Passwort konnte nicht geändert werden: "+e.message)}});
