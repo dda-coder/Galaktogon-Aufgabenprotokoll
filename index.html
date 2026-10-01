@@ -29,7 +29,7 @@
 <header>
 <div class="header-inner"><div><div class="logo" id="appLogo">GALAKTOGON AUFGABENPROTOKOLL</div><div class="version">GAP // 2.4 beta</div></div><div class="xp-mini"><div id="headerRank">Kadett</div><div id="headerXP">0 XP</div><button class="btn small" id="logoutBtn" style="margin-top:6px">Abmelden</button></div></div>
 <nav>
-<button data-page="dashboard">Dashboard</button><button data-page="updates">Updates</button><button data-page="tasks">Sektoraufgaben</button><button data-page="exams">Sektorprüfungen</button><button data-page="quests">Quests</button><button data-page="recurring">Daueraufträge</button><button data-page="activities">Aktivitäten</button><button data-page="progress">Fortschritt</button><button data-page="ranks">Ränge</button><button data-page="leaderboard">Leaderboard</button><button data-page="parents">Elternübersicht</button><button data-page="parentTasks">Sektoraufgaben</button><button data-page="parentExams">Sektorprüfungen</button><button data-page="parentQuests">Quests</button><button data-page="parentEffects">Buffs & Debuffs</button><button data-page="parentLogs">Logs</button><button data-page="parentReview">Wochenbericht</button><button data-page="settings">Einstellungen</button>
+<button data-page="dashboard">Dashboard</button><button data-page="updates">Updates</button><button data-page="tasks">Sektoraufgaben</button><button data-page="exams">Sektorprüfungen</button><button data-page="quests">Quests</button><button data-page="recurring">Daueraufträge</button><button data-page="appointments">Termine</button><button data-page="activities">Aktivitäten</button><button data-page="progress">Fortschritt</button><button data-page="ranks">Ränge</button><button data-page="leaderboard">Leaderboard</button><button data-page="parents">Elternübersicht</button><button data-page="parentTasks">Sektoraufgaben</button><button data-page="parentExams">Sektorprüfungen</button><button data-page="parentQuests">Quests</button><button data-page="parentEffects">Buffs & Debuffs</button><button data-page="parentLogs">Logs</button><button data-page="parentReview">Wochenbericht</button><button data-page="settings">Einstellungen</button>
 </nav>
 </header>
 <main>
@@ -83,7 +83,7 @@
 </section>
 <section id="dashboard" class="page active">
 <div class="grid"><div class="card"><div class="muted">RANG</div><div class="stat" id="dashRank">Kadett</div></div><div class="card"><div class="muted">XP</div><div class="stat" id="dashXP">0</div><div class="progress"><div id="dashBar" class="progress-bar"></div></div><div id="dashNext" class="meta"></div></div><div class="card"><div class="muted">XP-MODIFIKATOR</div><div class="stat" id="dashModifier">100%</div><div id="dashModifierInfo" class="meta"></div></div><div class="card"><div class="muted">OFFENE AUFGABEN HEUTE</div><div class="stat" id="dashToday">0</div></div></div><div class="card"><div class="muted">OFFENE QUESTS</div><div class="stat" id="dashOpenQuests">0</div><div class="meta">Aktuell offene Quests</div></div>
-<div class="card"><h2>Geteilte Aufgaben</h2><div id="dashboardShares"></div></div>
+<div class="card"><h2>Geteilte Aufgaben</h2><div id="dashboardShares"></div></div><div class="card"><h2>Anstehende Termine</h2><div id="dashboardAppointments"></div></div>
 <div class="card"><h2>Aktive Buffs & Debuffs</h2><div id="dashboardEffects"></div></div>
 <div class="card"><h2>Heutige Mission</h2><div id="dashboardToday"></div></div>
 <div class="card"><h2>Offene Quests</h2><div id="dashboardQuests"></div></div>
@@ -109,6 +109,11 @@
 <section id="recurring" class="page">
 <div class="card"><h2>Neuer Dauerauftrag</h2><p class="muted">Wähle die Wochentage aus, an denen der Auftrag erscheinen soll. Wird er an diesem Tag erledigt, kann er am nächsten ausgewählten Tag wieder erledigt werden.</p><form id="recurringForm"><input id="recurringTitle" placeholder="z. B. Jeden Tag Vokabeln machen" required><div class="form-grid"><input id="recurringSubject" placeholder="Fach"><input id="recurringXP" type="number" min="0" value="10" placeholder="XP"><input id="recurringDue" type="time" title="Optionale Uhrzeit"><input id="recurringLatePenalty" type="number" min="0" max="100" value="0" placeholder="Verspätungs-Debuff (%)" title="XP-Abzug bei verspäteter Erledigung"></div><div><div class="muted small">Wochentage</div><div class="days" id="weekdayInputs"></div></div><label class="day"><input id="recurringSecret" type="checkbox"> Geheim – Eltern sehen diesen Dauerauftrag nicht</label><button class="btn primary">Dauerauftrag hinzufügen</button></form></div>
 <div class="card"><h2>Aktive Daueraufträge</h2><div id="recurringList"></div></div>
+</section>
+
+<section id="appointments" class="page">
+<div class="card"><h2>Neuer Termin</h2><p class="muted">Speichere Termine mit Datum, Uhrzeit und einer Erinnerung.</p><form id="appointmentForm"><input id="appointmentTitle" placeholder="Termin" required><div class="form-grid"><input id="appointmentDate" type="date" required><input id="appointmentTime" type="time" required><input id="appointmentReminder" type="number" min="0" max="10080" value="10" placeholder="Erinnerung vorher (Minuten)"></div><textarea id="appointmentNote" placeholder="Notiz"></textarea><button class="btn primary">Termin speichern</button></form><div id="appointmentNotificationStatus" class="meta"></div></div>
+<div class="card"><h2>Meine Termine</h2><div id="appointmentList"></div></div>
 </section>
 
 <section id="activities" class="page">
@@ -214,11 +219,11 @@ function lateMultiplier(item,completedAt){if(!item?.due)return 1;const due=new D
 function rank(){let r=RANKS[0];RANKS.forEach(v=>{if(db.xp>=v.x)r=v});return r}
 function nextRank(){return RANKS.find(v=>db.xp<v.x)||null}
 function defaultActivities(){return [{id:uid(),title:"Gitarre lernen",xp:10},{id:uid(),title:"Bewegen / draußen",xp:10},{id:uid(),title:"Lesen",xp:15},{id:uid(),title:"Zimmer aufräumen",xp:15},{id:uid(),title:"Ganzes Zimmer",xp:20}]}
-function fresh(){const d={xp:0,tasks:[],exams:[],quests:[],recurring:[],activities:defaultActivities(),activityLog:[],xpLog:[],completionLog:[],deleteLog:[],effects:[],trust:"A",trustWeekModifier:20,trustWeekKey:"",tutorialDone:false,tutorialSectionsDone:[],fixed20:false};d.quests.push({id:uid(),title:"GALAKTOGON-Tutorial ansehen",due:"",xp:0,note:"Einmalige Einführung in Benutzeroberfläche, XP-System und Elternmodus.",tutorial:true});return d}
+function fresh(){const d={xp:0,tasks:[],exams:[],quests:[],recurring:[],appointments:[],activities:defaultActivities(),activityLog:[],xpLog:[],completionLog:[],deleteLog:[],effects:[],trust:"A",trustWeekModifier:20,trustWeekKey:"",tutorialDone:false,tutorialSectionsDone:[],fixed20:false};d.quests.push({id:uid(),title:"GALAKTOGON-Tutorial ansehen",due:"",xp:0,note:"Einmalige Einführung in Benutzeroberfläche, XP-System und Elternmodus.",tutorial:true});return d}
 
 function normalize(d){
  const f=fresh(); if(!d||typeof d!=="object")return f;
- ["tasks","exams","quests","recurring","activities","activityLog","xpLog","completionLog","deleteLog","effects"].forEach(k=>{if(!Array.isArray(d[k]))d[k]=[]});
+ ["tasks","exams","quests","recurring","appointments","activities","activityLog","xpLog","completionLog","deleteLog","effects"].forEach(k=>{if(!Array.isArray(d[k]))d[k]=[]});
  if(typeof d.xp!=="number")d.xp=0;if(!d.trust)d.trust="A";if(typeof d.trustWeekModifier!=="number")d.trustWeekModifier=d.trust==="A"?20:d.trust==="B"?5:d.trust==="C"?-5:-20;if(typeof d.trustWeekKey!=="string")d.trustWeekKey="";if(typeof d.tutorialDone!=="boolean")d.tutorialDone=false;if(!Array.isArray(d.tutorialSectionsDone))d.tutorialSectionsDone=[];
  /* Alte Aktivitäten reparieren, aber nur wenn sie noch vorhanden sind. */
  const names=["Gitarre lernen","Bewegen / draußen","Lesen","Zimmer aufräumen","Ganzes Zimmer"];
@@ -470,7 +475,7 @@ function showPage(p,render=true){
   if(render)renderAll();
 }
 function el(id){return document.getElementById(id)}
-const FIELD_LABELS={loginName:"Benutzername",loginPassword:"Passwort",signupName:"Benutzername",signupPassword:"Passwort",signupPassword2:"Passwort wiederholen",signupType:"Kontotyp",taskTitle:"Aufgabe",taskSubject:"Fach",taskDue:"Deadline (Datum & Uhrzeit)",taskLatePenalty:"Verspätungs-Debuff (%)",taskType:"Aufgabentyp",taskNote:"Notiz",examSubject:"Fach",examTitle:"Prüfung",examDate:"Datum",examSize:"Prüfungsgröße",examTarget:"Zielnote",questTitle:"Quest",questDue:"Deadline (Datum & Uhrzeit)",questLatePenalty:"Verspätungs-Debuff (%)",questXP:"XP-Belohnung",questNote:"Notiz",recurringTitle:"Dauerauftrag",recurringSubject:"Fach",recurringXP:"XP-Belohnung",recurringDue:"Uhrzeit (optional)",recurringLatePenalty:"Verspätungs-Debuff (%)",activityTitle:"Aktivität",activityXP:"XP-Belohnung",parentQuestTitle:"Quest",parentQuestDue:"Deadline (Datum)",parentQuestLatePenalty:"Verspätungs-Debuff (%)",parentQuestXP:"XP-Belohnung",parentQuestNote:"Beschreibung",buffName:"Effektname",buffKind:"Effektart",buffPercent:"Stärke (%)",buffUses:"Anzahl XP-Vergaben",trustStatus:"Vertrauensstatus"};
+const FIELD_LABELS={loginName:"Benutzername",loginPassword:"Passwort",signupName:"Benutzername",signupPassword:"Passwort",signupPassword2:"Passwort wiederholen",signupType:"Kontotyp",taskTitle:"Aufgabe",taskSubject:"Fach",taskDue:"Deadline (Datum & Uhrzeit)",taskLatePenalty:"Verspätungs-Debuff (%)",taskType:"Aufgabentyp",taskNote:"Notiz",examSubject:"Fach",examTitle:"Prüfung",examDate:"Datum",examSize:"Prüfungsgröße",examTarget:"Zielnote",questTitle:"Quest",questDue:"Deadline (Datum & Uhrzeit)",questLatePenalty:"Verspätungs-Debuff (%)",questXP:"XP-Belohnung",questNote:"Notiz",recurringTitle:"Dauerauftrag",recurringSubject:"Fach",recurringXP:"XP-Belohnung",recurringDue:"Uhrzeit (optional)",recurringLatePenalty:"Verspätungs-Debuff (%)",appointmentTitle:"Termin",appointmentDate:"Datum",appointmentTime:"Uhrzeit",appointmentReminder:"Erinnerung vorher (Minuten)",appointmentNote:"Notiz",activityTitle:"Aktivität",activityXP:"XP-Belohnung",parentQuestTitle:"Quest",parentQuestDue:"Deadline (Datum)",parentQuestLatePenalty:"Verspätungs-Debuff (%)",parentQuestXP:"XP-Belohnung",parentQuestNote:"Beschreibung",buffName:"Effektname",buffKind:"Effektart",buffPercent:"Stärke (%)",buffUses:"Anzahl XP-Vergaben",trustStatus:"Vertrauensstatus"};
 function decorateFields(root=document){root.querySelectorAll("input:not([type=checkbox]):not([type=hidden]),select,textarea").forEach(x=>{if(x.dataset.labeled)return;const label=FIELD_LABELS[x.id]||x.getAttribute("placeholder")||x.getAttribute("title");if(!label)return;const wrap=document.createElement("div");wrap.className="field-wrap";const l=document.createElement("label");l.className="field-label";l.textContent=label;l.htmlFor=x.id;x.parentNode.insertBefore(wrap,x);wrap.appendChild(l);wrap.appendChild(x);x.dataset.labeled="1"})}
 function checkForgotten(){
  const t=today();
@@ -561,6 +566,8 @@ function renderDashboard(){
  if(n){const pct=Math.max(0,Math.min(100,(db.xp-r.x)/(n.x-r.x)*100));document.getElementById("dashBar").style.width=pct+"%";document.getElementById("dashNext").textContent=n.x-db.xp+" XP bis "+n.n}else{document.getElementById("dashBar").style.width="100%";document.getElementById("dashNext").textContent="Maximaler Rang"}
  const dueRecurring=getRecurringToday();const normal=db.tasks.filter(t=>!t.due||t.due<=today());const dueQuests=db.quests.filter(q=>q.due&&q.due<=today());document.getElementById("dashToday").textContent=normal.length+dueRecurring.length+dueQuests.length;
  renderIncomingShares();
+ const now=new Date();const upcoming=db.appointments.filter(a=>!a.completed&&appointmentDateTime(a)>=now).sort((a,b)=>appointmentDateTime(a)-appointmentDateTime(b)).slice(0,5);
+ const ab=el("dashboardAppointments");if(ab)ab.innerHTML=upcoming.map(a=>'<div class="item"><div class="item-title">'+esc(a.title)+'</div><div class="meta">'+dateText(a.date+"T"+a.time)+' · Erinnerung '+Math.max(0,Number(a.reminder)||0)+' Min. vorher</div></div>').join("")||'<div class="empty">Keine anstehenden Termine.</div>';
  document.getElementById("dashboardEffects").innerHTML=effectsHTML()||'<div class="empty">Keine aktiven Effekte.</div>';
  document.getElementById("dashboardToday").innerHTML=[...normal,...dueRecurring].slice(0,8).map(x=>x.id&&x.days?taskHTML(x,true):taskHTML(x)).join("")||'<div class="empty">Keine Aufgaben für heute.</div>';
  const openQuests=db.quests.filter(q=>!q.completed);
@@ -574,6 +581,12 @@ function renderExams(){document.getElementById("examList").innerHTML=db.exams.sl
 function renderQuests(){document.getElementById("questList").innerHTML=db.quests.map(questHTML).join("")||'<div class="empty">Keine offenen Quests.</div>'}
 
 function getRecurringToday(){const day=new Date().getDay();return db.recurring.filter(r=>r.active&&r.days.includes(day)).map(r=>({...r,recurringId:r.id,id:r.id,completedToday:(r.doneDates||[]).includes(today())}))}
+function appointmentDateTime(a){return new Date(a.date+"T"+a.time+":00")}
+function renderAppointments(){
+ const list=db.appointments.slice().sort((a,b)=>appointmentDateTime(a)-appointmentDateTime(b));
+ const box=el("appointmentList");if(!box)return;
+ box.innerHTML=list.map(a=>{const d=appointmentDateTime(a),past=d<new Date(),done=Boolean(a.completed);return '<div class="item"><div class="item-title">'+esc(a.title)+'</div><div class="meta">'+dateText(a.date+"T"+a.time)+ ' · Erinnerung '+Math.max(0,Number(a.reminder)||0)+' Min. vorher</div>'+(a.note?'<div class="meta">'+esc(a.note)+'</div>':'')+'<div class="meta">'+(done?'<span class="tag green">ERLEDIGT</span>':past?'<span class="tag red">VERPASST</span>':'<span class="tag yellow">GEPLANT</span>')+'</div><div class="actions">'+(!done&&!past?'<button class="btn success" data-act="complete-appointment" data-id="'+a.id+'">Erledigt</button>':'')+'<button class="btn danger" data-act="delete-appointment" data-id="'+a.id+'">Löschen</button></div></div>'}).join("")||'<div class="empty">Keine Termine gespeichert.</div>';
+}
 function renderRecurring(){document.getElementById("recurringList").innerHTML=db.recurring.map(r=>`<div class="item"><div class="item-title">${esc(r.title)}</div><div class="meta">${esc(r.subject||"Kein Fach")} · +${r.xp} XP · ${r.days.map(d=>DAYS[d]).join(", ")}</div><div class="meta">${r.due?"Uhrzeit: "+r.due:"Keine Uhrzeit festgelegt"} · bei Verspätung −${Math.max(0,Math.min(100,Number(r.latePenalty)||0))} % XP</div><div class="meta">${r.active?"Aktiv":"Pausiert"}${r.secret?" · <span class=\"tag purple\">GEHEIM</span>":""}</div><div class="actions"><button class="btn success" data-act="toggle-recurring" data-id="${r.id}">${r.active?"Pausieren":"Aktivieren"}</button><button class="btn edit-btn" data-act="edit-recurring" data-id="${r.id}">Bearbeiten</button><button class="btn" data-act="share-recurring" data-id="${r.id}">Teilen</button><button class="btn danger" data-act="delete-recurring" data-id="${r.id}">Löschen</button></div></div>`).join("")||'<div class="empty">Keine Daueraufträge.</div>'}
 function renderActivities(){const box=document.getElementById("favoriteActivities");if(box)box.innerHTML=db.activities.map(a=>`<div><button class="favorite-btn" data-act="activity" data-id="${a.id}"><strong>${esc(a.title)}</strong><span>+${a.xp} XP</span></button><button class="btn edit-btn small" data-act="edit-activity" data-id="${a.id}">Bearbeiten</button><button class="btn danger small" data-act="delete-activity" data-id="${a.id}">Entfernen</button></div>`).join("")||'<div class="empty">Noch keine Favoriten.</div>'}
 
@@ -622,7 +635,7 @@ function renderParents(){
   const effects=el("parentEffectsList");if(effects)effects.innerHTML=effectsHTML()||'<div class="empty">Keine aktiven Effekte.</div>';
   const wr=el("weeklyReview");if(wr)wr.innerHTML=parentWeeklyReviewHTML();
 }
-function renderAll(){renderDashboard();renderTasks();renderExams();renderQuests();renderRecurring();renderActivities();renderProgress();renderParents();renderWeeklyReview();renderRanks();if(document.getElementById("leaderboard").classList.contains("active"))renderLeaderboard()}
+function renderAll(){renderDashboard();renderTasks();renderExams();renderQuests();renderRecurring();renderAppointments();renderActivities();renderProgress();renderParents();renderWeeklyReview();renderRanks();if(document.getElementById("leaderboard").classList.contains("active"))renderLeaderboard()}
 
 function deleteLog(type,obj){db.deleteLog.unshift({id:uid(),type,title:obj.title||obj.name||"Eintrag",secret:Boolean(obj.secret),date:new Date().toISOString()})}
 function completeTask(id,completedAt=new Date().toISOString()){const i=db.tasks.findIndex(x=>x.id===id);if(i<0)return;const t=db.tasks[i];const late=lateMultiplier(t,completedAt);const earned=addXP(taskXP(t.type),"Sektoraufgabe: "+t.title,"Sektoraufgabe",late,Boolean(t.secret));db.completionLog.unshift({id:uid(),title:t.title,earned,type:"Sektoraufgabe",secret:Boolean(t.secret),date:completedAt});db.tasks.splice(i,1);save();renderAll()}
@@ -844,7 +857,7 @@ const SETTINGS_KEY="gap_settings";
 const DEFAULT_SETTINGS={normalXP:10,largeXP:20,presentationXP:30,questXP:0,learningXP:10,recurringXP:10,taskReminder:true,examReminder:true,questReminder:true,reminderTime:"18:00",fontSize:"normal",animations:true,compact:false};
 function getSettings(){try{return {...DEFAULT_SETTINGS,...JSON.parse(localStorage.getItem(SETTINGS_KEY)||"{}")}}catch(e){return {...DEFAULT_SETTINGS}}}
 function saveSettings(s){localStorage.setItem(SETTINGS_KEY,JSON.stringify(s))}
-const NAV_LABELS={dashboard:["Dashboard","Übersicht"],updates:["Updates","Änderungen"],tasks:["Sektoraufgaben","Aufgaben"],exams:["Sektorprüfungen","Prüfungen"],quests:["Quests","Persönliche Aufgaben"],recurring:["Daueraufträge","Wiederkehrende Aufgaben"],activities:["Aktivitäten","Aktivitäten"],progress:["Fortschritt","Statistiken"],ranks:["Ränge","Rangstufen"],leaderboard:["Leaderboard","Vergleich"],parents:["Elternübersicht","Übersicht"],parentTasks:["Sektoraufgaben","Aufgaben"],parentExams:["Sektorprüfungen","Prüfungen"],parentQuests:["Quests","Aufträge"],parentEffects:["Buffs & Debuffs","Effekte"],parentLogs:["Logs","Protokolle"],parentReview:["Wochenbericht","Wochenbericht"],settings:["Einstellungen","Einstellungen"]};
+const NAV_LABELS={dashboard:["Dashboard","Übersicht"],updates:["Updates","Änderungen"],tasks:["Sektoraufgaben","Aufgaben"],exams:["Sektorprüfungen","Prüfungen"],quests:["Quests","Persönliche Aufgaben"],recurring:["Daueraufträge","Wiederkehrende Aufgaben"],appointments:["Termine","Termine"],activities:["Aktivitäten","Aktivitäten"],progress:["Fortschritt","Statistiken"],ranks:["Ränge","Rangstufen"],leaderboard:["Leaderboard","Vergleich"],parents:["Elternübersicht","Übersicht"],parentTasks:["Sektoraufgaben","Aufgaben"],parentExams:["Sektorprüfungen","Prüfungen"],parentQuests:["Quests","Aufträge"],parentEffects:["Buffs & Debuffs","Effekte"],parentLogs:["Logs","Protokolle"],parentReview:["Wochenbericht","Wochenbericht"],settings:["Einstellungen","Einstellungen"]};
 function getSeriousModeKey(){
  return currentAccountType==="parent"?SERIOUS_MODE_KEY+"_parent":SERIOUS_MODE_KEY;
 }
@@ -903,8 +916,16 @@ document.addEventListener("click",async e=>{
  const a=e.target.closest("[data-act^='share-']");
  if(a){try{await shareItem(a.dataset.act.slice(6),a.dataset.id)}catch(err){console.error(err);alert("Teilen fehlgeschlagen: "+err.message)}}
 });
+function completeAppointment(id){const a=db.appointments.find(x=>x.id===id);if(!a)return;a.completed=true;save();renderAll()}
+function deleteAppointment(id){const i=db.appointments.findIndex(x=>x.id===id);if(i<0)return;const a=db.appointments[i];if(!confirm("Termin löschen?\n\n"+a.title))return;db.appointments.splice(i,1);save();renderAll()}
+function checkAppointmentReminders(){
+ if(!("Notification" in window)||Notification.permission!=="granted")return;
+ const now=Date.now();
+ db.appointments.forEach(a=>{if(a.completed||a.reminded)return;const at=appointmentDateTime(a).getTime();const remindAt=at-Math.max(0,Number(a.reminder)||0)*60000;if(now>=remindAt&&now<at+60000){new Notification("GAP – Termin", {body:a.title+" · "+dateText(a.date+"T"+a.time)});a.reminded=true;save()}})
+}
 function setupForms(){
- el("taskForm").addEventListener("submit",e=>{e.preventDefault();db.tasks.push({id:uid(),title:el("taskTitle").value.trim(),subject:el("taskSubject").value.trim(),due:el("taskDue").value,latePenalty:Math.max(0,Math.min(100,Number(el("taskLatePenalty").value)||0)),type:el("taskType").value,note:el("taskNote").value.trim(),secret:el("taskSecret").checked});e.target.reset();save();renderAll()});
+ el("appointmentForm").addEventListener("submit",async e=>{e.preventDefault();const date=el("appointmentDate").value,time=el("appointmentTime").value;if(!date||!time){alert("Bitte Datum und Uhrzeit angeben.");return}const a={id:uid(),title:el("appointmentTitle").value.trim(),date,time,reminder:Math.max(0,Math.min(10080,Number(el("appointmentReminder").value)||0)),note:el("appointmentNote").value.trim(),completed:false,reminded:false};db.appointments.push(a);e.target.reset();el("appointmentReminder").value=10;save();if("Notification" in window&&Notification.permission==="default")try{await Notification.requestPermission()}catch(err){}renderAll()});
+el("taskForm").addEventListener("submit",e=>{e.preventDefault();db.tasks.push({id:uid(),title:el("taskTitle").value.trim(),subject:el("taskSubject").value.trim(),due:el("taskDue").value,latePenalty:Math.max(0,Math.min(100,Number(el("taskLatePenalty").value)||0)),type:el("taskType").value,note:el("taskNote").value.trim(),secret:el("taskSecret").checked});e.target.reset();save();renderAll()});
  el("examForm").addEventListener("submit",e=>{e.preventDefault();db.exams.push({id:uid(),subject:el("examSubject").value.trim(),title:el("examTitle").value.trim(),date:el("examDate").value,size:el("examSize").value,target:Number(el("examTarget").value),secret:el("examSecret").checked});e.target.reset();el("examTarget").value="2";save();renderAll()});
  el("questForm").addEventListener("submit",e=>{e.preventDefault();db.quests.push({id:uid(),title:el("questTitle").value.trim(),due:el("questDue").value,latePenalty:Math.max(0,Math.min(100,Number(el("questLatePenalty").value)||0)),xp:(Number(el("questXP").value)||getSettings().questXP),note:el("questNote").value.trim(),secret:el("questSecret").checked});e.target.reset();el("questXP").value=0;save();renderAll()});
  el("parentQuestForm").addEventListener("submit",e=>{e.preventDefault();db.quests.push({id:uid(),title:el("parentQuestTitle").value.trim(),due:el("parentQuestDue").value,latePenalty:Math.max(0,Math.min(100,Number(el("parentQuestLatePenalty").value)||0)),xp:Number(el("parentQuestXP").value)||0,note:el("parentQuestNote").value.trim(),fromParent:true});e.target.reset();el("parentQuestXP").value=20;save();renderAll();showPage("quests")});
@@ -915,6 +936,7 @@ el("recurringForm").addEventListener("submit",e=>{e.preventDefault();const days=
 }
 function setupDays(){document.getElementById("weekdayInputs").innerHTML=DAYS.map((d,i)=>`<label class="day"><input type="checkbox" value="${i}" ${i>0&&i<6?"checked":""}>${d}</label>`).join("")}
 bootAuth();setupDays();decorateFields();setupParentControls();setupForms();renderUpdates();applyViewMode();setupSettings();
+setInterval(checkAppointmentReminders,30000);
 </script>
 </body>
 </html>
