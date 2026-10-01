@@ -844,11 +844,11 @@ const GAP_UPDATES_DONE=[
 ["19 · Kinderkonto-Verknüpfung repariert","Die Verknüpfung eines Kinderkontos wurde nach der Elternseiten-Umstrukturierung wiederhergestellt und robuster gegen Ladefehler gemacht."],
 ["20 · Elternmodus & seriöse Ansicht","Die Überschriften im Elternmodus wurden ausgeschrieben und die seriöse Ansicht erhielt eigene Bezeichnungen sowie eine standardmäßige Aktivierung für Elternkonten."],
 ["21 · Einstellungen & Quest-Zähler","Die Kinderkonto-Verknüpfung wurde in die Einstellungen verschoben. Auf dem Dashboard zeigt eine neue Kachel die Anzahl der offenen Quests."],
+["24 · Geteilte Aufgaben","Kinder können Sektoraufgaben, Sektorprüfungen, Quests und Daueraufträge an andere Kinderkonten senden."],
+["25 · Termine","Eigene Termine können mit Datum, Uhrzeit und einer frei wählbaren Erinnerung gespeichert werden."],
 ];
 const GAP_UPDATES_FUTURE=[
-["22 · Nächstes Update","Hier wird automatisch das nächste noch nicht umgesetzte Update vorbereitet."],
-["23 · Weitere Verbesserungen","Neue festgelegte Funktionen werden fortlaufend mit der nächsten freien Nummer ergänzt."],
-["24 · Geteilte Aufgaben","Kinder können Sektoraufgaben, Sektorprüfungen, Quests und Daueraufträge an andere Kinderkonten senden."]
+["26 · Nächstes Update","Hier wird automatisch das nächste noch nicht umgesetzte Update vorbereitet."]
 ];
 function renderUpdates(){const done=el("updateListDone"),future=el("updateListFuture");if(done)done.innerHTML=GAP_UPDATES_DONE.map(x=>'<div class="item"><div class="item-title">'+esc(x[0])+'</div><div class="meta">'+esc(x[1])+'</div></div>').join("");if(future)future.innerHTML=GAP_UPDATES_FUTURE.map(x=>'<div class="item"><div class="item-title">'+esc(x[0])+'</div><div class="meta">'+esc(x[1])+'</div></div>').join("")}
 const SERIOUS_MODE_KEY="gap_serious_mode";
