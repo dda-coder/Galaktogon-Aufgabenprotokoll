@@ -1,0 +1,11 @@
+{
+  "name":"GALAKTOGON Aufgabenprotokoll",
+  "short_name":"GAP",
+  "start_url":"/",
+  "display":"standalone",
+  "background_color":"#0f151c",
+  "theme_color":"#141c25",
+  "icons":[
+    {"src":"/favicon.svg","sizes":"any","type":"image/svg+xml","purpose":"any maskable"}
+  ]
+}
