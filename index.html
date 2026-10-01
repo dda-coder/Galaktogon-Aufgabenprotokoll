@@ -971,9 +971,9 @@ function setupParentControls(){
  el("parentLinkForm")?.addEventListener("submit",async e=>{e.preventDefault();if(currentAccountType!=="parent")return;const status=el("parentLinkStatus");try{status.textContent="Verknüpfe Kinderkonto …";const name=await linkParentChild(el("parentLinkCode").value);el("parentLinkCode").value="";status.textContent=name?"Kinderkonto verknüpft: "+name:"Kinderkonto wurde verknüpft.";renderAll()}catch(e){status.textContent=e.message||"Verknüpfung fehlgeschlagen.";status.style.color="#ff7474"}});
 }
 document.addEventListener("click",async e=>{
- const appointmentEdit=e.target.closest("[data-act="edit-appointment"]");
+ const appointmentEdit=e.target.closest('[data-act="edit-appointment"]');
  if(appointmentEdit){editAppointment(appointmentEdit.dataset.id);return}
- const appointmentDelete=e.target.closest("[data-act="delete-appointment"]");
+ const appointmentDelete=e.target.closest('[data-act="delete-appointment"]');
  if(appointmentDelete){deleteAppointment(appointmentDelete.dataset.id);return}
  const b=e.target.closest("[data-share-action]");
  if(b){try{await respondShare(b.dataset.shareId,b.dataset.shareAction==="accept")}catch(err){console.error(err);alert("Aktion fehlgeschlagen: "+err.message)}return}
