@@ -61,7 +61,7 @@
 </div>
 <div class="card" id="taskBadgeSettingsCard">
 <div class="item"><div class="item-title">Lautloser Aufgaben-Counter</div>
-<div class="meta">Zeigt die Anzahl aller offenen Sektoraufgaben, Sektorprüfungen, Quests und heute fälligen Daueraufträge am GAP-App-Symbol. Er läuft getrennt von den normalen Push-Benachrichtigungen und bleibt lautlos.</div>
+<div class="meta">Zeigt die Anzahl aller offenen Sektoraufgaben, Sektorprüfungen, Quests und heute fälligen Daueraufträge als lautlosen Counter am GAP-App-Symbol. Zusätzlich wird eine stille, dauerhaft aktualisierte System-Benachrichtigung versucht, wenn der Browser dies unterstützt.</div>
 <div class="actions"><button class="btn primary" id="toggleTaskBadgeBtn">Aufgaben-Counter: AUS</button></div>
 <div id="taskBadgeStatus" class="meta">Status wird geladen.</div></div>
 </div>
@@ -651,7 +651,7 @@ function renderParents(){
   const wr=el("weeklyReview");if(wr)wr.innerHTML=parentWeeklyReviewHTML();
 }
 function openTaskCounter(){return db.tasks.length+db.exams.length+db.quests.length+getRecurringToday().filter(r=>!r.completedToday).length}
-async function updateTaskBadge(){const s=getSettings(),count=openTaskCounter();try{if(!s.taskBadge){if("clearAppBadge" in navigator)await navigator.clearAppBadge();return}if("setAppBadge" in navigator)await navigator.setAppBadge(count);else return}catch(e){console.warn("Aufgaben-Counter:",e)}}
+async function updateTaskBadge(){const s=getSettings(),count=openTaskCounter();try{if("clearAppBadge" in navigator)await navigator.clearAppBadge();if(s.taskBadge&&"setAppBadge" in navigator)await navigator.setAppBadge(count)}catch(e){console.warn("Aufgaben-Counter:",e)}if(s.taskBadge&&pushSupported()&&Notification.permission==="granted"){try{const reg=await navigator.serviceWorker.ready;await reg.showNotification("GAP – Offene Aufgaben",{body:count+" offene Einträge",tag:"gap-open-task-counter",silent:true,renotify:false,requireInteraction:true,data:{type:"open-task-counter"}})}catch(e){console.warn("Stiller Aufgaben-Counter:",e)}}}
 function renderAll(){renderDashboard();renderTasks();renderExams();renderQuests();renderRecurring();renderAppointments();renderActivities();renderProgress();renderParents();renderWeeklyReview();renderRanks();if(document.getElementById("leaderboard").classList.contains("active"))renderLeaderboard();updateTaskBadge()}
 
 function deleteLog(type,obj){db.deleteLog.unshift({id:uid(),type,title:obj.title||obj.name||"Eintrag",secret:Boolean(obj.secret),date:new Date().toISOString()})}
