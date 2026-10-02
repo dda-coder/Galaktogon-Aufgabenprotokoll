@@ -59,6 +59,12 @@
 <div class="actions"><button class="btn primary" id="enablePushBtn">Push-Benachrichtigungen aktivieren</button><button class="btn" id="disablePushBtn">Dieses Gerät deaktivieren</button></div>
 <div id="pushStatus" class="meta">Status wird geladen.</div></div>
 </div>
+<div class="card" id="taskBadgeSettingsCard">
+<div class="item"><div class="item-title">Lautloser Aufgaben-Counter</div>
+<div class="meta">Zeigt die Anzahl aller offenen Sektoraufgaben, Sektorprüfungen, Quests und heute fälligen Daueraufträge am GAP-App-Symbol. Er läuft getrennt von den normalen Push-Benachrichtigungen und bleibt lautlos.</div>
+<div class="actions"><button class="btn primary" id="toggleTaskBadgeBtn">Aufgaben-Counter: AUS</button></div>
+<div id="taskBadgeStatus" class="meta">Status wird geladen.</div></div>
+</div>
 <div class="card"><h2>Darstellung</h2>
 <div class="item"><div class="item-title">Ansicht</div><div class="meta">Wechsle zwischen der GALAKTOGON-Ansicht und einer neutralen, sachlichen Darstellung.</div><div class="actions"><button class="btn" id="seriousModeBtn">Seriöse Ansicht aktivieren</button></div><div id="viewModeStatus" class="meta"></div></div>
 <div class="item"><div class="item-title">Farbschema</div><div class="meta">White Mode und Black Mode sind unabhängig von der seriösen Ansicht.</div><div class="actions"><button class="btn" id="themeBtn">White Mode aktivieren</button></div><div id="themeStatus" class="meta"></div></div>
@@ -644,7 +650,10 @@ function renderParents(){
   const effects=el("parentEffectsList");if(effects)effects.innerHTML=effectsHTML()||'<div class="empty">Keine aktiven Effekte.</div>';
   const wr=el("weeklyReview");if(wr)wr.innerHTML=parentWeeklyReviewHTML();
 }
-function renderAll(){renderDashboard();renderTasks();renderExams();renderQuests();renderRecurring();renderAppointments();renderActivities();renderProgress();renderParents();renderWeeklyReview();renderRanks();if(document.getElementById("leaderboard").classList.contains("active"))renderLeaderboard()}
+function openTaskCounter(){return db.tasks.length+db.exams.length+db.quests.length+getRecurringToday().filter(r=>!r.completedToday).length}
+function openTaskCounter(){return db.tasks.length+db.exams.length+db.quests.length+getRecurringToday().filter(r=>!r.completedToday).length}
+async function updateTaskBadge(){const s=getSettings(),count=openTaskCounter();try{if(!s.taskBadge){if("clearAppBadge" in navigator)await navigator.clearAppBadge();return}if("setAppBadge" in navigator)await navigator.setAppBadge(count);else return}catch(e){console.warn("Aufgaben-Counter:",e)}}
+function renderAll(){renderDashboard();renderTasks();renderExams();renderQuests();renderRecurring();renderAppointments();renderActivities();renderProgress();renderParents();renderWeeklyReview();renderRanks();if(document.getElementById("leaderboard").classList.contains("active"))renderLeaderboard();updateTaskBadge()}
 
 function deleteLog(type,obj){db.deleteLog.unshift({id:uid(),type,title:obj.title||obj.name||"Eintrag",secret:Boolean(obj.secret),date:new Date().toISOString()})}
 function completeTask(id,completedAt=new Date().toISOString()){const i=db.tasks.findIndex(x=>x.id===id);if(i<0)return;const t=db.tasks[i];const late=lateMultiplier(t,completedAt);const earned=addXP(taskXP(t.type),"Sektoraufgabe: "+t.title,"Sektoraufgabe",late,Boolean(t.secret));db.completionLog.unshift({id:uid(),title:t.title,earned,type:"Sektoraufgabe",secret:Boolean(t.secret),date:completedAt});db.tasks.splice(i,1);save();renderAll()}
@@ -866,7 +875,7 @@ function renderUpdates(){const done=el("updateListDone"),future=el("updateListFu
 const SERIOUS_MODE_KEY="gap_serious_mode";
 const THEME_KEY="gap_theme";
 const SETTINGS_KEY="gap_settings";
-const DEFAULT_SETTINGS={normalXP:10,largeXP:20,presentationXP:30,questXP:0,learningXP:10,recurringXP:10,taskReminder:true,examReminder:true,questReminder:true,reminderTime:"18:00",fontSize:"normal",animations:true,compact:false};
+const DEFAULT_SETTINGS={normalXP:10,largeXP:20,presentationXP:30,questXP:0,learningXP:10,recurringXP:10,taskReminder:true,examReminder:true,questReminder:true,reminderTime:"18:00",fontSize:"normal",animations:true,compact:false,taskBadge:false};
 function getSettings(){try{return {...DEFAULT_SETTINGS,...JSON.parse(localStorage.getItem(SETTINGS_KEY)||"{}")}}catch(e){return {...DEFAULT_SETTINGS}}}
 function saveSettings(s){localStorage.setItem(SETTINGS_KEY,JSON.stringify(s))}
 const NAV_LABELS={dashboard:["Dashboard","Übersicht"],updates:["Updates","Änderungen"],tasks:["Sektoraufgaben","Aufgaben"],exams:["Sektorprüfungen","Prüfungen"],quests:["Quests","Persönliche Aufgaben"],recurring:["Daueraufträge","Wiederkehrende Aufgaben"],appointments:["Termine","Termine"],activities:["Aktivitäten","Aktivitäten"],progress:["Fortschritt","Statistiken"],ranks:["Ränge","Rangstufen"],leaderboard:["Leaderboard","Vergleich"],parents:["Elternübersicht","Übersicht"],parentTasks:["Sektoraufgaben","Aufgaben"],parentExams:["Sektorprüfungen","Prüfungen"],parentQuests:["Quests","Aufträge"],parentEffects:["Buffs & Debuffs","Effekte"],parentLogs:["Logs","Protokolle"],parentReview:["Wochenbericht","Wochenbericht"],settings:["Einstellungen","Einstellungen"]};
@@ -898,7 +907,7 @@ function renderSettings(){
  const fields={settingsReminderTime:s.reminderTime,settingsFontSize:s.fontSize};
  Object.entries(fields).forEach(([id,v])=>{const x=el(id);if(x)x.value=v});
  const toggle=(id,on,label)=>{const x=el(id);if(x)x.textContent=label+": "+(on?"EIN":"AUS")};
- toggle("taskReminderBtn",s.taskReminder,"Erinnerungen für Aufgaben");toggle("examReminderBtn",s.examReminder,"Erinnerungen für Prüfungen");toggle("questReminderBtn",s.questReminder,"Erinnerungen für Quests");toggle("animationBtn",s.animations,"Animationen");toggle("compactBtn",s.compact,"Kompakte Ansicht");
+ toggle("taskReminderBtn",s.taskReminder,"Erinnerungen für Aufgaben");toggle("examReminderBtn",s.examReminder,"Erinnerungen für Prüfungen");toggle("questReminderBtn",s.questReminder,"Erinnerungen für Quests");toggle("animationBtn",s.animations,"Animationen");toggle("compactBtn",s.compact,"Kompakte Ansicht");const badgeBtn=el("toggleTaskBadgeBtn"),badgeStatus=el("taskBadgeStatus");if(badgeBtn)badgeBtn.textContent="Aufgaben-Counter: "+(s.taskBadge?"EIN":"AUS");if(badgeStatus)badgeStatus.textContent=s.taskBadge?"Aktiv · "+openTaskCounter()+" offene Einträge":"Deaktiviert";
  document.body.classList.toggle("settings-compact",s.compact);document.body.classList.toggle("font-small",s.fontSize==="small");document.body.classList.toggle("font-large",s.fontSize==="large");document.body.classList.toggle("animations-off",!s.animations); const type=el("taskType");if(type){const labels={normal:"Normale Aufgabe",vocabulary:"Vokabeln",large:"Große Aufgabe",presentation:"Präsentation",learning:"Lernen"};[...type.options].forEach(o=>{const xp=o.value==="large"?s.largeXP:o.value==="presentation"?s.presentationXP:o.value==="learning"?s.learningXP:s.normalXP;o.textContent=labels[o.value]+" (+"+xp+" XP)"})}
  const sync=el("settingsSyncInfo");if(sync)sync.textContent=typeof save==="function"?"Online-Spielstand ist über das aktuelle GAP-Konto verbunden.":"Online-Synchronisierung wird geladen.";
 }
@@ -959,7 +968,7 @@ el("themeBtn")?.addEventListener("click",toggleTheme);
 
  [["taskReminder","taskReminderBtn"],["examReminder","examReminderBtn"],["questReminder","questReminderBtn"]].forEach(([k,b])=>el(b)?.addEventListener("click",()=>toggleSetting(k,b)));
  el("saveReminderSettingsBtn")?.addEventListener("click",()=>{const s=getSettings();s.reminderTime=el("settingsReminderTime").value||"18:00";saveSettings(s);const n=el("notificationStatus");if("Notification" in window&&Notification.permission==="default")Notification.requestPermission().then(x=>{n.textContent="Benachrichtigungsberechtigung: "+x});else n.textContent="Erinnerungseinstellungen gespeichert.";renderSettings()});
- el("animationBtn")?.addEventListener("click",()=>toggleSetting("animations","animationBtn"));el("compactBtn")?.addEventListener("click",()=>toggleSetting("compact","compactBtn"));
+ el("animationBtn")?.addEventListener("click",()=>toggleSetting("animations","animationBtn"));el("compactBtn")?.addEventListener("click",()=>toggleSetting("compact","compactBtn"));el("toggleTaskBadgeBtn")?.addEventListener("click",async()=>{const s=getSettings();s.taskBadge=!s.taskBadge;saveSettings(s);await updateTaskBadge();renderSettings()});
  el("settingsFontSize")?.addEventListener("change",()=>{const s=getSettings();s.fontSize=el("settingsFontSize").value;saveSettings(s);renderSettings()});
  el("syncNowBtn")?.addEventListener("click",()=>{try{save();alert("Synchronisierung wurde angestoßen.")}catch(e){alert("Synchronisierung konnte nicht gestartet werden.")}});
  el("resetLocalDataBtn")?.addEventListener("click",()=>{if(confirm("Lokale GAP-Daten wirklich zurücksetzen? Online gespeicherte Daten bleiben erhalten.")){localStorage.removeItem(KEY);if(currentUser)localStorage.removeItem(KEY+"_"+currentUser.id);if(activeChildId)localStorage.removeItem(KEY+"_"+activeChildId);location.reload()}});
