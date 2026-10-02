@@ -411,11 +411,11 @@ async function signIn(){
   const loginBtn=document.getElementById("loginBtn");
   if(!supabaseConfigured){authMsg("Die Supabase-Daten fehlen noch. URL und Publishable Key in der index.html eintragen.",true);return}
   if(!supabaseClient){authMsg("Supabase konnte nicht geladen werden. Bitte Seite neu laden.",true);return}
-  loginInProgress=true;
-  if(loginBtn){loginBtn.disabled=true;loginBtn.textContent="Anmeldung läuft …"}
   const name=document.getElementById("loginName").value.trim();
   const pw=document.getElementById("loginPassword").value;
   if(!validUsername(name)){authMsg("Ungültiger Benutzername.",true);return}
+  loginInProgress=true;
+  if(loginBtn){loginBtn.disabled=true;loginBtn.textContent="Anmeldung läuft …"}
   authMsg("Schritt 2/3: Anmeldung wird geprüft …");
   try{
     const {data,error}=await supabaseClient.auth.signInWithPassword({
