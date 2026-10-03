@@ -23,7 +23,7 @@
 <body id="appBody">
 <div id="authScreen" style="position:fixed;inset:0;background:#0f151c;color:#f3f6f9;z-index:999;display:flex;align-items:center;justify-content:center;padding:18px">
 <div class="card" style="width:min(440px,100%);margin:0"><div class="logo">GALAKTOGON</div><div class="version" style="margin-bottom:18px">ONLINE-KONTO // V9</div>
-<div id="authLogin"><h2>Anmelden</h2><p class="muted">Dein GALAKTOGON-Spielstand wird online gespeichert und ist auf Handy, iPad und Laptop verfügbar.</p><div id="loginForm"><input id="loginName" placeholder="Benutzername" autocomplete="username" required><input id="loginPassword" type="password" placeholder="Passwort" autocomplete="current-password" required><button type="button" class="btn primary" id="loginBtn" onclick="window.gapLoginClick()">Anmelden</button></div><p class="small muted">Noch kein Konto? <button class="btn" type="button" id="showSignup">Konto erstellen</button></p></div>
+<div id="authLogin"><h2>Anmelden</h2><p class="muted">Dein GALAKTOGON-Spielstand wird online gespeichert und ist auf Handy, iPad und Laptop verfügbar.</p><div id="loginForm"><input id="loginName" placeholder="Benutzername" autocomplete="username" required><input id="loginPassword" type="password" placeholder="Passwort" autocomplete="current-password" required><button type="button" class="btn primary" id="loginBtn">Anmelden</button></div><p class="small muted">Noch kein Konto? <button class="btn" type="button" id="showSignup">Konto erstellen</button></p></div>
 <div id="authSignup" style="display:none"><h2>Konto erstellen</h2><p class="muted">Du brauchst nur einen Benutzernamen und ein Passwort. Jeder Benutzer bekommt einen eigenen GALAKTOGON-Spielstand.</p><form id="signupForm"><input id="signupName" placeholder="Benutzername" autocomplete="username" minlength="3" maxlength="20" required><input id="signupPassword" type="password" placeholder="Passwort (mind. 6 Zeichen)" autocomplete="new-password" minlength="6" required><input id="signupPassword2" type="password" placeholder="Passwort wiederholen" autocomplete="new-password" minlength="6" required><select id="signupType" required><option value="child">Kinderkonto</option><option value="parent">Elternkonto</option></select><button class="btn primary">Konto erstellen</button></form><p class="small muted">Bereits ein Konto? <button class="btn" type="button" id="showLogin">Zur Anmeldung</button></p></div>
 <div id="authMessage" class="small" style="margin-top:10px"></div></div></div>
 
@@ -451,7 +451,7 @@ window.signUp=signUp;
 async function bootAuth(){
   document.getElementById("showSignup").onclick=()=>setAuthMode(true);
   document.getElementById("showLogin").onclick=()=>setAuthMode(false);
-  document.getElementById("loginBtn").addEventListener("click",()=>window.gapLoginClick());
+  document.getElementById("loginBtn").addEventListener("click",signIn);
   document.getElementById("signupForm").addEventListener("submit",async e=>{e.preventDefault();await signUp()});
   document.getElementById("logoutBtn").onclick=logout;
   if(!supabaseConfigured){authMsg("Noch nicht eingerichtet: Supabase-Projekt erstellen und die beiden Werte oben in der Datei eintragen.",true);return}
