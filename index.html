@@ -18,6 +18,41 @@
 .tour-card{position:fixed;z-index:1004;width:min(390px,calc(100vw - 24px));background:var(--panel);border:1px solid var(--accent);border-radius:12px;padding:16px;box-shadow:0 12px 45px rgba(0,0,0,.55)}
 .tour-card h2{margin:0 0 8px}.tour-card p{margin:0;line-height:1.45}.tour-progress{color:var(--muted);font-size:12px;margin-bottom:8px}.tour-actions{display:flex;gap:7px;justify-content:space-between;margin-top:14px;flex-wrap:wrap}
 .serious-mode .logo{letter-spacing:0}.serious-mode .progress{background:#0b1016}.serious-mode nav button{border-radius:4px}.serious-mode .card{border-radius:6px}.serious-mode .item{border-radius:5px}.serious-mode .btn{border-radius:4px}.settings-compact .card{padding:10px;margin-bottom:9px}.settings-compact .item{padding:8px;margin:6px 0}.font-small{font-size:14px}.font-large{font-size:18px}.animations-off *{animation:none!important;transition:none!important}.light-mode{--bg:#f4f6f8;--panel:#fff;--panel2:#eef1f4;--line:#d2d8de;--text:#1f2933;--muted:#66717d;--accent:#2563eb;--green:#198754;--yellow:#b7791f;--red:#c53030;--purple:#6b46c1}.light-mode header{background:#fff}.light-mode input,.light-mode select,.light-mode textarea{background:#fff;color:#1f2933}.light-mode nav button{background:#eef1f4;color:#1f2933}.light-mode nav button.active{background:#2563eb;color:#fff}.light-mode .btn{background:#e2e7eb;color:#1f2933}.light-mode .btn.primary{background:#2563eb;color:#fff}
+
+/* Mobile usability: compact, touch-friendly navigation and form controls */
+:where(button,a,input,select,textarea,[tabindex]):focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+button, .btn, nav button{-webkit-tap-highlight-color:transparent}
+.card,.item,.log,.grid>*,.form-grid>*{min-width:0}
+@media(max-width:600px){
+  header{padding:10px 10px 8px}
+  .header-inner{align-items:center;gap:10px}
+  .logo{font-size:17px;letter-spacing:1px;line-height:1.25}
+  .version{font-size:11px}
+  .xp-mini{font-size:13px;white-space:nowrap}
+  nav{
+    max-width:none;margin:9px -2px 0;padding:0 2px 5px;
+    flex-wrap:nowrap;overflow-x:auto;overflow-y:hidden;
+    gap:7px;overscroll-behavior-x:contain;-webkit-overflow-scrolling:touch;
+    scrollbar-width:thin;scroll-snap-type:x proximity
+  }
+  nav button{flex:0 0 auto;min-height:44px;padding:10px 12px;white-space:nowrap;scroll-snap-align:start}
+  main{padding:10px}
+  .grid{grid-template-columns:minmax(0,1fr);gap:8px}
+  .card{padding:13px;margin-bottom:10px;overflow-wrap:anywhere}
+  .card h2{font-size:18px;line-height:1.3}
+  .stat{font-size:25px}
+  .form-grid{grid-template-columns:minmax(0,1fr);gap:10px}
+  input,select,textarea{font-size:16px;min-height:44px;padding:10px}
+  textarea{min-height:90px}
+  .actions{gap:8px}
+  .actions .btn,.btn{min-height:40px;padding:9px 12px}
+  .item{padding:10px;overflow-wrap:anywhere}
+  .meta{line-height:1.4}
+  .favorite-grid{grid-template-columns:minmax(0,1fr)}
+}
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+}
 </style>
 </head>
 <body id="appBody">
