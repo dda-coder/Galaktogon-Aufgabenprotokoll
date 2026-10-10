@@ -124,6 +124,7 @@ button, .btn, nav button{-webkit-tap-highlight-color:transparent}
 </div>
 </div>\n\n<div class="card"><h2>Datenschutz & Daten</h2>
 <div class="item"><div class="item-title">Online-Spielstand</div><div id="settingsSyncInfo" class="meta">Status wird geladen.</div><div class="actions"><button class="btn primary" id="syncNowBtn">Jetzt synchronisieren</button></div></div>
+<div class="item"><div class="item-title">Backup</div><div class="meta">Exportiert deinen GAP-Spielstand als JSON-Datei. Beim Import wird der aktuelle Spielstand zuerst als Sicherheitskopie exportiert.</div><div class="actions"><button class="btn" id="exportBackupBtn">Backup exportieren</button><button class="btn" id="importBackupBtn">Backup importieren</button><input id="importBackupFile" type="file" accept=".json,application/json" hidden></div><div id="backupStatus" class="meta" aria-live="polite"></div></div>
 <div class="item"><div class="item-title">Lokale Daten</div><div class="meta">Setzt den lokalen GAP-Spielstand dieses Geräts zurück. Online gespeicherte Daten werden dadurch nicht automatisch gelöscht.</div><div class="actions"><button class="btn danger" id="resetLocalDataBtn">Lokale Daten zurücksetzen</button></div></div>
 <div class="item"><div class="item-title">Konto löschen</div><div class="meta">Das vollständige Löschen eines Supabase-Kontos benötigt eine serverseitig abgesicherte Kontofunktion.</div></div>
 </div>
@@ -306,13 +307,16 @@ function saveRaw(d,ownerId=null){
  }
 }
 function userDataOwnerId(){return currentAccountType==="parent"?activeChildId:(currentUser?.id||null)}
+function setSyncStatus(message){const node=el("settingsSyncInfo");if(node)node.textContent=message}
 async function save(){
   const ownerId=userDataOwnerId();
   const isParent=currentAccountType==="parent";
   const username=isParent?activeChildUsername:currentUsername;
   const snapshot=JSON.parse(JSON.stringify(db));
-  saveRaw(snapshot,ownerId);
-  if(!ownerId||!currentUser||!supabaseClient)return;
+  const localSaved=saveRaw(snapshot,ownerId);
+  if(!localSaved){setSyncStatus("Lokales Speichern fehlgeschlagen. Gerätespeicher prüfen.");return false}
+  if(!ownerId||!currentUser||!supabaseClient){setSyncStatus("Nur lokal gespeichert. Für Cloud-Synchronisierung bitte anmelden.");return false}
+  setSyncStatus("Änderungen lokal gespeichert · Cloud-Synchronisierung ausstehend …");
   clearTimeout(saveTimer);
   const now=new Date();
   const leaderboard=isParent?null:{
@@ -330,26 +334,29 @@ async function save(){
         const {error:leaderboardError}=await supabaseClient.from("gap_leaderboard_public").upsert(leaderboard);
         if(leaderboardError)console.warn("GAP Leaderboard:",leaderboardError);
       }
-      const sync=el("settingsSyncInfo");
-      if(sync)sync.textContent="Zuletzt online gespeichert: "+new Date().toLocaleTimeString("de-DE",{hour:"2-digit",minute:"2-digit"});
+      setSyncStatus("Synchronisiert · "+new Date().toLocaleTimeString("de-DE",{hour:"2-digit",minute:"2-digit"}));
     }catch(e){
       console.error("Online-Speicher:",e);
-      const sync=el("settingsSyncInfo");
-      if(sync)sync.textContent="Online-Speicherung fehlgeschlagen. Lokale Daten sind vorhanden; bitte Verbindung prüfen.";
+      setSyncStatus("Cloud-Synchronisierung fehlgeschlagen. Lokale Daten sind vorhanden; Verbindung prüfen und erneut versuchen.");
     }
   },150);
 }
 async function saveNow(){
-  const ownerId=userDataOwnerId();
-  const username=currentAccountType==="parent"?activeChildUsername:currentUsername;
-  const snapshot=JSON.parse(JSON.stringify(db));
-  saveRaw(snapshot,ownerId);
-  if(!ownerId||!currentUser||!supabaseClient)return;
-  const {error}=await supabaseClient.from("galaktogon_data").upsert({
-    user_id:ownerId,username,data:snapshot,updated_at:new Date().toISOString()
-  });
+ clearTimeout(saveTimer);saveTimer=null;
+ const ownerId=userDataOwnerId();
+ const username=currentAccountType==="parent"?activeChildUsername:currentUsername;
+ const snapshot=JSON.parse(JSON.stringify(db));
+ if(!saveRaw(snapshot,ownerId))throw new Error("Lokales Speichern fehlgeschlagen.");
+ if(!ownerId||!currentUser||!supabaseClient){setSyncStatus("Nur lokal gespeichert. Kein aktives Online-Konto.");return false}
+ setSyncStatus("Synchronisierung läuft …");
+ try{
+  const {error}=await supabaseClient.from("galaktogon_data").upsert({user_id:ownerId,username,data:snapshot,updated_at:new Date().toISOString()});
   if(error)throw error;
+  setSyncStatus("Synchronisierung erfolgreich · "+new Date().toLocaleTimeString("de-DE",{hour:"2-digit",minute:"2-digit"}));
+  return true;
+ }catch(error){setSyncStatus("Synchronisierung fehlgeschlagen. Lokale Daten bleiben erhalten.");throw error}
 }
+
 async function loadProfile(){
   const {data,error}=await supabaseClient.from("gap_profiles").select("user_id,username,account_type,pairing_code").eq("user_id",currentUser.id).single();
   if(error) throw error;
@@ -1075,7 +1082,11 @@ el("themeBtn")?.addEventListener("click",toggleTheme);
  el("animationBtn")?.addEventListener("click",()=>toggleSetting("animations","animationBtn"));el("compactBtn")?.addEventListener("click",()=>toggleSetting("compact","compactBtn"));el("toggleTaskBadgeBtn")?.addEventListener("click",async()=>{const s=getSettings();s.taskBadge=!s.taskBadge;saveSettings(s);await updateTaskBadge();renderSettings()});
  el("settingsFontSize")?.addEventListener("change",()=>{const s=getSettings();s.fontSize=el("settingsFontSize").value;saveSettings(s);renderSettings()});
  el("saveUndoCutoffBtn")?.addEventListener("click",()=>{const value=el("undoCutoffTime")?.value||"23:59";const s=getSettings();s.undoCutoffTime=value;saveSettings(s);renderUndoCutoffSettings();renderAll()});
- el("syncNowBtn")?.addEventListener("click",()=>{try{save();alert("Synchronisierung wurde angestoßen.")}catch(e){alert("Synchronisierung konnte nicht gestartet werden.")}});
+ el("syncNowBtn")?.addEventListener("click",async()=>{const btn=el("syncNowBtn");if(btn)btn.disabled=true;try{const ok=await saveNow();if(!ok)alert("Es konnte keine Cloud-Synchronisierung durchgeführt werden. Der Spielstand wurde lokal gespeichert.");}catch(e){console.error("Manuelle GAP-Synchronisierung:",e);alert("Synchronisierung fehlgeschlagen. Lokale Daten sind vorhanden.");}finally{if(btn)btn.disabled=false}});
+ const downloadBackup=()=>{const payload={app:"GALAKTOGON AUFGABENPROTOKOLL",formatVersion:1,exportedAt:new Date().toISOString(),data:db};const blob=new Blob([JSON.stringify(payload,null,2)],{type:"application/json"});const url=URL.createObjectURL(blob);const a=document.createElement("a");a.href=url;a.download="GAP-Backup-"+today()+".json";document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);const status=el("backupStatus");if(status)status.textContent="Backup exportiert · "+new Date().toLocaleTimeString("de-DE",{hour:"2-digit",minute:"2-digit"})};
+ el("exportBackupBtn")?.addEventListener("click",downloadBackup);
+ el("importBackupBtn")?.addEventListener("click",()=>el("importBackupFile")?.click());
+ el("importBackupFile")?.addEventListener("change",async e=>{const file=e.target.files?.[0];if(!file)return;const status=el("backupStatus");try{if(file.size>5*1024*1024)throw new Error("Die Backup-Datei ist größer als 5 MB.");const parsed=JSON.parse(await file.text());if(parsed?.app!=="GALAKTOGON AUFGABENPROTOKOLL"||parsed?.formatVersion!==1||!parsed.data||typeof parsed.data!=="object"||Array.isArray(parsed.data))throw new Error("Die Datei ist kein gültiges GAP-Backup.");if(!confirm("Backup wirklich importieren? Der aktuelle Spielstand wird ersetzt. Vorher wird eine Sicherheitskopie heruntergeladen."))return;downloadBackup();db=normalize(parsed.data);if(!saveRaw(db,userDataOwnerId()))throw new Error("Der importierte Spielstand konnte nicht lokal gespeichert werden.");renderAll();try{await saveNow();if(status)status.textContent="Backup importiert und gespeichert."}catch(syncError){if(status)status.textContent="Backup lokal importiert; Cloud-Synchronisierung fehlgeschlagen. Bitte später erneut synchronisieren."}}catch(error){console.error("GAP Backup-Import:",error);if(status)status.textContent="Import fehlgeschlagen: "+(error?.message||"Datei konnte nicht gelesen werden.")}finally{e.target.value=""}});
  el("resetLocalDataBtn")?.addEventListener("click",()=>{if(confirm("Lokale GAP-Daten wirklich zurücksetzen? Online gespeicherte Daten bleiben erhalten.")){localStorage.removeItem(KEY);if(currentUser)localStorage.removeItem(KEY+"_"+currentUser.id);if(activeChildId)localStorage.removeItem(KEY+"_"+activeChildId);location.reload()}});
  document.querySelectorAll("[data-page-jump]").forEach(b=>b.addEventListener("click",()=>showPage(b.dataset.pageJump)));
  renderSettings();renderUndoCutoffSettings();
