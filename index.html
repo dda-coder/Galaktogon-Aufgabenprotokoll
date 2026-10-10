@@ -1111,6 +1111,7 @@ let editingAppointmentId=null;
 function editAppointment(id){const a=db.appointments.find(x=>x.id===id);if(!a)return;editingAppointmentId=id;el("appointmentTitle").value=a.title||"";el("appointmentDate").value=a.date||"";el("appointmentTime").value=a.time||"";el("appointmentReminder").value=Math.max(0,Number(a.reminder)||0);el("appointmentNote").value=a.note||"";el("appointmentSaveBtn").textContent="Änderungen speichern";el("appointmentCancelEditBtn").style.display="inline-block";el("appointmentForm").scrollIntoView({behavior:"smooth",block:"center"})}
 function cancelAppointmentEdit(){editingAppointmentId=null;el("appointmentForm").reset();el("appointmentReminder").value=10;el("appointmentSaveBtn").textContent="Termin speichern";el("appointmentCancelEditBtn").style.display="none"}
 function deleteAppointment(id){const i=db.appointments.findIndex(x=>x.id===id);if(i<0)return;const a=db.appointments[i];if(!confirm("Termin löschen?\n\n"+a.title))return;if(editingAppointmentId===id)editingAppointmentId=null;db.appointments.splice(i,1);save();renderAll()}
+async function showGapNotification(title,options){const registration=await navigator.serviceWorker?.getRegistration("/");if(registration){await registration.showNotification(title,options);return}new Notification(title,options)}
 async function checkExamReminders(){
  const settings=getSettings();
  if(!settings.examReminder||!("Notification" in window)||Notification.permission!=="granted")return;
@@ -1124,7 +1125,7 @@ async function checkExamReminders(){
  if(!upcoming.length)return;
  const lines=upcoming.slice(0,4).map(x=>x.date+" · "+(x.subject?x.subject+" – ":"")+x.title);
  const more=upcoming.length>4?"\n+"+(upcoming.length-4)+" weitere Prüfung(en)":"";
- try{new Notification("GAP – Anstehende Sektorprüfungen",{body:lines.join("\n")+more,tag:"gap-exam-reminder-"+today(),icon:"favicon.svg",data:{url:"/"}});localStorage.setItem(key,"1")}catch(e){console.warn("GAP Prüfungs-Erinnerung:",e)}
+ try{await showGapNotification("GAP – Anstehende Sektorprüfungen",{body:lines.join("\n")+more,tag:"gap-exam-reminder-"+today(),icon:"favicon.svg",data:{url:"/"}});localStorage.setItem(key,"1")}catch(e){console.warn("GAP Prüfungs-Erinnerung:",e)}
 }
 async function checkAppointmentReminders(){
  if(!("Notification" in window)||Notification.permission!=="granted")return;
@@ -1136,7 +1137,7 @@ async function checkAppointmentReminders(){
    }catch(e){}
  }
  const now=Date.now();
- db.appointments.forEach(a=>{if(a.completed||a.reminded)return;const at=appointmentDateTime(a).getTime();const remindAt=at-Math.max(0,Number(a.reminder)||0)*60000;if(now>=remindAt&&now<at+60000){new Notification("GAP – Termin", {body:a.title+" · "+dateText(a.date+"T"+a.time)});a.reminded=true;save()}})
+ for(const a of db.appointments){if(a.completed||a.reminded)continue;const at=appointmentDateTime(a).getTime();if(!Number.isFinite(at))continue;const remindAt=at-Math.max(0,Number(a.reminder)||0)*60000;if(now>=remindAt&&now<at+60000){try{await showGapNotification("GAP – Termin",{body:a.title+" · "+dateText(a.date+"T"+a.time),tag:"gap-appointment-"+a.id,icon:"favicon.svg",data:{url:"/"}});a.reminded=true;save()}catch(e){console.warn("GAP Termin-Erinnerung:",e)}}}
 }
 function setupForms(){
  el("taskSearch")?.addEventListener("input",renderTasks);el("examSearch")?.addEventListener("input",renderExams);el("questSearch")?.addEventListener("input",renderQuests);el("recurringSearch")?.addEventListener("input",renderRecurring);
