@@ -58,7 +58,7 @@ button, .btn, nav button{-webkit-tap-highlight-color:transparent}
 :root{--bg:#101923;--panel:#192735;--panel2:#223443;--line:#344a5d;--text:#f2f7fb;--muted:#b2c1cd;--accent:#83c9ff;--green:#78dfae;--yellow:#ffda82;--red:#ff9292;--purple:#c4a8ff}
 body{background:radial-gradient(ellipse at 50% -18%,rgba(74,135,177,.17),transparent 58%),var(--bg);line-height:1.5;letter-spacing:.01em}
 header{background:rgba(17,27,38,.94);backdrop-filter:blur(14px);box-shadow:0 5px 24px rgba(0,0,0,.16)}
-nav{gap:8px}nav button{border-radius:999px;padding:9px 14px;transition:background .18s ease,border-color .18s ease}
+nav{gap:8px}nav button{border-radius:999px;padding:9px 14px;transition:background .18s ease,border-color .18s ease}.nav-tools{display:flex;align-items:center;gap:8px;padding:0 0 10px}.nav-tools select{max-width:100%;flex:1;min-height:42px}body.simplified-navigation nav{display:none}body.simplified-navigation #simplifiedNavToggle{border-color:var(--accent);color:var(--accent)}
 nav button:hover{border-color:var(--accent)}nav button.active{box-shadow:0 3px 12px color-mix(in srgb,var(--accent) 22%,transparent)}
 .card{border-radius:18px;border-color:color-mix(in srgb,var(--line) 80%,transparent);box-shadow:0 8px 24px rgba(0,0,0,.10);padding:19px;transition:border-color .18s ease,transform .18s ease}
 .card h2{letter-spacing:-.02em} .item{border-radius:13px}
@@ -187,6 +187,7 @@ body.accent-violet .progress-bar{background:linear-gradient(90deg,#c4a8ff,#83c9f
 
 <header>
 <div class="header-inner"><div><div class="logo" id="appLogo">GALAKTOGON AUFGABENPROTOKOLL</div><div class="version">GAP // 2.5 beta</div></div><div class="xp-mini"><div id="headerRank">Kadett</div><div id="headerXP">0 XP</div><button class="btn small" id="logoutBtn" style="margin-top:6px">Abmelden</button></div></div>
+<div class="nav-tools"><button type="button" class="btn small" id="simplifiedNavToggle" aria-pressed="false">Vereinfachte Navigation</button><select id="simplifiedNavSelect" aria-label="Bereich öffnen" hidden><option value="">Bereich auswählen …</option></select></div>
 <nav>
 <button data-page="dashboard">Dashboard</button><button data-page="updates">Updates</button><button data-page="tasks">Sektoraufgaben</button><button data-page="exams">Sektorprüfungen</button><button data-page="quests">Quests</button><button data-page="recurring">Daueraufträge</button><button data-page="appointments">Termine</button><button data-page="activities">Aktivitäten</button><button data-page="progress">Fortschritt</button><button data-page="ranks">Ränge</button><button data-page="leaderboard">Leaderboard</button><button data-page="parents">Elternübersicht</button><button data-page="parentTasks">Sektoraufgaben</button><button data-page="parentExams">Sektorprüfungen</button><button data-page="parentQuests">Quests</button><button data-page="parentEffects">Buffs & Debuffs</button><button data-page="parentLogs">Logs</button><button data-page="parentReview">Wochenbericht</button><button data-page="settings">Einstellungen</button>
 </nav>
@@ -701,11 +702,18 @@ async function bootAuth(){
   }
 }
 document.querySelectorAll("nav button").forEach(b=>b.addEventListener("click",()=>showPage(b.dataset.page)));
+const simpleNavToggle=el("simplifiedNavToggle"),simpleNavSelect=el("simplifiedNavSelect");
+[["dashboard","Dashboard"],["updates","Updates"],["tasks","Sektoraufgaben"],["exams","Sektorprüfungen"],["quests","Quests"],["recurring","Daueraufträge"],["appointments","Termine"],["activities","Aktivitäten"],["progress","Fortschritt"],["ranks","Ränge"],["leaderboard","Leaderboard"],["parents","Elternübersicht"],["parentTasks","Eltern · Sektoraufgaben"],["parentExams","Eltern · Sektorprüfungen"],["parentQuests","Eltern · Quests"],["parentEffects","Eltern · Buffs & Debuffs"],["parentLogs","Eltern · Logs"],["parentReview","Eltern · Wochenbericht"],["settings","Einstellungen"]].forEach(([value,label])=>{const o=document.createElement("option");o.value=value;o.textContent=label;simpleNavSelect.appendChild(o)});
+function syncSimpleNav(){simpleNavSelect.value=document.querySelector("nav button.active")?.dataset.page||"dashboard";const on=document.body.classList.contains("simplified-navigation");simpleNavToggle.setAttribute("aria-pressed",on?"true":"false");simpleNavToggle.textContent=on?"Normale Navigation":"Vereinfachte Navigation"}
+simpleNavToggle.addEventListener("click",()=>{document.body.classList.toggle("simplified-navigation");syncSimpleNav()});
+simpleNavSelect.addEventListener("change",()=>{if(simpleNavSelect.value)showPage(simpleNavSelect.value)});
+
 document.querySelectorAll("[data-gap-goto]").forEach(b=>b.addEventListener("click",()=>showPage(b.dataset.gapGoto)));
 
 document.querySelectorAll("[data-period]").forEach(b=>b.addEventListener("click",()=>{leaderboardPeriod=b.dataset.period;document.querySelectorAll("[data-period]").forEach(x=>x.classList.toggle("primary",x===b));renderLeaderboard()}));
 
 function showPage(p,render=true){
+if(simpleNavSelect)simpleNavSelect.value=p;
   if(currentAccountType==="parent"&&!["parents","parentTasks","parentExams","parentQuests","parentEffects","parentLogs","parentReview","settings"].includes(p))p="parents";
   if(currentAccountType!=="parent"&&p==="parents")p="dashboard";
   document.querySelectorAll(".page").forEach(x=>x.classList.remove("active"));
