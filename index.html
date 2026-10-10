@@ -162,6 +162,20 @@ body.accent-violet .progress-bar{background:linear-gradient(90deg,#c4a8ff,#83c9f
 }
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.page.active{animation:none}.favorite-btn:hover{transform:none}}
 
+
+/* GAP dashboard shortcuts and refined interaction */
+.dashboard-shortcuts{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:11px;margin:0 0 16px}
+.shortcut-card{display:flex;align-items:center;gap:11px;min-width:0;padding:14px 13px;text-align:left;border:1px solid var(--line);border-radius:15px;background:linear-gradient(145deg,var(--panel2),var(--panel));color:var(--text);cursor:pointer;transition:transform .16s ease,border-color .16s ease,box-shadow .16s ease}
+.shortcut-card:hover{transform:translateY(-2px);border-color:var(--accent);box-shadow:0 7px 20px rgba(0,0,0,.12)}
+.shortcut-card>span:nth-child(2){display:flex;flex:1;flex-direction:column;gap:3px;min-width:0}
+.shortcut-card strong{font-size:13px;line-height:1.35}
+.shortcut-card small{font-size:11px;color:var(--muted);line-height:1.35}
+.shortcut-symbol{display:grid;place-items:center;flex:0 0 35px;width:35px;height:35px;border-radius:11px;background:color-mix(in srgb,var(--accent) 16%,var(--panel));color:var(--accent);font-size:23px;font-weight:700}
+.shortcut-arrow{font-size:22px;color:var(--muted)}
+.light-mode .shortcut-card{background:linear-gradient(145deg,#fff,var(--panel2));box-shadow:0 3px 12px rgba(35,55,75,.04)}
+@media(max-width:700px){.dashboard-shortcuts{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.shortcut-card{padding:12px 10px;gap:8px}.shortcut-card strong{font-size:12px}.shortcut-card small{font-size:10px}.shortcut-symbol{width:31px;height:31px;flex-basis:31px;border-radius:9px}}
+@media(prefers-reduced-motion:reduce){.shortcut-card{transition:none}.shortcut-card:hover{transform:none}}
+
 </style>
 </head>
 <body id="appBody">
@@ -249,6 +263,7 @@ body.accent-violet .progress-bar{background:linear-gradient(90deg,#c4a8ff,#83c9f
 </section>
 <section id="dashboard" class="page active">
 <div class="dashboard-welcome"><div class="welcome-kicker">GALAKTOGON · DEIN ÜBERBLICK</div><h1>Schön, dass du da bist.</h1><p>Ein Schritt nach dem anderen. Deine nächste Mission wartet schon.</p><div class="welcome-orbit" aria-hidden="true"><span></span><span></span><span></span></div></div>
+<div class="dashboard-shortcuts" aria-label="Schnellzugriff"><button class="shortcut-card" type="button" data-gap-goto="tasks"><span class="shortcut-symbol">＋</span><span><strong>Aufgabe eintragen</strong><small>Neue Sektoraufgabe</small></span><span class="shortcut-arrow">›</span></button><button class="shortcut-card" type="button" data-gap-goto="exams"><span class="shortcut-symbol">◷</span><span><strong>Prüfung planen</strong><small>Lernziel im Blick behalten</small></span><span class="shortcut-arrow">›</span></button><button class="shortcut-card" type="button" data-gap-goto="quests"><span class="shortcut-symbol">✦</span><span><strong>Quest ansehen</strong><small>Deine persönlichen Ziele</small></span><span class="shortcut-arrow">›</span></button><button class="shortcut-card" type="button" data-gap-goto="progress"><span class="shortcut-symbol">↗</span><span><strong>Fortschritt</strong><small>XP und Lernstatistik</small></span><span class="shortcut-arrow">›</span></button></div>
 <div class="grid"><div class="card"><div class="muted">RANG</div><div class="stat" id="dashRank">Kadett</div></div><div class="card"><div class="muted">XP</div><div class="stat" id="dashXP">0</div><div class="progress"><div id="dashBar" class="progress-bar"></div></div><div id="dashNext" class="meta"></div></div><div class="card"><div class="muted">XP-MODIFIKATOR</div><div class="stat" id="dashModifier">100%</div><div id="dashModifierInfo" class="meta"></div></div><div class="card"><div class="muted">OFFENE AUFGABEN HEUTE</div><div class="stat" id="dashToday">0</div></div></div><div class="card"><div class="muted">OFFENE QUESTS</div><div class="stat" id="dashOpenQuests">0</div><div class="meta">Aktuell offene Quests</div></div>
 <div class="card"><h2>Geteilte Aufgaben</h2><div id="dashboardShares"></div></div><div class="card"><h2>Anstehende Termine</h2><div id="dashboardAppointments"></div></div>
 <div class="card"><h2>Aktive Buffs & Debuffs</h2><div id="dashboardEffects"></div></div>
@@ -686,6 +701,8 @@ async function bootAuth(){
   }
 }
 document.querySelectorAll("nav button").forEach(b=>b.addEventListener("click",()=>showPage(b.dataset.page)));
+document.querySelectorAll("[data-gap-goto]").forEach(b=>b.addEventListener("click",()=>showPage(b.dataset.gapGoto)));
+
 document.querySelectorAll("[data-period]").forEach(b=>b.addEventListener("click",()=>{leaderboardPeriod=b.dataset.period;document.querySelectorAll("[data-period]").forEach(x=>x.classList.toggle("primary",x===b));renderLeaderboard()}));
 
 function showPage(p,render=true){
