@@ -272,24 +272,47 @@ function saveRaw(d,ownerId=null){
 function userDataOwnerId(){return currentAccountType==="parent"?activeChildId:(currentUser?.id||null)}
 async function save(){
   const ownerId=userDataOwnerId();
-  saveRaw(db,ownerId);
+  const isParent=currentAccountType==="parent";
+  const username=isParent?activeChildUsername:currentUsername;
+  const snapshot=JSON.parse(JSON.stringify(db));
+  saveRaw(snapshot,ownerId);
   if(!ownerId||!currentUser||!supabaseClient)return;
   clearTimeout(saveTimer);
+  const now=new Date();
+  const leaderboard=isParent?null:{
+    user_id:ownerId,username:currentUsername||"Unbekannt",xp:snapshot.xp,
+    day_xp:periodXP("day"),week_xp:periodXP("week"),month_xp:periodXP("month"),
+    all_xp:snapshot.xp,updated_at:now.toISOString()
+  };
   saveTimer=setTimeout(async()=>{
-    const {error}=await supabaseClient.from("galaktogon_data").upsert({user_id:ownerId,username:currentAccountType==="parent"?activeChildUsername:currentUsername,data:db,updated_at:new Date().toISOString()});
-    if(currentAccountType!=="parent"){
-      const now=new Date();const day=periodXP("day"),week=periodXP("week"),month=periodXP("month");
-      await supabaseClient.from("gap_leaderboard_public").upsert({user_id:ownerId,username:currentUsername||"Unbekannt",xp:db.xp,day_xp:day,week_xp:week,month_xp:month,all_xp:db.xp,updated_at:now.toISOString()});
+    try{
+      const {error}=await supabaseClient.from("galaktogon_data").upsert({
+        user_id:ownerId,username,data:snapshot,updated_at:now.toISOString()
+      });
+      if(error)throw error;
+      if(leaderboard){
+        const {error:leaderboardError}=await supabaseClient.from("gap_leaderboard_public").upsert(leaderboard);
+        if(leaderboardError)console.warn("GAP Leaderboard:",leaderboardError);
+      }
+      const sync=el("settingsSyncInfo");
+      if(sync)sync.textContent="Zuletzt online gespeichert: "+new Date().toLocaleTimeString("de-DE",{hour:"2-digit",minute:"2-digit"});
+    }catch(e){
+      console.error("Online-Speicher:",e);
+      const sync=el("settingsSyncInfo");
+      if(sync)sync.textContent="Online-Speicherung fehlgeschlagen. Lokale Daten sind vorhanden; bitte Verbindung prüfen.";
     }
-    if(error) console.error("Online-Speicher:",error);
   },150);
 }
 async function saveNow(){
   const ownerId=userDataOwnerId();
-  saveRaw(db,ownerId);
+  const username=currentAccountType==="parent"?activeChildUsername:currentUsername;
+  const snapshot=JSON.parse(JSON.stringify(db));
+  saveRaw(snapshot,ownerId);
   if(!ownerId||!currentUser||!supabaseClient)return;
-  const {error}=await supabaseClient.from("galaktogon_data").upsert({user_id:ownerId,username:currentAccountType==="parent"?activeChildUsername:currentUsername,data:db,updated_at:new Date().toISOString()});
-  if(error) throw error;
+  const {error}=await supabaseClient.from("galaktogon_data").upsert({
+    user_id:ownerId,username,data:snapshot,updated_at:new Date().toISOString()
+  });
+  if(error)throw error;
 }
 async function loadProfile(){
   const {data,error}=await supabaseClient.from("gap_profiles").select("user_id,username,account_type,pairing_code").eq("user_id",currentUser.id).single();
