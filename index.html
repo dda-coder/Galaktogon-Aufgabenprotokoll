@@ -710,7 +710,7 @@ function appointmentDateTime(a){return new Date(a.date+"T"+a.time+":00")}
 function renderAppointments(){
  const list=db.appointments.slice().sort((a,b)=>appointmentDateTime(a)-appointmentDateTime(b));
  const box=el("appointmentList");if(!box)return;
- box.innerHTML=list.map(a=>{const d=appointmentDateTime(a),past=d<new Date(),done=Boolean(a.completed)||past;return '<div class="item"><div class="item-title">'+esc(a.title)+'</div><div class="meta">'+dateText(a.date+"T"+a.time)+ ' · Erinnerung '+Math.max(0,Number(a.reminder)||0)+' Min. vorher</div>'+(a.note?'<div class="meta">'+esc(a.note)+'</div>':'')+'<div class="meta">'+(done?'<span class="tag green">ERLEDIGT</span>':'<span class="tag yellow">GEPLANT</span>')+'</div><div class="actions"><button class="btn edit-btn" data-act="edit-appointment" data-id="'+a.id+'">Bearbeiten</button><button class="btn danger" data-act="delete-appointment" data-id="'+a.id+'">Löschen</button></div></div>'}).join("")||'<div class="empty">Keine Termine gespeichert.</div>';
+ box.innerHTML=list.map(a=>{const d=appointmentDateTime(a),past=d<new Date(),status=a.completed?'<span class="tag green">ERLEDIGT</span>':past?'<span class="tag red">VERSÄUMT</span>':'<span class="tag yellow">GEPLANT</span>';return '<div class="item"><div class="item-title">'+esc(a.title)+'</div><div class="meta">'+dateText(a.date+"T"+a.time)+ ' · Erinnerung '+Math.max(0,Number(a.reminder)||0)+' Min. vorher</div>'+(a.note?'<div class="meta">'+esc(a.note)+'</div>':'')+'<div class="meta">'+status+'</div><div class="actions"><button class="btn edit-btn" data-act="edit-appointment" data-id="'+a.id+'">Bearbeiten</button><button class="btn danger" data-act="delete-appointment" data-id="'+a.id+'">Löschen</button></div></div>'}).join("")||'<div class="empty">Keine Termine gespeichert.</div>';
 }
 function renderRecurring(){const q=(el("recurringSearch")?.value||"").trim().toLocaleLowerCase("de-DE");const open=db.recurring.filter(r=>queryMatches(r,q,["title","subject"])).map(r=>`<div class="item"><div class="item-title">${esc(r.title)}</div><div class="meta">${esc(r.subject||"Kein Fach")} · +${r.xp} XP · ${r.days.map(d=>DAYS[d]).join(", ")}</div><div class="meta">${r.due?"Uhrzeit: "+r.due:"Keine Uhrzeit festgelegt"} · bei Verspätung −${Math.max(0,Math.min(100,Number(r.latePenalty)||0))} % XP</div><div class="meta">${r.active?"Aktiv":"Pausiert"}${r.secret?' · <span class="tag purple">GEHEIM</span>':''}</div><div class="actions"><button class="btn success" data-act="toggle-recurring" data-id="${r.id}">${r.active?"Pausieren":"Aktivieren"}</button><button class="btn edit-btn" data-act="edit-recurring" data-id="${r.id}">Bearbeiten</button><button class="btn" data-act="share-recurring" data-id="${r.id}">Teilen</button><button class="btn danger" data-act="delete-recurring" data-id="${r.id}">Löschen</button></div></div>`).join("");const recent=recentCompletions("Dauerauftrag").map(l=>recentUndoHTML(l)).join("");document.getElementById("recurringList").innerHTML=(open|| (q?'<div class="empty">Keine passenden Daueraufträge gefunden.</div>':""))+recent||'<div class="empty">Keine Daueraufträge.</div>'}
 
@@ -1111,6 +1111,21 @@ let editingAppointmentId=null;
 function editAppointment(id){const a=db.appointments.find(x=>x.id===id);if(!a)return;editingAppointmentId=id;el("appointmentTitle").value=a.title||"";el("appointmentDate").value=a.date||"";el("appointmentTime").value=a.time||"";el("appointmentReminder").value=Math.max(0,Number(a.reminder)||0);el("appointmentNote").value=a.note||"";el("appointmentSaveBtn").textContent="Änderungen speichern";el("appointmentCancelEditBtn").style.display="inline-block";el("appointmentForm").scrollIntoView({behavior:"smooth",block:"center"})}
 function cancelAppointmentEdit(){editingAppointmentId=null;el("appointmentForm").reset();el("appointmentReminder").value=10;el("appointmentSaveBtn").textContent="Termin speichern";el("appointmentCancelEditBtn").style.display="none"}
 function deleteAppointment(id){const i=db.appointments.findIndex(x=>x.id===id);if(i<0)return;const a=db.appointments[i];if(!confirm("Termin löschen?\n\n"+a.title))return;if(editingAppointmentId===id)editingAppointmentId=null;db.appointments.splice(i,1);save();renderAll()}
+async function checkExamReminders(){
+ const settings=getSettings();
+ if(!settings.examReminder||!("Notification" in window)||Notification.permission!=="granted")return;
+ const now=new Date(),time=String(settings.reminderTime||"18:00").split(":").map(Number);
+ if(now.getHours()*60+now.getMinutes()<((time[0]||0)*60+(time[1]||0)))return;
+ const owner=userDataOwnerId()||"local",key="gap_exam_reminder_"+owner+"_"+today();
+ try{if(localStorage.getItem(key)==="1")return}catch(e){}
+ const start=new Date(now.getFullYear(),now.getMonth(),now.getDate());
+ const end=new Date(start);end.setDate(end.getDate()+7);
+ const upcoming=db.exams.filter(x=>{if(!x?.date)return false;const d=new Date(x.date+"T00:00:00");return Number.isFinite(d.getTime())&&d>=start&&d<end}).sort((a,b)=>a.date.localeCompare(b.date));
+ if(!upcoming.length)return;
+ const lines=upcoming.slice(0,4).map(x=>x.date+" · "+(x.subject?x.subject+" – ":"")+x.title);
+ const more=upcoming.length>4?"\n+"+(upcoming.length-4)+" weitere Prüfung(en)":"";
+ try{new Notification("GAP – Anstehende Sektorprüfungen",{body:lines.join("\n")+more,tag:"gap-exam-reminder-"+today(),icon:"favicon.svg",data:{url:"/"}});localStorage.setItem(key,"1")}catch(e){console.warn("GAP Prüfungs-Erinnerung:",e)}
+}
 async function checkAppointmentReminders(){
  if(!("Notification" in window)||Notification.permission!=="granted")return;
  if(pushSupported()){
@@ -1139,6 +1154,7 @@ el("recurringForm").addEventListener("submit",e=>{e.preventDefault();const days=
 function setupDays(){document.getElementById("weekdayInputs").innerHTML=DAYS.map((d,i)=>`<label class="day"><input type="checkbox" value="${i}" ${i>0&&i<6?"checked":""}>${d}</label>`).join("")}
 bootAuth();setupDays();decorateFields();setupParentControls();setupForms();renderUpdates();applyViewMode();setupSettings();
 setInterval(checkAppointmentReminders,30000);
+ setInterval(checkExamReminders,30000);
 </script>
 </body>
 </html>
