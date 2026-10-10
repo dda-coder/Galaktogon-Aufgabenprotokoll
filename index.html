@@ -378,9 +378,13 @@ function applyAccountView(){
   const linkBox=el("parentLinkSettings");if(linkBox)linkBox.style.display=parent?"block":"none";
 }
 async function selectParentChild(childId){
-  if(currentAccountType!=="parent")return;
-  if(!linkedChildren.some(x=>x.user_id===childId))return;
-  await loadChildOwner(childId);
+  if(currentAccountType!=="parent"||!linkedChildren.some(x=>x.user_id===childId)||childId===activeChildId)return;
+  // Flush pending writes before changing the selected child account.
+  await saveNow();
+  clearTimeout(saveTimer);
+  saveTimer=null;
+  const loaded=await loadChildOwner(childId);
+  if(!loaded)throw new Error("Für dieses Kinderkonto wurde noch kein Spielstand gefunden.");
   renderAll();
 }
 async function linkParentChild(code){
