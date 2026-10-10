@@ -49,7 +49,7 @@ test("past appointments are not falsely marked completed", () => {
 });
 
 test("grade and subject statistics plus trust breakdown are present", () => {
-  for (const id of ["gradeAverage", "gradeRecentAverage", "gradeTrend", "gradeHistory", "subjectXPStats"]) {
+  for (const id of ["gradeAverage", "gradeRecentAverage", "gradeTrend", "gradeHistory", "subjectXPStats", "rankHistory"]) {
     assert.ok(html.includes('id="' + id + '"'), "Missing statistics element: " + id);
   }
   assert.match(html, /xpScore:Math\.round\(xpScore\)/);
