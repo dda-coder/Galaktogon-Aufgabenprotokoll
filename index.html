@@ -58,7 +58,8 @@ button, .btn, nav button{-webkit-tap-highlight-color:transparent}
 :root{--bg:#101923;--panel:#192735;--panel2:#223443;--line:#344a5d;--text:#f2f7fb;--muted:#b2c1cd;--accent:#83c9ff;--green:#78dfae;--yellow:#ffda82;--red:#ff9292;--purple:#c4a8ff}
 body{background:radial-gradient(ellipse at 50% -18%,rgba(74,135,177,.17),transparent 58%),var(--bg);line-height:1.5;letter-spacing:.01em}
 header{background:rgba(17,27,38,.94);backdrop-filter:blur(14px);box-shadow:0 5px 24px rgba(0,0,0,.16)}
-nav{gap:8px}nav button{border-radius:999px;padding:9px 14px;transition:background .18s ease,border-color .18s ease}.nav-tools{display:flex;align-items:center;gap:8px;padding:0 0 10px}.nav-tools select{max-width:100%;flex:1;min-height:42px}body.simplified-navigation nav{display:none}body.simplified-navigation #simplifiedNavToggle{border-color:var(--accent);color:var(--accent)}
+nav{gap:8px}nav button{border-radius:999px;padding:9px 14px;transition:background .18s ease,border-color .18s ease}.floating-nav-toggle{position:fixed;right:max(18px,env(safe-area-inset-right));bottom:max(18px,env(safe-area-inset-bottom));z-index:800;display:flex;align-items:center;gap:9px;min-height:52px;padding:0 18px;border:1px solid color-mix(in srgb,var(--accent) 55%,var(--line));border-radius:999px;background:linear-gradient(135deg,var(--panel2),var(--panel));color:var(--text);font-weight:750;box-shadow:0 10px 30px rgba(0,0,0,.32);cursor:pointer;transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease}.floating-nav-toggle span:first-child{font-size:20px;line-height:1}.floating-nav-toggle:hover{transform:translateY(-2px);border-color:var(--accent);box-shadow:0 13px 34px rgba(0,0,0,.38)}.floating-nav-toggle:focus-visible{outline:3px solid var(--accent);outline-offset:3px}body.simplified-navigation .floating-nav-toggle{background:var(--accent);color:#10202b;border-color:var(--accent)}@media(max-width:600px){.floating-nav-toggle{right:max(12px,env(safe-area-inset-right));bottom:max(12px,env(safe-area-inset-bottom));min-height:48px;padding:0 15px}.floating-nav-label{font-size:13px}}@media(prefers-reduced-motion:reduce){.floating-nav-toggle{transition:none}}
+.nav-tools{display:flex;align-items:center;gap:8px;padding:0 0 10px}.nav-tools select{max-width:100%;flex:1;min-height:42px}body.simplified-navigation nav{display:none}body.simplified-navigation #simplifiedNavToggle{border-color:var(--accent);color:var(--accent)}
 nav button:hover{border-color:var(--accent)}nav button.active{box-shadow:0 3px 12px color-mix(in srgb,var(--accent) 22%,transparent)}
 .card{border-radius:18px;border-color:color-mix(in srgb,var(--line) 80%,transparent);box-shadow:0 8px 24px rgba(0,0,0,.10);padding:19px;transition:border-color .18s ease,transform .18s ease}
 .card h2{letter-spacing:-.02em} .item{border-radius:13px}
@@ -179,6 +180,7 @@ body.accent-violet .progress-bar{background:linear-gradient(90deg,#c4a8ff,#83c9f
 </style>
 </head>
 <body id="appBody">
+<button type="button" id="floatingNavToggle" class="floating-nav-toggle" aria-label="Vereinfachte Navigation öffnen" title="Vereinfachte Navigation"><span aria-hidden="true">☰</span><span class="floating-nav-label">Navigation</span></button>
 <div id="authScreen" style="position:fixed;inset:0;background:#0f151c;color:#f3f6f9;z-index:999;display:flex;align-items:center;justify-content:center;padding:18px">
 <div class="card" style="width:min(440px,100%);margin:0"><div class="logo">GALAKTOGON</div><div class="version" style="margin-bottom:18px">ONLINE-KONTO // V9</div>
 <div id="authLogin"><h2>Anmelden</h2><p class="muted">Dein GALAKTOGON-Spielstand wird online gespeichert und ist auf Handy, iPad und Laptop verfügbar.</p><div id="loginForm"><input id="loginName" placeholder="Benutzername" autocomplete="username" required><input id="loginPassword" type="password" placeholder="Passwort" autocomplete="current-password" required><button type="button" class="btn primary" id="loginBtn">Anmelden</button></div><p class="small muted">Noch kein Konto? <button class="btn" type="button" id="showSignup">Konto erstellen</button></p></div>
@@ -706,6 +708,13 @@ const simpleNavToggle=el("simplifiedNavToggle"),simpleNavSelect=el("simplifiedNa
 [["dashboard","Dashboard"],["updates","Updates"],["tasks","Sektoraufgaben"],["exams","Sektorprüfungen"],["quests","Quests"],["recurring","Daueraufträge"],["appointments","Termine"],["activities","Aktivitäten"],["progress","Fortschritt"],["ranks","Ränge"],["leaderboard","Leaderboard"],["parents","Elternübersicht"],["parentTasks","Eltern · Sektoraufgaben"],["parentExams","Eltern · Sektorprüfungen"],["parentQuests","Eltern · Quests"],["parentEffects","Eltern · Buffs & Debuffs"],["parentLogs","Eltern · Logs"],["parentReview","Eltern · Wochenbericht"],["settings","Einstellungen"]].forEach(([value,label])=>{const o=document.createElement("option");o.value=value;o.textContent=label;simpleNavSelect.appendChild(o)});
 function syncSimpleNav(){simpleNavSelect.value=document.querySelector("nav button.active")?.dataset.page||"dashboard";const on=document.body.classList.contains("simplified-navigation");simpleNavToggle.setAttribute("aria-pressed",on?"true":"false");simpleNavToggle.textContent=on?"Normale Navigation":"Vereinfachte Navigation"}
 simpleNavToggle.addEventListener("click",()=>{document.body.classList.toggle("simplified-navigation");syncSimpleNav()});
+const floatingNavToggle=el("floatingNavToggle");
+floatingNavToggle.addEventListener("click",()=>simpleNavToggle.click());
+const syncFloatingNav=()=>{const on=document.body.classList.contains("simplified-navigation");floatingNavToggle.setAttribute("aria-label",on?"Normale Navigation öffnen":"Vereinfachte Navigation öffnen");floatingNavToggle.title=on?"Normale Navigation":"Vereinfachte Navigation";floatingNavToggle.querySelector(".floating-nav-label").textContent=on?"Navigation":"Navigation"};
+const originalSyncSimpleNav=syncSimpleNav;
+syncSimpleNav=function(){originalSyncSimpleNav();syncFloatingNav()};
+syncFloatingNav();
+
 simpleNavSelect.addEventListener("change",()=>{if(simpleNavSelect.value)showPage(simpleNavSelect.value)});
 
 document.querySelectorAll("[data-gap-goto]").forEach(b=>b.addEventListener("click",()=>showPage(b.dataset.gapGoto)));
