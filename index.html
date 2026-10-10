@@ -53,6 +53,42 @@ button, .btn, nav button{-webkit-tap-highlight-color:transparent}
 @media(prefers-reduced-motion:reduce){
   *,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
 }
+
+/* GAP Theme 6: customizable accent palettes and welcoming dashboard */
+:root{--bg:#101923;--panel:#192735;--panel2:#223443;--line:#344a5d;--text:#f2f7fb;--muted:#b2c1cd;--accent:#83c9ff;--green:#78dfae;--yellow:#ffda82;--red:#ff9292;--purple:#c4a8ff}
+body{background:radial-gradient(ellipse at 50% -18%,rgba(74,135,177,.17),transparent 58%),var(--bg);line-height:1.5;letter-spacing:.01em}
+header{background:rgba(17,27,38,.94);backdrop-filter:blur(14px);box-shadow:0 5px 24px rgba(0,0,0,.16)}
+nav{gap:8px}nav button{border-radius:999px;padding:9px 14px;transition:background .18s ease,border-color .18s ease}
+nav button:hover{border-color:var(--accent)}nav button.active{box-shadow:0 3px 12px color-mix(in srgb,var(--accent) 22%,transparent)}
+.card{border-radius:18px;border-color:color-mix(in srgb,var(--line) 80%,transparent);box-shadow:0 8px 24px rgba(0,0,0,.10);padding:19px;transition:border-color .18s ease,transform .18s ease}
+.card h2{letter-spacing:-.02em} .item{border-radius:13px}
+.btn{border-radius:10px;transition:filter .15s ease,transform .15s ease}.btn:hover,nav button:hover{filter:brightness(1.08)}
+.btn:active{transform:translateY(1px)}
+input,select,textarea{border-radius:10px}
+.progress{background:color-mix(in srgb,var(--panel2) 70%,#000);height:12px}
+.progress-bar{background:linear-gradient(90deg,var(--accent),var(--purple));border-radius:20px}
+.dashboard-welcome{position:relative;overflow:hidden;isolation:isolate;min-height:150px;margin-bottom:16px;padding:25px 28px;border-radius:22px;border:1px solid color-mix(in srgb,var(--accent) 42%,var(--line));background:linear-gradient(115deg,color-mix(in srgb,var(--panel) 90%,var(--accent)),var(--panel) 62%,color-mix(in srgb,var(--panel) 82%,var(--purple)));box-shadow:0 12px 35px rgba(0,0,0,.14)}
+.dashboard-welcome h1{font-size:clamp(24px,3.2vw,34px);line-height:1.15;margin:8px 0;font-weight:750;letter-spacing:-.035em}
+.dashboard-welcome p{margin:0;color:var(--muted);max-width:500px}
+.welcome-kicker{font-size:11px;letter-spacing:.16em;font-weight:800;color:var(--accent)}
+.welcome-orbit{position:absolute;right:7%;top:50%;width:150px;height:150px;transform:translateY(-50%);border:1px solid color-mix(in srgb,var(--accent) 35%,transparent);border-radius:50%;opacity:.8;z-index:-1}
+.welcome-orbit:before,.welcome-orbit:after{content:"";position:absolute;border:1px solid color-mix(in srgb,var(--accent) 25%,transparent);border-radius:50%;inset:19px}
+.welcome-orbit:after{inset:42px}
+.welcome-orbit span{position:absolute;width:10px;height:10px;border-radius:50%;background:var(--accent);box-shadow:0 0 18px var(--accent);left:20px;top:28px}
+.welcome-orbit span:nth-child(2){background:var(--purple);left:auto;right:22px;top:78px;box-shadow:0 0 18px var(--purple)}
+.welcome-orbit span:nth-child(3){width:6px;height:6px;left:70px;top:auto;bottom:8px}
+.theme-swatches{display:grid;grid-template-columns:repeat(auto-fit,minmax(105px,1fr));gap:10px;margin-top:13px}
+.theme-swatch{display:flex;align-items:center;gap:9px;justify-content:flex-start;padding:11px 12px;min-height:48px;border:1px solid var(--line);border-radius:12px;background:var(--panel2);color:var(--text);cursor:pointer}
+.theme-swatch[aria-pressed="true"]{border-color:var(--accent);box-shadow:0 0 0 2px color-mix(in srgb,var(--accent) 24%,transparent)}
+.swatch-dot{width:19px;height:19px;flex:0 0 19px;border-radius:50%;box-shadow:inset 0 0 0 2px rgba(255,255,255,.2)}
+.swatch-dot.space{background:#83c9ff}.swatch-dot.forest{background:#6cdaa4}.swatch-dot.ocean{background:#49c8db}.swatch-dot.sunset{background:#ffad73}.swatch-dot.violet{background:#c4a8ff}
+body.accent-forest{--accent:#6cdaa4;--line:#315447}body.accent-ocean{--accent:#49c8db;--line:#31515c}body.accent-sunset{--accent:#ffad73;--line:#59463e}body.accent-violet{--accent:#c4a8ff;--line:#4b4263}
+.light-mode .dashboard-welcome{background:linear-gradient(115deg,color-mix(in srgb,var(--accent) 12%,white),white 68%,color-mix(in srgb,var(--purple) 12%,white));box-shadow:0 8px 24px rgba(25,45,65,.07)}
+.light-mode .card{box-shadow:0 5px 20px rgba(25,45,65,.055)}
+.light-mode .progress{background:#e3eaf0}
+@media(max-width:600px){.dashboard-welcome{padding:20px;min-height:135px}.welcome-orbit{right:-45px;opacity:.55}.card{border-radius:15px;padding:14px}.theme-swatches{grid-template-columns:repeat(2,minmax(0,1fr))}nav button{padding:8px 12px}}
+@media(prefers-reduced-motion:reduce){.card,.btn,nav button{transition:none}}
+
 </style>
 </head>
 <body id="appBody">
@@ -103,6 +139,13 @@ button, .btn, nav button{-webkit-tap-highlight-color:transparent}
 <div class="card"><h2>Darstellung</h2>
 <div class="item"><div class="item-title">Ansicht</div><div class="meta">Wechsle zwischen der GALAKTOGON-Ansicht und einer neutralen, sachlichen Darstellung.</div><div class="actions"><button class="btn" id="seriousModeBtn">Seriöse Ansicht aktivieren</button></div><div id="viewModeStatus" class="meta"></div></div>
 <div class="item"><div class="item-title">Farbschema</div><div class="meta">White Mode und Black Mode sind unabhängig von der seriösen Ansicht.</div><div class="actions"><button class="btn" id="themeBtn">White Mode aktivieren</button></div><div id="themeStatus" class="meta"></div></div>
+<div class="item theme-picker"><div class="item-title">Akzentfarbe</div><div class="meta">Wähle die Farbe, die am besten zu deiner GAP-Oberfläche passt. Deine Auswahl wird auf diesem Gerät gespeichert.</div><div class="theme-swatches" role="group" aria-label="Akzentfarbe wählen">
+<button type="button" class="theme-swatch" data-gap-accent="space" aria-label="Weltraumblau"><span class="swatch-dot space"></span><span>Weltraum</span></button>
+<button type="button" class="theme-swatch" data-gap-accent="forest" aria-label="Waldgrün"><span class="swatch-dot forest"></span><span>Wald</span></button>
+<button type="button" class="theme-swatch" data-gap-accent="ocean" aria-label="Ozeanblau"><span class="swatch-dot ocean"></span><span>Ozean</span></button>
+<button type="button" class="theme-swatch" data-gap-accent="sunset" aria-label="Sonnenuntergang"><span class="swatch-dot sunset"></span><span>Feuer</span></button>
+<button type="button" class="theme-swatch" data-gap-accent="violet" aria-label="Violett"><span class="swatch-dot violet"></span><span>Nebel</span></button>
+</div><div class="meta" id="accentThemeStatus" aria-live="polite"></div></div>
 <div class="item"><div class="item-title">Schriftgröße</div><div class="actions"><select id="settingsFontSize"><option value="small">Klein</option><option value="normal" selected>Normal</option><option value="large">Groß</option></select></div></div>
 <div class="item"><div class="item-title">Animationen</div><div class="actions"><button class="btn" id="animationBtn">Animationen: EIN</button></div></div>
 <div class="item"><div class="item-title">Kompakte Ansicht</div><div class="actions"><button class="btn" id="compactBtn">Kompakte Ansicht: AUS</button></div></div>
@@ -1173,6 +1216,20 @@ el("buffForm").addEventListener("submit",e=>{e.preventDefault();const kind=el("b
 el("recurringForm").addEventListener("submit",e=>{e.preventDefault();const days=[...document.querySelectorAll("#weekdayInputs input:checked")].map(x=>Number(x.value));if(!days.length){alert("Bitte mindestens einen Wochentag auswählen.");return}db.recurring.push({id:uid(),title:el("recurringTitle").value.trim(),subject:el("recurringSubject").value.trim(),due:el("recurringDue").value,latePenalty:Math.max(0,Math.min(100,Number(el("recurringLatePenalty").value)||0)),xp:Number(el("recurringXP").value)||getSettings().recurringXP,days,doneDates:[],active:true,secret:el("recurringSecret").checked});e.target.reset();save();renderAll()});
 }
 function setupDays(){document.getElementById("weekdayInputs").innerHTML=DAYS.map((d,i)=>`<label class="day"><input type="checkbox" value="${i}" ${i>0&&i<6?"checked":""}>${d}</label>`).join("")}
+
+const GAP_ACCENT_KEY="gap-accent-theme";
+function applyAccentTheme(){
+ const allowed=["space","forest","ocean","sunset","violet"];
+ const saved=localStorage.getItem(GAP_ACCENT_KEY);
+ document.body.classList.remove("accent-forest","accent-ocean","accent-sunset","accent-violet");
+ if(allowed.includes(saved)&&saved!=="space")document.body.classList.add("accent-"+saved);
+ document.querySelectorAll("[data-gap-accent]").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.gapAccent===(allowed.includes(saved)?saved:"space"))));
+ const status=document.getElementById("accentThemeStatus");
+ if(status){const names={space:"Weltraumblau",forest:"Waldgrün",ocean:"Ozeanblau",sunset:"Sonnenuntergang",violet:"Violett"};status.textContent="Aktiv: "+names[allowed.includes(saved)?saved:"space"];}
+}
+document.querySelectorAll("[data-gap-accent]").forEach(b=>b.addEventListener("click",()=>{localStorage.setItem(GAP_ACCENT_KEY,b.dataset.gapAccent);applyAccentTheme()}));
+applyAccentTheme();
+
 bootAuth();setupDays();decorateFields();setupParentControls();setupForms();renderUpdates();applyViewMode();setupSettings();
 setInterval(checkAppointmentReminders,30000);
  setInterval(checkExamReminders,30000);
