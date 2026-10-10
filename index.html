@@ -447,30 +447,46 @@ async function signUp(){
   currentUser=data.user;currentUsername=name;
   try{await loadProfile();if(currentAccountType==="parent")await setupParentSession();else await loadOnline();enterApp()}catch(e){authMsg("Konto wurde erstellt, aber die Kontodaten konnten nicht geladen werden: "+e.message,true)}
 }
+let loginInProgress=false;
 async function signIn(){
-  if(!supabaseConfigured){authMsg("Die Supabase-Daten fehlen noch. URL und Publishable Key in der index.html eintragen.",true);return}
+  if(loginInProgress)return;
+  if(!supabaseConfigured){authMsg("Die Supabase-Einstellungen fehlen.",true);return}
+  if(!supabaseClient||!supabaseClient.auth){authMsg("Die Login-Bibliothek wurde nicht geladen. Bitte Internetverbindung prüfen und die Seite neu laden.",true);return}
   const name=document.getElementById("loginName").value.trim();
   const pw=document.getElementById("loginPassword").value;
-  if(!validUsername(name)){authMsg("Ungültiger Benutzername.",true);return}
-  authMsg("Schritt 2/3: Anmeldung wird geprüft …");
+  if(!validUsername(name)){authMsg("Benutzername: 3–20 Zeichen, nur Buchstaben, Zahlen, _ oder -.",true);return}
+  if(!pw){authMsg("Bitte das Passwort eingeben.",true);return}
+  const button=document.getElementById("loginBtn");
+  loginInProgress=true;
+  if(button){button.disabled=true;button.textContent="Anmeldung läuft …"}
+  authMsg("Anmeldung wird geprüft …");
   try{
-    const {data,error}=await supabaseClient.auth.signInWithPassword({
-      email:usernameEmail(name),
-      password:pw
-    });
+    const {data,error}=await supabaseClient.auth.signInWithPassword({email:usernameEmail(name),password:pw});
     if(error)throw error;
     if(!data?.user||!data?.session)throw new Error("Supabase hat keine gültige Sitzung zurückgegeben.");
     currentAccessToken=data.session.access_token||"";
     currentUser=data.user;
-    authMsg("Schritt 3/3: Anmeldung erfolgreich – Kontoprofil wird geladen …");
+    authMsg("Anmeldung erfolgreich – Kontoprofil wird geladen …");
     await loadProfile();
-    authMsg("Schritt 3/3: Kontoprofil geladen – Spielstand wird geladen …");
+    authMsg("Spielstand wird geladen …");
     if(currentAccountType==="parent")await setupParentSession();
-    else await loadOnline();await loadIncomingShares();
+    else await loadOnline();
+    try{await loadIncomingShares()}catch(e){console.warn("GAP Freigaben konnten nicht geladen werden:",e)}
     enterApp();
   }catch(e){
     console.error("GAP Anmeldung:",e);
-    authMsg("Anmeldung konnte nicht abgeschlossen werden: "+(e?.message||e),true);
+    try{await supabaseClient?.auth?.signOut()}catch(signOutError){console.warn("GAP Sitzungsbereinigung:",signOutError)}
+    currentAccessToken="";
+    currentUser=null;
+    currentProfile=null;
+    currentUsername="";
+    currentAccountType="child";
+    activeChildId=null;
+    activeChildUsername="";
+    authMsg("Anmeldung fehlgeschlagen: "+(e?.message||"Unbekannter Fehler"),true);
+  }finally{
+    loginInProgress=false;
+    if(button){button.disabled=false;button.textContent="Anmelden"}
   }
 }
 window.signIn=signIn;
@@ -479,9 +495,11 @@ async function bootAuth(){
   document.getElementById("showSignup").onclick=()=>setAuthMode(true);
   document.getElementById("showLogin").onclick=()=>setAuthMode(false);
   document.getElementById("loginBtn").addEventListener("click",signIn);
+  ["loginName","loginPassword"].forEach(id=>document.getElementById(id).addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();signIn()}}));
   document.getElementById("signupForm").addEventListener("submit",async e=>{e.preventDefault();await signUp()});
   document.getElementById("logoutBtn").onclick=logout;
-  if(!supabaseConfigured){authMsg("Noch nicht eingerichtet: Supabase-Projekt erstellen und die beiden Werte oben in der Datei eintragen.",true);return}
+  if(!supabaseConfigured){authMsg("Die Supabase-Einstellungen fehlen.",true);return}
+  if(!supabaseClient){authMsg("Die Login-Bibliothek wurde nicht geladen. Bitte Internetverbindung prüfen und die Seite neu laden.",true);return}
   try{
     const {data,error}=await supabaseClient.auth.getSession();
     if(error)throw error;
