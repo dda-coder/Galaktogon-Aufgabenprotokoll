@@ -89,6 +89,79 @@ body.accent-forest{--accent:#6cdaa4;--line:#315447}body.accent-ocean{--accent:#4
 @media(max-width:600px){.dashboard-welcome{padding:20px;min-height:135px}.welcome-orbit{right:-45px;opacity:.55}.card{border-radius:15px;padding:14px}.theme-swatches{grid-template-columns:repeat(2,minmax(0,1fr))}nav button{padding:8px 12px}}
 @media(prefers-reduced-motion:reduce){.card,.btn,nav button{transition:none}}
 
+
+/* GAP visual system v2: hierarchy, navigation, accessible states and progress polish */
+:root{--radius-card:18px;--radius-control:11px}
+html{scroll-behavior:smooth;scroll-padding-top:150px}
+body{line-height:1.52}
+main{padding-top:24px;padding-bottom:42px}
+header{position:sticky;top:0}
+.header-inner{align-items:center}
+.xp-mini{min-width:88px}
+nav{padding-bottom:2px}
+nav button{font-weight:600;white-space:nowrap}
+nav button.active{font-weight:800}
+.page.active{animation:gapPageIn .22s ease-out}
+@keyframes gapPageIn{from{opacity:.65;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
+.card h2{font-size:clamp(17px,2vw,21px);margin-bottom:12px}
+.card .muted{line-height:1.55}
+.item-title{line-height:1.35}
+.stat{letter-spacing:-.035em;font-variant-numeric:tabular-nums}
+button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+input::placeholder,textarea::placeholder{color:var(--muted);opacity:.8}
+input:disabled,select:disabled,textarea:disabled{opacity:.65;cursor:not-allowed}
+.btn.primary{background:var(--accent);color:#102030;font-weight:750}
+.btn.success{font-weight:700}
+.btn.danger{font-weight:700}
+.tag{border-radius:999px;padding:4px 9px;font-weight:700;letter-spacing:.015em}
+.empty{border:1px dashed var(--line);border-radius:12px;padding:16px;text-align:center;line-height:1.5}
+.favorite-btn{border-radius:14px;transition:transform .16s ease,border-color .16s ease}
+.favorite-btn:hover{transform:translateY(-2px);border-color:var(--accent)}
+.dashboard-welcome{display:flex;flex-direction:column;justify-content:center}
+.dashboard-welcome:after{content:"";position:absolute;right:0;top:0;bottom:0;width:35%;background:linear-gradient(90deg,transparent,color-mix(in srgb,var(--accent) 5%,transparent));pointer-events:none;z-index:-1}
+.theme-swatch{font-weight:650;text-align:left}
+.light-mode{--bg:#f3f6fa;--panel:#ffffff;--panel2:#f0f4f8;--line:#d8e1e9;--text:#203040;--muted:#617486}
+.light-mode body{background:radial-gradient(ellipse at 50% -18%,rgba(70,140,210,.10),transparent 58%),var(--bg)}
+.light-mode header{background:rgba(255,255,255,.93);box-shadow:0 5px 24px rgba(35,55,75,.08)}
+.light-mode nav button{background:#f0f4f8;border-color:#d8e1e9}
+.light-mode nav button.active{background:var(--accent);color:#102030}
+.light-mode input,.light-mode select,.light-mode textarea{background:#fff;border-color:#cbd7e1;color:#203040}
+.light-mode .btn{background:#e7edf3;color:#203040}
+.light-mode .btn.primary{background:var(--accent);color:#102030}
+.light-mode .progress-bar{background:linear-gradient(90deg,var(--accent),#a99aff)}
+.light-mode .item{background:var(--panel2)}
+body.accent-forest{--accent:#6cdaa4;--line:#315447}
+body.accent-ocean{--accent:#49c8db;--line:#31515c}
+body.accent-sunset{--accent:#ffad73;--line:#59463e}
+body.accent-violet{--accent:#c4a8ff;--line:#4b4263}
+body.accent-forest .progress-bar{background:linear-gradient(90deg,#6cdaa4,#b4efb9)}
+body.accent-ocean .progress-bar{background:linear-gradient(90deg,#49c8db,#83c9ff)}
+body.accent-sunset .progress-bar{background:linear-gradient(90deg,#ffad73,#ffda82)}
+body.accent-violet .progress-bar{background:linear-gradient(90deg,#c4a8ff,#83c9ff)}
+@media(max-width:700px){
+ html{scroll-padding-top:190px}
+ main{padding:14px 10px 28px}
+ header{padding:11px 10px 7px}
+ .header-inner{gap:8px}
+ .logo{font-size:16px;letter-spacing:.5px}
+ .version{font-size:11px}
+ .xp-mini{font-size:12px;min-width:65px}
+ nav{margin-top:9px;flex-wrap:nowrap;overflow-x:auto;overscroll-behavior-x:contain;scrollbar-width:thin;padding:0 0 7px;gap:6px}
+ nav button{flex:0 0 auto;padding:8px 11px;font-size:13px}
+ .dashboard-welcome{border-radius:17px}
+ .grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+ .grid .card{margin-bottom:0}
+ .grid .stat{font-size:25px}
+ .card{margin-bottom:11px}
+ .actions .btn{flex:0 1 auto}
+}
+@media(max-width:390px){
+ .grid{grid-template-columns:1fr}
+ .dashboard-welcome h1{max-width:75%}
+ .welcome-orbit{right:-65px}
+}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.page.active{animation:none}.favorite-btn:hover{transform:none}}
+
 </style>
 </head>
 <body id="appBody">
