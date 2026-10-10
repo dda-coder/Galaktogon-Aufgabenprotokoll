@@ -15,7 +15,7 @@ self.addEventListener("push",event=>{
 self.addEventListener("notificationclose",event=>{
   const n=event.notification;
   if(n.tag!=="gap-open-task-counter"||n.data?.dismissedByClick)return;
-  event.waitUntil(new Promise(resolve=>setTimeout(resolve,1500)).then(()=>self.registration.showNotification("GAP – Offene Aufgaben",{
+  event.waitUntil(new Promise(resolve=>setTimeout(resolve,1500)).then(()=>self.registration.showNotification(n.title||"GAP – Offene Aufgaben",{
     body:n.body||"Offene Aufgaben vorhanden.",
     icon:"favicon.svg",
     badge:"favicon.svg",
