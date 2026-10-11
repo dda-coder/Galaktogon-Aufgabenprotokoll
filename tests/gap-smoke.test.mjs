@@ -71,3 +71,10 @@ test("switching floating navigation groups clears the previous submenu", () => {
   assert.match(html, /const wasOpen=!dockMoreMenu\.hidden&&b\.getAttribute\("aria-expanded"\)==="true";closeDockMenu\(\);\s*if\(!wasOpen\)/);
   assert.match(html, /group\.items\.forEach\(\(\[page,label\]\)=>\{const item=document\.createElement\("button"\)/);
 });
+
+
+test("browser back navigation restores a GAP page instead of leaving a blank screen", () => {
+  assert.match(html, /function showPage\(p,render=true,fromHistory=false\)/);
+  assert.match(html, /if\(!fromHistory\)[\s\S]*?history\.pushState\(state,"",location\.href\);else history\.replaceState\(state,"",location\.href\)/);
+  assert.match(html, /window\.addEventListener\("popstate",event=>[\s\S]*?event\.state\?\.gapPage\|\|fallback[\s\S]*?showPage\(page,false,true\)/);
+});
