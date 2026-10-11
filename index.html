@@ -1264,13 +1264,12 @@ const GAP_UPDATES_DONE=[
 ["25 · Termine","Eigene Termine können mit Datum, Uhrzeit und einer frei wählbaren Erinnerung gespeichert werden."],
 ["26 · Web-Push-Benachrichtigungen","GAP kann offene Aufgaben um 18:00 Uhr per Push an registrierte Geräte melden – auch wenn GAP nicht geöffnet ist."],
 ["28 · Termin-Push-Benachrichtigungen","GAP kann Termine zum eingestellten Erinnerungszeitpunkt per Push an registrierte Geräte melden – auch wenn GAP nicht geöffnet ist."],
+["29 · Qualitätsupdate","Notendurchschnitt zählt nur große Prüfungen. Dazu kommen neue Achievements, eine überarbeitete Aktivitätsansicht, Dashboard-Prioritäten, Backup-Vorschau und Design-Verbesserungen."],
 ];
 const GAP_UPDATES_FUTURE=[
-["29 · Fortschritt & Noten","Notendurchschnitt nur aus großen Prüfungen, dazu bessere Fortschrittsübersicht und verständliche Statistik."],
-["30 · Auszeichnungsarchiv","Neue Achievements für XP-Meilensteine, erledigte Aufträge, Aktivitäten und regelmäßige Nutzung."],
-["31 · Aktivitätszentrale","Aufgeräumte Aktivitätskarten, klare XP-Anzeige und bessere Bedienung auf Handy und PC."],
-["32 · Backup-Prüfung","Vor dem Wiederherstellen eine Vorschau mit XP, Eintragszahlen und Warnungen anzeigen."],
-["33 · Design-Feinschliff","Einheitliche Abstände, klarere Überschriften und reduzierte, hochwertigere Übergänge."]
+["30 · Automatische Funktionstests","Geplante Prüfungen für Anmeldung, XP, Noten, Backup-Import und Benachrichtigungen, damit Fehler früher auffallen."],
+["31 · Erweiterte Statistiken","Mehr Auswertungen zu Lernserien, XP-Entwicklung und persönlichen Meilensteinen."],
+["32 · GAP als App","Vorbereitung einer installierbaren Android- und iOS-App auf Basis der bestehenden GAP-Webseite."]
 ];
 function renderUpdates(){const done=el("updateListDone"),future=el("updateListFuture");if(done)done.innerHTML=GAP_UPDATES_DONE.map((x,i)=>'<article class="update-entry"><div class="update-number">'+String(i+1).padStart(2,"0")+'</div><div><div class="item-title">'+esc(x[0])+'</div><div class="meta">'+esc(x[1])+'</div></div><span class="tag green">VERÖFFENTLICHT</span></article>').join("");if(future)future.innerHTML=GAP_UPDATES_FUTURE.map((x,i)=>'<article class="update-entry update-planned"><div class="update-number">+'+(i+1)+'</div><div><div class="item-title">'+esc(x[0])+'</div><div class="meta">'+esc(x[1])+'</div></div><span class="tag yellow">GEPLANT</span></article>').join("")}
 const SERIOUS_MODE_KEY="gap_serious_mode";
