@@ -609,6 +609,7 @@ function enterApp(){
   auth.style.display="none";
   applyAccountView();
   applyViewMode();
+  renderDock();
   const page=currentAccountType==="parent"?"parents":"dashboard";
   try{
     showPage(page,false);
@@ -627,6 +628,7 @@ async function logout(){
   currentAccessToken="";
   supabaseClient=createAnonClient();
   currentUser=null;currentUsername="";currentAccountType="child";currentProfile=null;activeChildId=null;activeChildUsername="";linkedChildren=[];
+  renderDock();
   document.getElementById("authScreen").style.display="flex";
   setAuthMode(false);
   document.getElementById("loginPassword").value="";
@@ -766,7 +768,13 @@ function showPage(p,render=true){
   target.classList.add("active");
   document.querySelectorAll("nav button").forEach(x=>x.classList.toggle("active",x.dataset.page===p));
   if(gapDock.querySelectorAll(".dock-button").length===0)renderDock();
-  gapDock.querySelectorAll("[data-dock-page]").forEach(x=>x.classList.toggle("active",x.dataset.dockPage===p));
+  const groups=dockGroups[currentAccountType==="parent"?"parent":"child"];
+  gapDock.querySelectorAll(".dock-button").forEach((button,index)=>{
+    const group=groups[index];
+    const selected=Boolean(group&&(group.page===p||group.items?.some(([page])=>page===p)));
+    button.classList.toggle("active",selected);
+    button.setAttribute("aria-current",group?.page===p?"page":"false");
+  });
   dockMoreMenu.querySelectorAll("button").forEach(x=>x.classList.toggle("active",x.dataset.dockPage===p));
   if(render)renderAll();
 }
