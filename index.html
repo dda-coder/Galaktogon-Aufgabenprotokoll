@@ -760,11 +760,17 @@ document.querySelectorAll("[data-gap-goto]").forEach(b=>b.addEventListener("clic
 
 document.querySelectorAll("[data-period]").forEach(b=>b.addEventListener("click",()=>{leaderboardPeriod=b.dataset.period;document.querySelectorAll("[data-period]").forEach(x=>x.classList.toggle("primary",x===b));renderLeaderboard()}));
 
-function showPage(p,render=true){
+function showPage(p,render=true,fromHistory=false){
   if(currentAccountType==="parent"&&!["parents","parentTasks","parentExams","parentQuests","parentEffects","parentLogs","parentReview","settings"].includes(p))p="parents";
   if(currentAccountType!=="parent"&&p==="parents")p="dashboard";
   document.querySelectorAll(".page").forEach(x=>x.classList.remove("active"));
   const target=document.getElementById(p);if(!target)return;
+  if(!fromHistory){
+    try{
+      const state={...(history.state&&typeof history.state==="object"?history.state:{}),gapPage:p};
+      if(render)history.pushState(state,"",location.href);else history.replaceState(state,"",location.href);
+    }catch(e){console.warn("GAP Seitenverlauf:",e)}
+  }
   target.classList.add("active");
   document.querySelectorAll("nav button").forEach(x=>x.classList.toggle("active",x.dataset.page===p));
   if(gapDock.querySelectorAll(".dock-button").length===0)renderDock();
@@ -778,6 +784,14 @@ function showPage(p,render=true){
   dockMoreMenu.querySelectorAll("button").forEach(x=>x.classList.toggle("active",x.dataset.dockPage===p));
   if(render)renderAll();
 }
+window.addEventListener("popstate",event=>{
+  const fallback=currentAccountType==="parent"?"parents":"dashboard";
+  const page=event.state?.gapPage||fallback;
+  showPage(page,false,true);
+  if(!event.state?.gapPage){
+    try{history.replaceState({...(history.state&&typeof history.state==="object"?history.state:{}),gapPage:page},"",location.href)}catch(e){console.warn("GAP Verlauf wiederherstellen:",e)}
+  }
+});
 function el(id){return document.getElementById(id)}
 const FIELD_LABELS={loginName:"Benutzername",loginPassword:"Passwort",signupName:"Benutzername",signupPassword:"Passwort",signupPassword2:"Passwort wiederholen",signupType:"Kontotyp",taskTitle:"Aufgabe",taskSubject:"Fach",taskDue:"Deadline (Datum & Uhrzeit)",taskLatePenalty:"Verspätungs-Debuff (%)",taskType:"Aufgabentyp",taskNote:"Notiz",examSubject:"Fach",examTitle:"Prüfung",examDate:"Datum",examSize:"Prüfungsgröße",examTarget:"Zielnote",questTitle:"Quest",questDue:"Deadline (Datum & Uhrzeit)",questLatePenalty:"Verspätungs-Debuff (%)",questXP:"XP-Belohnung",questNote:"Notiz",recurringTitle:"Dauerauftrag",recurringSubject:"Fach",recurringXP:"XP-Belohnung",recurringDue:"Uhrzeit (optional)",recurringLatePenalty:"Verspätungs-Debuff (%)",appointmentTitle:"Termin",appointmentDate:"Datum",appointmentTime:"Uhrzeit",appointmentReminder:"Erinnerung vorher (Minuten)",appointmentNote:"Notiz",activityTitle:"Aktivität",activityXP:"XP-Belohnung",parentQuestTitle:"Quest",parentQuestDue:"Deadline (Datum)",parentQuestLatePenalty:"Verspätungs-Debuff (%)",parentQuestXP:"XP-Belohnung",parentQuestNote:"Beschreibung",buffName:"Effektname",buffKind:"Effektart",buffPercent:"Stärke (%)",buffUses:"Anzahl XP-Vergaben",trustStatus:"Vertrauensstatus"};
 function decorateFields(root=document){root.querySelectorAll("input:not([type=checkbox]):not([type=hidden]),select,textarea").forEach(x=>{if(x.dataset.labeled)return;const label=FIELD_LABELS[x.id]||x.getAttribute("placeholder")||x.getAttribute("title");if(!label)return;const wrap=document.createElement("div");wrap.className="field-wrap";const l=document.createElement("label");l.className="field-label";l.textContent=label;l.htmlFor=x.id;x.parentNode.insertBefore(wrap,x);wrap.appendChild(l);wrap.appendChild(x);x.dataset.labeled="1"})}
