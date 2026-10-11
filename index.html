@@ -58,7 +58,24 @@ button, .btn, nav button{-webkit-tap-highlight-color:transparent}
 :root{--bg:#101923;--panel:#192735;--panel2:#223443;--line:#344a5d;--text:#f2f7fb;--muted:#b2c1cd;--accent:#83c9ff;--green:#78dfae;--yellow:#ffda82;--red:#ff9292;--purple:#c4a8ff}
 body{background:radial-gradient(ellipse at 50% -18%,rgba(74,135,177,.17),transparent 58%),var(--bg);line-height:1.5;letter-spacing:.01em}
 header{background:rgba(17,27,38,.94);backdrop-filter:blur(14px);box-shadow:0 5px 24px rgba(0,0,0,.16)}
-nav{gap:8px}nav button{border-radius:999px;padding:9px 14px;transition:background .18s ease,border-color .18s ease}.floating-nav-toggle{position:fixed;right:max(18px,env(safe-area-inset-right));bottom:max(18px,env(safe-area-inset-bottom));z-index:800;display:flex;align-items:center;gap:9px;min-height:52px;padding:0 18px;border:1px solid color-mix(in srgb,var(--accent) 55%,var(--line));border-radius:999px;background:linear-gradient(135deg,var(--panel2),var(--panel));color:var(--text);font-weight:750;box-shadow:0 10px 30px rgba(0,0,0,.32);cursor:pointer;transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease}.floating-nav-toggle span:first-child{font-size:20px;line-height:1}.floating-nav-toggle:hover{transform:translateY(-2px);border-color:var(--accent);box-shadow:0 13px 34px rgba(0,0,0,.38)}.floating-nav-toggle:focus-visible{outline:3px solid var(--accent);outline-offset:3px}body.simplified-navigation .floating-nav-toggle{background:var(--accent);color:#10202b;border-color:var(--accent)}@media(max-width:600px){.floating-nav-toggle{right:max(12px,env(safe-area-inset-right));bottom:max(12px,env(safe-area-inset-bottom));min-height:48px;padding:0 15px}.floating-nav-label{font-size:13px}}@media(prefers-reduced-motion:reduce){.floating-nav-toggle{transition:none}}
+nav{gap:8px}nav button{border-radius:999px;padding:9px 14px;transition:background .18s ease,border-color .18s ease}
+header nav{display:none}
+.gap-dock-wrap{position:fixed;left:50%;bottom:max(14px,env(safe-area-inset-bottom));transform:translateX(-50%);z-index:850;width:min(940px,calc(100% - 28px));display:flex;flex-direction:column;align-items:stretch;gap:10px;pointer-events:none}
+.gap-dock,.dock-more-menu{pointer-events:auto;background:color-mix(in srgb,var(--panel) 92%,transparent);border:1px solid color-mix(in srgb,var(--accent) 25%,var(--line));backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);box-shadow:0 12px 36px rgba(0,0,0,.34)}
+.gap-dock{width:100%;max-width:none;margin:0;display:flex;justify-content:space-around;align-items:stretch;gap:4px;padding:7px;border-radius:22px}
+.gap-dock .dock-button{flex:1;min-width:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding:7px 5px;border:1px solid transparent;border-radius:15px;background:transparent;color:var(--muted);font-size:11px;font-weight:650;line-height:1.15;white-space:nowrap}
+.gap-dock .dock-icon{font-size:20px;line-height:1.1;font-weight:700}
+.gap-dock .dock-button:hover{color:var(--text);border-color:var(--line)}
+.gap-dock .dock-button.active{background:var(--accent);color:#10202b;border-color:var(--accent);box-shadow:0 3px 12px color-mix(in srgb,var(--accent) 25%,transparent)}
+.gap-dock .dock-home{flex:1.15}
+.dock-more-menu{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;padding:12px;border-radius:18px;max-height:min(48vh,420px);overflow-y:auto}
+.dock-more-menu[hidden]{display:none}
+.dock-more-menu button{min-width:0;padding:10px 8px;border:1px solid var(--line);border-radius:11px;background:var(--panel2);color:var(--text);font-size:12px;text-align:center}
+.dock-more-menu button:hover,.dock-more-menu button.active{border-color:var(--accent);color:var(--accent)}
+body{padding-bottom:100px}
+@media(max-width:600px){.gap-dock-wrap{width:calc(100% - 16px);bottom:max(8px,env(safe-area-inset-bottom))}.gap-dock{gap:1px;padding:5px;border-radius:18px}.gap-dock .dock-button{padding:7px 2px;font-size:9px;letter-spacing:-.02em}.gap-dock .dock-icon{font-size:18px}.dock-more-menu{grid-template-columns:repeat(2,minmax(0,1fr));padding:9px;gap:6px}.dock-more-menu button{font-size:11px;padding:10px 5px}body{padding-bottom:90px}}
+@media(prefers-reduced-motion:reduce){.gap-dock .dock-button{transition:none}}
+
 .nav-tools{display:flex;align-items:center;gap:8px;padding:0 0 10px}.nav-tools select{max-width:100%;flex:1;min-height:42px}body.simplified-navigation nav{display:none}body.simplified-navigation #simplifiedNavToggle{border-color:var(--accent);color:var(--accent)}
 nav button:hover{border-color:var(--accent)}nav button.active{box-shadow:0 3px 12px color-mix(in srgb,var(--accent) 22%,transparent)}
 .card{border-radius:18px;border-color:color-mix(in srgb,var(--line) 80%,transparent);box-shadow:0 8px 24px rgba(0,0,0,.10);padding:19px;transition:border-color .18s ease,transform .18s ease}
@@ -180,7 +197,17 @@ body.accent-violet .progress-bar{background:linear-gradient(90deg,#c4a8ff,#83c9f
 </style>
 </head>
 <body id="appBody">
-<button type="button" id="floatingNavToggle" class="floating-nav-toggle" aria-label="Vereinfachte Navigation öffnen" title="Vereinfachte Navigation"><span aria-hidden="true">☰</span><span class="floating-nav-label">Navigation</span></button>
+<div id="gapDockWrap" class="gap-dock-wrap">
+  <nav id="gapDock" class="gap-dock" aria-label="Hauptnavigation">
+    <button type="button" class="dock-button dock-home active" data-dock-page="dashboard"><span class="dock-icon" aria-hidden="true">⌂</span><span>Dashboard</span></button>
+    <button type="button" class="dock-button" data-dock-page="tasks"><span class="dock-icon" aria-hidden="true">☷</span><span>Aufgaben</span></button>
+    <button type="button" class="dock-button" data-dock-page="appointments"><span class="dock-icon" aria-hidden="true">▦</span><span>Termine</span></button>
+    <button type="button" class="dock-button" data-dock-page="progress"><span class="dock-icon" aria-hidden="true">↗</span><span>Fortschritt</span></button>
+    <button type="button" class="dock-button" data-dock-page="settings"><span class="dock-icon" aria-hidden="true">⚙</span><span>Einstellungen</span></button>
+    <button type="button" id="dockMoreToggle" class="dock-button" aria-expanded="false" aria-controls="dockMoreMenu"><span class="dock-icon" aria-hidden="true">•••</span><span>Mehr</span></button>
+  </nav>
+  <div id="dockMoreMenu" class="dock-more-menu" hidden aria-label="Weitere Bereiche"></div>
+</div>
 <div id="authScreen" style="position:fixed;inset:0;background:#0f151c;color:#f3f6f9;z-index:999;display:flex;align-items:center;justify-content:center;padding:18px">
 <div class="card" style="width:min(440px,100%);margin:0"><div class="logo">GALAKTOGON</div><div class="version" style="margin-bottom:18px">ONLINE-KONTO // V9</div>
 <div id="authLogin"><h2>Anmelden</h2><p class="muted">Dein GALAKTOGON-Spielstand wird online gespeichert und ist auf Handy, iPad und Laptop verfügbar.</p><div id="loginForm"><input id="loginName" placeholder="Benutzername" autocomplete="username" required><input id="loginPassword" type="password" placeholder="Passwort" autocomplete="current-password" required><button type="button" class="btn primary" id="loginBtn">Anmelden</button></div><p class="small muted">Noch kein Konto? <button class="btn" type="button" id="showSignup">Konto erstellen</button></p></div>
@@ -189,10 +216,7 @@ body.accent-violet .progress-bar{background:linear-gradient(90deg,#c4a8ff,#83c9f
 
 <header>
 <div class="header-inner"><div><div class="logo" id="appLogo">GALAKTOGON AUFGABENPROTOKOLL</div><div class="version">GAP // 2.5 beta</div></div><div class="xp-mini"><div id="headerRank">Kadett</div><div id="headerXP">0 XP</div><button class="btn small" id="logoutBtn" style="margin-top:6px">Abmelden</button></div></div>
-<div class="nav-tools"><button type="button" class="btn small" id="simplifiedNavToggle" aria-pressed="false">Vereinfachte Navigation</button><select id="simplifiedNavSelect" aria-label="Bereich öffnen" hidden><option value="">Bereich auswählen …</option></select></div>
-<nav>
-<button data-page="dashboard">Dashboard</button><button data-page="updates">Updates</button><button data-page="tasks">Sektoraufgaben</button><button data-page="exams">Sektorprüfungen</button><button data-page="quests">Quests</button><button data-page="recurring">Daueraufträge</button><button data-page="appointments">Termine</button><button data-page="activities">Aktivitäten</button><button data-page="progress">Fortschritt</button><button data-page="ranks">Ränge</button><button data-page="leaderboard">Leaderboard</button><button data-page="parents">Elternübersicht</button><button data-page="parentTasks">Sektoraufgaben</button><button data-page="parentExams">Sektorprüfungen</button><button data-page="parentQuests">Quests</button><button data-page="parentEffects">Buffs & Debuffs</button><button data-page="parentLogs">Logs</button><button data-page="parentReview">Wochenbericht</button><button data-page="settings">Einstellungen</button>
-</nav>
+
 </header>
 <main>
 <section id="updates" class="page"><div class="card"><h2>GAP-Updates</h2><p class="muted">Hier werden die bisher veröffentlichten und die geplanten Updates von GAP gesammelt. Entfernte oder zurückgerollte Funktionen werden nicht als aktuelle Updates aufgeführt.</p><h3>Bereits umgesetzt</h3><div id="updateListDone"></div></div><div class="card"><h2>Zukünftige Updates</h2><div id="updateListFuture"></div></div></section>
@@ -704,18 +728,14 @@ async function bootAuth(){
   }
 }
 document.querySelectorAll("nav button").forEach(b=>b.addEventListener("click",()=>showPage(b.dataset.page)));
-const simpleNavToggle=el("simplifiedNavToggle"),simpleNavSelect=el("simplifiedNavSelect");
-[["dashboard","Dashboard"],["updates","Updates"],["tasks","Sektoraufgaben"],["exams","Sektorprüfungen"],["quests","Quests"],["recurring","Daueraufträge"],["appointments","Termine"],["activities","Aktivitäten"],["progress","Fortschritt"],["ranks","Ränge"],["leaderboard","Leaderboard"],["parents","Elternübersicht"],["parentTasks","Eltern · Sektoraufgaben"],["parentExams","Eltern · Sektorprüfungen"],["parentQuests","Eltern · Quests"],["parentEffects","Eltern · Buffs & Debuffs"],["parentLogs","Eltern · Logs"],["parentReview","Eltern · Wochenbericht"],["settings","Einstellungen"]].forEach(([value,label])=>{const o=document.createElement("option");o.value=value;o.textContent=label;simpleNavSelect.appendChild(o)});
-function syncSimpleNav(){simpleNavSelect.value=document.querySelector("nav button.active")?.dataset.page||"dashboard";const on=document.body.classList.contains("simplified-navigation");simpleNavToggle.setAttribute("aria-pressed",on?"true":"false");simpleNavToggle.textContent=on?"Normale Navigation":"Vereinfachte Navigation"}
-simpleNavToggle.addEventListener("click",()=>{document.body.classList.toggle("simplified-navigation");syncSimpleNav()});
-const floatingNavToggle=el("floatingNavToggle");
-floatingNavToggle.addEventListener("click",()=>simpleNavToggle.click());
-const syncFloatingNav=()=>{const on=document.body.classList.contains("simplified-navigation");floatingNavToggle.setAttribute("aria-label",on?"Normale Navigation öffnen":"Vereinfachte Navigation öffnen");floatingNavToggle.title=on?"Normale Navigation":"Vereinfachte Navigation";floatingNavToggle.querySelector(".floating-nav-label").textContent=on?"Navigation":"Navigation"};
-const originalSyncSimpleNav=syncSimpleNav;
-syncSimpleNav=function(){originalSyncSimpleNav();syncFloatingNav()};
-syncFloatingNav();
-
-simpleNavSelect.addEventListener("change",()=>{if(simpleNavSelect.value)showPage(simpleNavSelect.value)});
+const dockMoreToggle=el("dockMoreToggle"),dockMoreMenu=el("dockMoreMenu");
+const dockPages=[
+["updates","Updates"],["exams","Sektorprüfungen"],["quests","Quests"],["recurring","Daueraufträge"],["activities","Aktivitäten"],["ranks","Ränge"],["leaderboard","Leaderboard"],["parents","Elternübersicht"],["parentTasks","Eltern · Sektoraufgaben"],["parentExams","Eltern · Sektorprüfungen"],["parentQuests","Eltern · Quests"],["parentEffects","Eltern · Buffs & Debuffs"],["parentLogs","Eltern · Logs"],["parentReview","Eltern · Wochenbericht"]
+];
+dockPages.forEach(([page,label])=>{const b=document.createElement("button");b.type="button";b.dataset.dockPage=page;b.textContent=label; b.addEventListener("click",()=>{showPage(page);dockMoreMenu.hidden=true;dockMoreToggle.setAttribute("aria-expanded","false")});dockMoreMenu.appendChild(b)});
+dockMoreToggle.addEventListener("click",()=>{const open=dockMoreMenu.hidden;dockMoreMenu.hidden=!open;dockMoreToggle.setAttribute("aria-expanded",open?"true":"false")});
+document.querySelectorAll("[data-dock-page]").forEach(b=>b.addEventListener("click",()=>showPage(b.dataset.dockPage)));
+document.addEventListener("click",e=>{if(!e.target.closest("#gapDockWrap")){dockMoreMenu.hidden=true;dockMoreToggle.setAttribute("aria-expanded","false")}});
 
 document.querySelectorAll("[data-gap-goto]").forEach(b=>b.addEventListener("click",()=>showPage(b.dataset.gapGoto)));
 
@@ -729,6 +749,8 @@ if(simpleNavSelect)simpleNavSelect.value=p;
   const target=document.getElementById(p);if(!target)return;
   target.classList.add("active");
   document.querySelectorAll("nav button").forEach(x=>x.classList.toggle("active",x.dataset.page===p));
+  document.querySelectorAll("[data-dock-page]").forEach(x=>x.classList.toggle("active",x.dataset.dockPage===p));
+  dockMoreMenu.querySelectorAll("button").forEach(x=>x.classList.toggle("active",x.dataset.dockPage===p));
   if(render)renderAll();
 }
 function el(id){return document.getElementById(id)}
