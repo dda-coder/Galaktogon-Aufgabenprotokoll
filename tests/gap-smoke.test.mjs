@@ -18,7 +18,9 @@ test("backup controls and validation are present", () => {
   }
   assert.match(html, /file\.size>5\*1024\*1024/);
   assert.match(html, /parsed\?\.app!=="GALAKTOGON AUFGABENPROTOKOLL"/);
-  assert.match(html, /Backup wirklich importieren\?/);
+  assert.match(html, /Backup-Vorschau/);
+  assert.match(html, /Fortfahren\?/);
+  assert.match(html, /downloadBackup\(\);db=normalize\(parsed\.data\)/);
 });
 
 test("manual sync reports its actual result", () => {
