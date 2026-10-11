@@ -55,3 +55,13 @@ test("grade and subject statistics plus trust breakdown are present", () => {
   assert.match(html, /xpScore:Math\.round\(xpScore\)/);
   assert.match(html, /category:"Effekt"/);
 });
+
+test("floating navigation refreshes for account roles and active groups", () => {
+  assert.match(html, /function enterApp\(\)[\s\S]*?renderDock\(\);[\s\S]*?showPage\(page,false\)/);
+  assert.match(html, /currentAccountType="child";currentProfile=null;activeChildId=null;activeChildUsername="";linkedChildren=\[\];\s*renderDock\(\);/);
+  assert.match(html, /const groups=dockGroups\[currentAccountType==="parent"\?"parent":"child"\]/);
+  assert.match(html, /group\.items\?\.some\(\(\[page\]\)=>page===p\)/);
+  for (const page of ["dashboard", "tasks", "exams", "quests", "recurring", "appointments", "activities", "progress", "ranks", "leaderboard", "parents", "parentTasks", "parentExams", "parentQuests", "parentEffects", "parentLogs", "parentReview", "settings", "updates"]) {
+    assert.ok(html.includes('id="' + page + '"'), "Navigation target missing: " + page);
+  }
+});
