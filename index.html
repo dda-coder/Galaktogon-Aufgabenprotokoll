@@ -738,7 +738,7 @@ parent:[
 {label:"Fortschritt",icon:"↗",items:[["parentReview","Wochenbericht"],["parentLogs","Protokolle"],["parentEffects","Buffs & Debuffs"]]},
 {label:"Einstellungen",icon:"⚙",page:"settings"}
 ]};
-function closeDockMenu(){dockMoreMenu.hidden=true;gapDock.querySelectorAll("[aria-expanded]").forEach(b=>b.setAttribute("aria-expanded","false"))}
+function closeDockMenu(){dockMoreMenu.hidden=true;dockMoreMenu.replaceChildren();gapDock.querySelectorAll("[aria-expanded]").forEach(b=>b.setAttribute("aria-expanded","false"))}
 function renderDock(){
  const parent=currentAccountType==="parent",groups=dockGroups[parent?"parent":"child"];
  gapDock.replaceChildren();dockMoreMenu.replaceChildren();
