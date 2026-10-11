@@ -65,3 +65,9 @@ test("floating navigation refreshes for account roles and active groups", () => 
     assert.ok(html.includes('id="' + page + '"'), "Navigation target missing: " + page);
   }
 });
+
+test("switching floating navigation groups clears the previous submenu", () => {
+  assert.match(html, /function closeDockMenu\(\)\{dockMoreMenu\.hidden=true;dockMoreMenu\.replaceChildren\(\);gapDock\.querySelectorAll\("\[aria-expanded\]"\)\.forEach\(b=>b\.setAttribute\("aria-expanded","false"\)\)\}/);
+  assert.match(html, /const wasOpen=!dockMoreMenu\.hidden&&b\.getAttribute\("aria-expanded"\)==="true";closeDockMenu\(\);\s*if\(!wasOpen\)/);
+  assert.match(html, /group\.items\.forEach\(\(\[page,label\]\)=>\{const item=document\.createElement\("button"\)/);
+});
