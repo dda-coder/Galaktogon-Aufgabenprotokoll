@@ -198,14 +198,7 @@ body.accent-violet .progress-bar{background:linear-gradient(90deg,#c4a8ff,#83c9f
 </head>
 <body id="appBody">
 <div id="gapDockWrap" class="gap-dock-wrap">
-  <nav id="gapDock" class="gap-dock" aria-label="Hauptnavigation">
-    <button type="button" class="dock-button dock-home active" data-dock-page="dashboard"><span class="dock-icon" aria-hidden="true">⌂</span><span>Dashboard</span></button>
-    <button type="button" class="dock-button" data-dock-page="tasks"><span class="dock-icon" aria-hidden="true">☷</span><span>Aufgaben</span></button>
-    <button type="button" class="dock-button" data-dock-page="appointments"><span class="dock-icon" aria-hidden="true">▦</span><span>Termine</span></button>
-    <button type="button" class="dock-button" data-dock-page="progress"><span class="dock-icon" aria-hidden="true">↗</span><span>Fortschritt</span></button>
-    <button type="button" class="dock-button" data-dock-page="settings"><span class="dock-icon" aria-hidden="true">⚙</span><span>Einstellungen</span></button>
-    <button type="button" id="dockMoreToggle" class="dock-button" aria-expanded="false" aria-controls="dockMoreMenu"><span class="dock-icon" aria-hidden="true">•••</span><span>Mehr</span></button>
-  </nav>
+  <nav id="gapDock" class="gap-dock" aria-label="Hauptnavigation"></nav>
   <div id="dockMoreMenu" class="dock-more-menu" hidden aria-label="Weitere Bereiche"></div>
 </div>
 <div id="authScreen" style="position:fixed;inset:0;background:#0f151c;color:#f3f6f9;z-index:999;display:flex;align-items:center;justify-content:center;padding:18px">
@@ -728,28 +721,52 @@ async function bootAuth(){
   }
 }
 document.querySelectorAll("nav button[data-page]").forEach(b=>b.addEventListener("click",()=>showPage(b.dataset.page)));
-const dockMoreToggle=el("dockMoreToggle"),dockMoreMenu=el("dockMoreMenu");
-const dockPages=[
-["updates","Updates"],["exams","Sektorprüfungen"],["quests","Quests"],["recurring","Daueraufträge"],["activities","Aktivitäten"],["ranks","Ränge"],["leaderboard","Leaderboard"],["parents","Elternübersicht"],["parentTasks","Eltern · Sektoraufgaben"],["parentExams","Eltern · Sektorprüfungen"],["parentQuests","Eltern · Quests"],["parentEffects","Eltern · Buffs & Debuffs"],["parentLogs","Eltern · Logs"],["parentReview","Eltern · Wochenbericht"]
-];
-dockPages.forEach(([page,label])=>{const b=document.createElement("button");b.type="button";b.dataset.dockPage=page;b.textContent=label; b.addEventListener("click",()=>{showPage(page);dockMoreMenu.hidden=true;dockMoreToggle.setAttribute("aria-expanded","false")});dockMoreMenu.appendChild(b)});
-dockMoreToggle.addEventListener("click",()=>{const open=dockMoreMenu.hidden;dockMoreMenu.hidden=!open;dockMoreToggle.setAttribute("aria-expanded",open?"true":"false")});
-document.querySelectorAll("[data-dock-page]").forEach(b=>b.addEventListener("click",()=>showPage(b.dataset.dockPage)));
-document.addEventListener("click",e=>{if(!e.target.closest("#gapDockWrap")){dockMoreMenu.hidden=true;dockMoreToggle.setAttribute("aria-expanded","false")}});
+const dockMoreMenu=el("dockMoreMenu"),gapDock=el("gapDock");
+const dockGroups={
+child:[
+{label:"Dashboard",icon:"⌂",page:"dashboard",primary:true},
+{label:"Aufgaben",icon:"☷",items:[["tasks","Sektoraufgaben"],["exams","Sektorprüfungen"],["quests","Quests"],["recurring","Daueraufträge"],["appointments","Termine"]]},
+{label:"Fortschritt",icon:"↗",items:[["progress","Fortschritt & XP"],["ranks","Ränge"],["leaderboard","Leaderboard"]]},
+{label:"Aktivitäten",icon:"★",page:"activities"},
+{label:"Einstellungen",icon:"⚙",items:[["settings","Einstellungen"],["updates","Updates"]]}
+],
+parent:[
+{label:"Übersicht",icon:"⌂",page:"parents",primary:true},
+{label:"Aufgaben",icon:"☷",items:[["parentTasks","Sektoraufgaben"],["parentExams","Sektorprüfungen"],["parentQuests","Quests"]]},
+{label:"Fortschritt",icon:"↗",items:[["parentReview","Wochenbericht"],["parentLogs","Protokolle"],["parentEffects","Buffs & Debuffs"]]},
+{label:"Einstellungen",icon:"⚙",page:"settings"}
+]};
+function closeDockMenu(){dockMoreMenu.hidden=true;gapDock.querySelectorAll("[aria-expanded]").forEach(b=>b.setAttribute("aria-expanded","false"))}
+function renderDock(){
+ const parent=currentAccountType==="parent",groups=dockGroups[parent?"parent":"child"];
+ gapDock.replaceChildren();dockMoreMenu.replaceChildren();
+ groups.forEach((group,i)=>{
+  const b=document.createElement("button");b.type="button";b.className="dock-button"+(group.primary?" dock-home":"");b.dataset.dockGroup=String(i);
+  b.innerHTML='<span class="dock-icon" aria-hidden="true"></span><span></span>';b.querySelector(".dock-icon").textContent=group.icon;b.lastElementChild.textContent=group.label;
+  if(group.page){b.dataset.dockPage=group.page;b.addEventListener("click",()=>{closeDockMenu();showPage(group.page)})}
+  else {b.setAttribute("aria-expanded","false");b.setAttribute("aria-controls","dockMoreMenu");b.addEventListener("click",()=>{
+    const wasOpen=!dockMoreMenu.hidden&&b.getAttribute("aria-expanded")==="true";closeDockMenu();
+    if(!wasOpen){group.items.forEach(([page,label])=>{const item=document.createElement("button");item.type="button";item.dataset.dockPage=page;item.textContent=label;item.addEventListener("click",()=>{closeDockMenu();showPage(page)});dockMoreMenu.appendChild(item)});dockMoreMenu.hidden=false;b.setAttribute("aria-expanded","true")}
+  })}
+  gapDock.appendChild(b);
+ });
+}
+renderDock();
+document.addEventListener("click",e=>{if(!e.target.closest("#gapDockWrap"))closeDockMenu()});
 
 document.querySelectorAll("[data-gap-goto]").forEach(b=>b.addEventListener("click",()=>showPage(b.dataset.gapGoto)));
 
 document.querySelectorAll("[data-period]").forEach(b=>b.addEventListener("click",()=>{leaderboardPeriod=b.dataset.period;document.querySelectorAll("[data-period]").forEach(x=>x.classList.toggle("primary",x===b));renderLeaderboard()}));
 
 function showPage(p,render=true){
-if(simpleNavSelect)simpleNavSelect.value=p;
   if(currentAccountType==="parent"&&!["parents","parentTasks","parentExams","parentQuests","parentEffects","parentLogs","parentReview","settings"].includes(p))p="parents";
   if(currentAccountType!=="parent"&&p==="parents")p="dashboard";
   document.querySelectorAll(".page").forEach(x=>x.classList.remove("active"));
   const target=document.getElementById(p);if(!target)return;
   target.classList.add("active");
   document.querySelectorAll("nav button").forEach(x=>x.classList.toggle("active",x.dataset.page===p));
-  document.querySelectorAll("[data-dock-page]").forEach(x=>x.classList.toggle("active",x.dataset.dockPage===p));
+  if(gapDock.querySelectorAll(".dock-button").length===0)renderDock();
+  gapDock.querySelectorAll("[data-dock-page]").forEach(x=>x.classList.toggle("active",x.dataset.dockPage===p));
   dockMoreMenu.querySelectorAll("button").forEach(x=>x.classList.toggle("active",x.dataset.dockPage===p));
   if(render)renderAll();
 }
