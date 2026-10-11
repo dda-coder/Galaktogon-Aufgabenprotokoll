@@ -24,4 +24,4 @@ jobs:
         with:
           node-version: 22
       - name: GAP-Smoke-Tests ausführen
-        run: node --test tests/gap-smoke.test.cjs
+        run: node --test tests/gap-smoke.test.mjs tests/gap-smoke.test.cjs
