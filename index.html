@@ -727,7 +727,7 @@ async function bootAuth(){
     authMsg("Sitzung konnte nicht geprüft werden: "+(e?.message||e),true);
   }
 }
-document.querySelectorAll("nav button").forEach(b=>b.addEventListener("click",()=>showPage(b.dataset.page)));
+document.querySelectorAll("nav button[data-page]").forEach(b=>b.addEventListener("click",()=>showPage(b.dataset.page)));
 const dockMoreToggle=el("dockMoreToggle"),dockMoreMenu=el("dockMoreMenu");
 const dockPages=[
 ["updates","Updates"],["exams","Sektorprüfungen"],["quests","Quests"],["recurring","Daueraufträge"],["activities","Aktivitäten"],["ranks","Ränge"],["leaderboard","Leaderboard"],["parents","Elternübersicht"],["parentTasks","Eltern · Sektoraufgaben"],["parentExams","Eltern · Sektorprüfungen"],["parentQuests","Eltern · Quests"],["parentEffects","Eltern · Buffs & Debuffs"],["parentLogs","Eltern · Logs"],["parentReview","Eltern · Wochenbericht"]
