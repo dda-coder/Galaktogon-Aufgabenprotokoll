@@ -520,6 +520,7 @@ async function save(){
         const {error:leaderboardError}=await supabaseClient.from("gap_leaderboard_public").upsert(leaderboard);
         if(leaderboardError)console.warn("GAP Leaderboard:",leaderboardError);
       }
+      await publishPublicProfile();
       setSyncStatus("Synchronisiert · "+new Date().toLocaleTimeString("de-DE",{hour:"2-digit",minute:"2-digit"}));
     }catch(e){
       console.error("Online-Speicher:",e);
