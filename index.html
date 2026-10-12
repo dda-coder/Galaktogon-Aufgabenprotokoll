@@ -630,16 +630,21 @@ async function linkParentChild(code){
 }
 function enterApp(){
   const auth=document.getElementById("authScreen");
-  auth.style.display="none";
-  applyAccountView();
-  applyViewMode();
-  renderDock();
   const page=currentAccountType==="parent"?"parents":"dashboard";
+  if(auth)auth.style.display="none";
   try{
+    applyAccountView();
+    applyViewMode();
+    renderDock();
     showPage(page,false);
     renderAll();
   }catch(e){
     console.error("GAP App-Initialisierung:",e);
+    // Ein Darstellungsfehler darf eine gültige Anmeldung nicht zurücksetzen.
+    if(auth)auth.style.display="none";
+    document.querySelectorAll(".page").forEach(x=>x.classList.remove("active"));
+    const target=document.getElementById(page);
+    if(target)target.classList.add("active");
     if(currentAccountType==="parent"){
       const info=el("parentChildInfo");
       if(info)info.innerHTML='<div class="item"><strong>Elternkonto geladen</strong><div class="meta">Die Anmeldung war erfolgreich, aber ein Bereich der Elternverwaltung konnte nicht dargestellt werden. Fehler: '+esc(e?.message||e)+'</div></div>';
