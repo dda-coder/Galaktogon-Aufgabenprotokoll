@@ -5,13 +5,17 @@ DECLARE
   target_user_id uuid;
   match_count integer;
 BEGIN
-  SELECT count(*), min(user_id) INTO match_count, target_user_id
+  SELECT count(*) INTO match_count
   FROM public.gap_profiles
   WHERE lower(username) = 'test';
 
   IF match_count <> 1 THEN
     RAISE EXCEPTION 'Expected exactly one GAP profile named Test; found %', match_count;
   END IF;
+
+  SELECT user_id INTO target_user_id
+  FROM public.gap_profiles
+  WHERE lower(username) = 'test';
 
   UPDATE auth.users
   SET raw_app_meta_data = COALESCE(raw_app_meta_data, '{}'::jsonb)
