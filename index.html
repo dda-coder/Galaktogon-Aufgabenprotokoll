@@ -266,6 +266,14 @@ body.accent-violet .progress-bar{background:linear-gradient(90deg,#c4a8ff,#83c9f
 </div>
 <div class="item" id="leaderboardVisibilitySettings"><div class="item-title">Leaderboard-Sichtbarkeit</div><div class="meta">Wenn du das Leaderboard deaktivierst, erscheinst du nicht mehr in der Rangliste. Dein Konto und deine XP bleiben erhalten.</div><div class="actions"><button type="button" class="btn" id="leaderboardVisibilityBtn">Leaderboard deaktivieren</button></div><div id="leaderboardVisibilityStatus" class="meta">Status wird geladen.</div></div>
 
+<div class="card" id="adminMonitorSettings" style="display:none">
+  <h2>Admin-Zentrale</h2>
+  <p class="muted">Nur lesender Überblick über GAP-Konten und deren gespeicherte Daten. Zugriff wird serverseitig über die Admin-Rolle geprüft.</p>
+  <div class="actions"><button type="button" class="btn primary" id="adminMonitorRefreshBtn">Daten aktualisieren</button></div>
+  <div id="adminMonitorStatus" class="meta">Admin-Berechtigung wird geprüft.</div>
+  <div id="adminMonitorList"></div>
+</div>
+
 <div class="card" id="pushSettingsCard">
 <div class="item"><div class="item-title">Push-Benachrichtigungen</div>
 <div class="meta">Jeden Tag um 18:00 Uhr erinnert GAP an offene Sektoraufgaben mit Abgabe heute, offene Quests und fällige Daueraufträge. Zusätzlich können Termine zum eingestellten Erinnerungszeitpunkt per Push gemeldet werden. Die Benachrichtigungen werden an jedes registrierte Gerät gesendet.</div>
@@ -647,6 +655,7 @@ function enterApp(){
     showPage(page,false);
     renderAll();
     publishPublicProfile();
+    if(isAdmin())loadAdminMonitor();
   }catch(e){
     console.error("GAP App-Initialisierung:",e);
     // Ein Darstellungsfehler darf eine gültige Anmeldung nicht zurücksetzen.
@@ -797,9 +806,42 @@ document.addEventListener("click",e=>{if(!e.target.closest("#gapDockWrap"))close
 document.querySelectorAll("[data-gap-goto]").forEach(b=>b.addEventListener("click",()=>showPage(b.dataset.gapGoto)));
 
 document.querySelectorAll("[data-period]").forEach(b=>b.addEventListener("click",()=>{leaderboardPeriod=b.dataset.period;document.querySelectorAll("[data-period]").forEach(x=>x.classList.toggle("primary",x===b));renderLeaderboard()}));
-function updateLeaderboardVisibilityUI(){const wrap=el("leaderboardVisibilitySettings"),btn=el("leaderboardVisibilityBtn"),status=el("leaderboardVisibilityStatus");if(wrap)wrap.style.display=currentAccountType==="parent"?"none":"block";if(btn)btn.textContent=leaderboardPublic?"Leaderboard deaktivieren":"Im Leaderboard anzeigen";if(status)status.textContent=leaderboardPublic?"Dein Profil ist in der Rangliste sichtbar.":"Dein Profil ist aus der Rangliste ausgeblendet."}
+function isAdmin(){return currentUser?.app_metadata?.gap_role==="admin"}
+function updateLeaderboardVisibilityUI(){const wrap=el("leaderboardVisibilitySettings"),btn=el("leaderboardVisibilityBtn"),status=el("leaderboardVisibilityStatus"),reserved=isAdmin()||(currentUsername||"").toLowerCase()==="test";if(wrap)wrap.style.display=currentAccountType==="parent"||reserved?"none":"block";if(btn)btn.textContent=leaderboardPublic?"Leaderboard deaktivieren":"Im Leaderboard anzeigen";if(status)status.textContent=reserved?"Dieses Systemkonto bleibt aus der Rangliste ausgeschlossen.":leaderboardPublic?"Dein Profil ist in der Rangliste sichtbar.":"Dein Profil ist aus der Rangliste ausgeblendet."}
 async function toggleLeaderboardVisibility(){if(!currentUser||!supabaseClient||currentAccountType==="parent")return;const btn=el("leaderboardVisibilityBtn");if(btn)btn.disabled=true;try{const next=!leaderboardPublic;const {error}=await supabaseClient.from("gap_public_profiles").update({is_public:next,updated_at:new Date().toISOString()}).eq("user_id",currentUser.id);if(error)throw error;leaderboardPublic=next;if(next){await publishPublicProfile()}else{const {error:deleteError}=await supabaseClient.from("gap_leaderboard_public").delete().eq("user_id",currentUser.id);if(deleteError)throw deleteError;updateLeaderboardVisibilityUI()}if(el("leaderboard")?.classList.contains("active"))await renderLeaderboard()}catch(e){console.error("Leaderboard-Sichtbarkeit:",e);const status=el("leaderboardVisibilityStatus");if(status)status.textContent="Änderung fehlgeschlagen: "+(e?.message||e)}finally{if(btn)btn.disabled=false}}
 el("leaderboardVisibilityBtn")?.addEventListener("click",toggleLeaderboardVisibility);
+
+async function loadAdminMonitor(){
+ const wrap=el("adminMonitorSettings"),status=el("adminMonitorStatus"),list=el("adminMonitorList");
+ if(!wrap)return;
+ if(!isAdmin()){wrap.style.display="none";return}
+ wrap.style.display="block";
+ if(status)status.textContent="Konten und gespeicherte GAP-Daten werden geladen …";
+ if(list)list.innerHTML="";
+ try{
+  const [profilesResult,dataResult]=await Promise.all([
+   supabaseClient.from("gap_profiles").select("user_id,username,account_type,created_at,updated_at").order("username"),
+   supabaseClient.from("galaktogon_data").select("user_id,username,data,updated_at").order("username")
+  ]);
+  if(profilesResult.error)throw profilesResult.error;
+  if(dataResult.error)throw dataResult.error;
+  const dataById=new Map((dataResult.data||[]).map(row=>[row.user_id,row]));
+  const profiles=profilesResult.data||[];
+  if(list)list.innerHTML=profiles.map(profile=>{
+   const row=dataById.get(profile.user_id);
+   const data=row?.data&&typeof row.data==="object"?row.data:{};
+   const count=key=>Array.isArray(data[key])?data[key].length:0;
+   const updated=row?.updated_at||profile.updated_at||"Unbekannt";
+   const dataMarkup=row?'<details class="item"><summary>Gespeicherte Daten anzeigen</summary><pre style="white-space:pre-wrap;overflow-wrap:anywhere;max-height:420px;overflow:auto">'+esc(JSON.stringify(data,null,2))+'</pre></details>':'<div class="meta">Noch keine Cloud-Daten gespeichert.</div>';
+   return '<article class="item"><strong>'+esc(profile.username||row?.username||"Unbekannt")+'</strong><div class="meta">Kontotyp: '+esc(profile.account_type||"child")+' · Letzte Cloud-Aktualisierung: '+esc(updated)+'</div><div class="meta">SA: '+count("tasks")+' · SP: '+count("exams")+' · Quests: '+count("quests")+' · Daueraufträge: '+count("recurring")+'</div>'+dataMarkup+'</article>';
+  }).join("")||'<div class="empty">Keine GAP-Konten gefunden.</div>';
+  if(status)status.textContent=profiles.length+" Konto/Konten geladen. Die Ansicht ist schreibgeschützt.";
+ }catch(error){
+  console.error("GAP Admin-Zentrale:",error);
+  if(status)status.textContent="Admin-Daten konnten nicht geladen werden. Prüfe die Admin-Rolle und die Datenbankrichtlinien.";
+ }
+}
+el("adminMonitorRefreshBtn")?.addEventListener("click",loadAdminMonitor);
 document.addEventListener("click",e=>{
  const avatarButton=e.target.closest("[data-profile-avatar]");
  const frameButton=e.target.closest("[data-profile-frame]");
@@ -1076,7 +1118,7 @@ function renderRanks(){const r=rank(),n=nextRank(),unlocked=syncAchievements(),c
 let leaderboardPeriod="week";
 let leaderboardPublic=true;
 const PROFILE_FRAME_COLORS={cadet:"#7890a6",operator:"#83c9ff",specialist:"#78dfae",commander:"#c4a8ff",legend:"#ffd166",first:"#49c8db",streak:"#ffad73"};
-async function publishPublicProfile(){if(!currentUser||!supabaseClient||currentAccountType==="parent")return;const existing=await supabaseClient.from("gap_public_profiles").select("is_public").eq("user_id",currentUser.id).maybeSingle();if(!existing.error&&existing.data)leaderboardPublic=existing.data.is_public!==false;else if((currentUsername||"").toLowerCase()==="test")leaderboardPublic=false;const cosmetics=db.profileCosmetics||{avatar:"🚀",frame:"cadet"};const unlocked=syncAchievements();const now=new Date();const xp=Math.max(0,Number(db.xp)||0);const profile={user_id:currentUser.id,username:currentUsername||"GAP-Pilot",avatar:PROFILE_AVATARS.some(x=>x.id===cosmetics.avatar)?cosmetics.avatar:"🚀",frame:PROFILE_FRAMES.some(x=>x.id===cosmetics.frame)?cosmetics.frame:"cadet",rank_name:rank().n,xp,achievements_count:unlocked.size,is_public:leaderboardPublic,updated_at:now.toISOString()};const {error}=await supabaseClient.from("gap_public_profiles").upsert(profile);if(error)console.warn("Öffentliches Profil konnte nicht synchronisiert werden:",error.message);if(leaderboardPublic){const leaderboard={user_id:currentUser.id,username:currentUsername||"Unbekannt",xp,day_xp:periodXP("day"),week_xp:periodXP("week"),month_xp:periodXP("month"),all_xp:xp,updated_at:now.toISOString()};const {error:leaderboardError}=await supabaseClient.from("gap_leaderboard_public").upsert(leaderboard);if(leaderboardError)console.warn("GAP Leaderboard konnte beim Profilstart nicht synchronisiert werden:",leaderboardError.message)}else{const {error:deleteError}=await supabaseClient.from("gap_leaderboard_public").delete().eq("user_id",currentUser.id);if(deleteError)console.warn("Leaderboard-Eintrag konnte nicht entfernt werden:",deleteError.message)}updateLeaderboardVisibilityUI()}
+async function publishPublicProfile(){if(!currentUser||!supabaseClient||currentAccountType==="parent")return;const existing=await supabaseClient.from("gap_public_profiles").select("is_public").eq("user_id",currentUser.id).maybeSingle();if(isAdmin()||(currentUsername||"").toLowerCase()==="test")leaderboardPublic=false;else if(!existing.error&&existing.data)leaderboardPublic=existing.data.is_public!==false;const cosmetics=db.profileCosmetics||{avatar:"🚀",frame:"cadet"};const unlocked=syncAchievements();const now=new Date();const xp=Math.max(0,Number(db.xp)||0);const profile={user_id:currentUser.id,username:currentUsername||"GAP-Pilot",avatar:PROFILE_AVATARS.some(x=>x.id===cosmetics.avatar)?cosmetics.avatar:"🚀",frame:PROFILE_FRAMES.some(x=>x.id===cosmetics.frame)?cosmetics.frame:"cadet",rank_name:rank().n,xp,achievements_count:unlocked.size,is_public:leaderboardPublic,updated_at:now.toISOString()};const {error}=await supabaseClient.from("gap_public_profiles").upsert(profile);if(error)console.warn("Öffentliches Profil konnte nicht synchronisiert werden:",error.message);if(leaderboardPublic){const leaderboard={user_id:currentUser.id,username:currentUsername||"Unbekannt",xp,day_xp:periodXP("day"),week_xp:periodXP("week"),month_xp:periodXP("month"),all_xp:xp,updated_at:now.toISOString()};const {error:leaderboardError}=await supabaseClient.from("gap_leaderboard_public").upsert(leaderboard);if(leaderboardError)console.warn("GAP Leaderboard konnte beim Profilstart nicht synchronisiert werden:",leaderboardError.message)}else{const {error:deleteError}=await supabaseClient.from("gap_leaderboard_public").delete().eq("user_id",currentUser.id);if(deleteError)console.warn("Leaderboard-Eintrag konnte nicht entfernt werden:",deleteError.message)}updateLeaderboardVisibilityUI()}
 function profileColor(frame){return PROFILE_FRAME_COLORS[frame]||PROFILE_FRAME_COLORS.cadet}
 async function openPublicProfile(userId,username){const modal=el("publicProfileModal"),content=el("publicProfileContent");if(!modal||!content)return;modal.hidden=false;content.innerHTML='<div class="muted">Profil wird geladen …</div>';let p=null;if(userId&&supabaseClient){const {data,error}=await supabaseClient.from("gap_public_profiles").select("user_id,username,avatar,frame,rank_name,xp,achievements_count").eq("user_id",userId).maybeSingle();if(!error)p=data}if(!p)p={username:username||"GAP-Pilot",avatar:"🚀",frame:"cadet",rank_name:"Profil noch nicht eingerichtet",xp:0,achievements_count:0};const avatar=PROFILE_AVATARS.find(a=>a.id===p.avatar)||PROFILE_AVATARS[0];const frame=PROFILE_FRAMES.find(f=>f.id===p.frame)||PROFILE_FRAMES[0];content.innerHTML='<div class="profile-showcase"><div class="profile-avatar-frame '+esc(frame.className)+'" style="--frame-color:'+profileColor(p.frame)+'">'+esc(avatar.id)+'</div><div><div class="profile-kicker">GALAKTOGON // PILOTENPROFIL</div><h2 id="publicProfileTitle">'+esc(p.username||username||"GAP-Pilot")+'</h2><div class="meta">'+esc(p.rank_name||"Kadett")+' · '+Number(p.xp||0).toLocaleString("de-DE")+' XP</div><div class="profile-progress-line"><span>'+Number(p.achievements_count||0)+' Auszeichnungen</span><span>'+esc(avatar.name)+'</span></div></div></div><div class="item"><strong>Profilstatus</strong><div class="meta">Avatar und Rahmen werden mit dem GAP-Konto synchronisiert. Persönliche Aufgaben und private Daten sind nicht öffentlich.</div></div>'}
 document.addEventListener("click",e=>{const close=e.target.closest("[data-close-profile]");if(close){const modal=el("publicProfileModal");if(modal)modal.hidden=true;return}const row=e.target.closest("[data-profile-user]");if(row)openPublicProfile(row.dataset.profileUser,row.dataset.profileUsername)});
