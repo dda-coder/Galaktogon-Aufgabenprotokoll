@@ -1192,6 +1192,7 @@ function dayPlanItems(){
  const day=new Date(date+"T00:00:00").getDay();
  db.recurring.filter(x=>x.active&&Array.isArray(x.days)&&x.days.includes(day)).forEach(x=>items.push({kind:"recurring",id:x.id,title:x.title,subject:"Dauerauftrag",due:x.due?date+"T"+x.due:"",secret:x.secret,done:(x.doneDates||[]).includes(date),source:x}));
  db.appointments.filter(x=>x.date===date&&!x.completed).forEach(x=>items.push({kind:"appointment",id:x.id,title:x.title,subject:"Termin",due:x.date+"T"+x.time,source:x}));
+ (db.completionLog||[]).filter(x=>x.date&&x.date.slice(0,10)===date&&["Sektoraufgabe","Quest"].includes(x.type)).forEach(x=>{const kind=x.type==="Quest"?"quest":"task";if(!items.some(i=>i.kind===kind&&i.id===(x.restoreData?.id||x.id)))items.push({kind,id:x.restoreData?.id||x.id,title:x.title,subject:kind==="quest"?"Quest":"Sektoraufgabe",due:x.restoreData?.due||"",secret:x.secret,done:true,source:x.restoreData||x})});
  return items;
 }
 function renderDayPlan(){
