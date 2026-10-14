@@ -1187,7 +1187,7 @@ function dayPlanItems(){
  const date=dayPlanSelectedDate(),end=new Date(date+"T00:00:00");end.setDate(end.getDate()+7);const endKey=end.getFullYear()+"-"+String(end.getMonth()+1).padStart(2,"0")+"-"+String(end.getDate()).padStart(2,"0");
  const items=[];
  db.tasks.forEach(x=>{if(!x.due||x.due.slice(0,10)<=date)items.push({kind:"task",id:x.id,title:x.title,subject:x.subject||"Sektoraufgabe",due:x.due||"",secret:x.secret,source:x})});
- db.quests.forEach(x=>{if(!x.due||x.due.slice(0,10)<=date)items.push({kind:"quest",id:x.id,title:x.title,subject:"Quest",due:x.due||"",secret:x.secret,source:x})});
+ db.quests.forEach(x=>{if(!x.completed)items.push({kind:"quest",id:x.id,title:x.title,subject:"Quest",due:x.due||"",secret:x.secret,source:x})});
  db.exams.forEach(x=>{if(x.date&&x.date>=date&&x.date<endKey)items.push({kind:"exam",id:x.id,title:(x.subject?x.subject+" – ":"")+x.title,subject:x.size==="large"?"Große Sektorprüfung":"Sektorprüfung",due:x.date,secret:x.secret,source:x})});
  const day=new Date(date+"T00:00:00").getDay();
  db.recurring.filter(x=>x.active&&Array.isArray(x.days)&&x.days.includes(day)).forEach(x=>items.push({kind:"recurring",id:x.id,title:x.title,subject:"Dauerauftrag",due:x.due?date+"T"+x.due:"",secret:x.secret,done:(x.doneDates||[]).includes(date),source:x}));
