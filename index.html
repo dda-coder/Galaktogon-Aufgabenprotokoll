@@ -253,6 +253,12 @@ body.accent-violet .progress-bar{background:linear-gradient(90deg,#c4a8ff,#83c9f
 <section id="parentReview" class="page">
 <div class="card"><h2>Wochenbericht</h2><p class="muted">Zusammenfassung der aktuellen Woche für das ausgewählte Kinderkonto.</p><div id="weeklyReview"></div></div>
 </section>
+<section id="dayPlan" class="page">
+<div class="dashboard-welcome"><div class="welcome-kicker">GALAKTOGON · TAGESSTEUERUNG</div><h1>Tagesplan</h1><p>Alle relevanten Aufgaben an einem Ort. Lege Prioritäten fest und arbeite sie Schritt für Schritt ab.</p><div class="welcome-orbit"><span></span><span></span><span></span></div></div>
+<div class="card"><h2>Tag auswählen</h2><div class="form-grid"><label class="field-wrap"><span class="field-label">Planungsdatum</span><input id="dayPlanDate" type="date"></label><div class="field-wrap"><span class="field-label">Sortierung</span><select id="dayPlanSort"><option value="priority">Priorität zuerst</option><option value="due">Fälligkeit zuerst</option><option value="type">Aufgabentyp</option></select></div></div><div class="actions"><button class="btn" type="button" id="dayPlanTodayBtn">Heute</button><button class="btn" type="button" id="dayPlanRefreshBtn">Plan aktualisieren</button></div><div class="grid" id="dayPlanStats"></div></div>
+<div class="card"><h2>Deine Prioritätenliste</h2><p class="muted">Priorität pro Eintrag ändern. Änderungen werden mit deinem GAP-Spielstand gespeichert.</p><div id="dayPlanList"></div></div>
+<div class="card"><h2>Planungsregel</h2><p class="muted">Der Plan zeigt offene Sektoraufgaben und Quests bis zum gewählten Tag (einschließlich überfälliger und undatierter Einträge), Prüfungen der nächsten sieben Tage, Termine genau an diesem Tag und aktive Daueraufträge für den Wochentag. Erledigte Einträge werden ausgeblendet.</p></div>
+</section>
 <section id="settings" class="page">
 <div class="card"><h2>Einstellungen</h2><p class="muted">Konto, Darstellung, Tutorials und Daten verwalten.</p>
 
@@ -362,6 +368,8 @@ body.accent-violet .progress-bar{background:linear-gradient(90deg,#c4a8ff,#83c9f
 </section>
 
 <section id="activities" class="page"><div class="holo-hero"><div class="holo-kicker">GALAKTOGON // AKTIVITÄTENPROTOKOLL</div><h1>Missionschronik</h1><p>Aktivitäten, XP-Zuwachs und persönliche Meilensteine – live protokolliert.</p><div class="holo-orbit"><span></span><i></i></div></div><div class="holo-stats" id="activityStats"></div><div class="card holo-card"><h2>Favorisierte Aktivitäten</h2><p class="muted">Wähle eine Aktivität, um sie auszuführen und im Protokoll zu erfassen.</p><div id="favoriteActivities" class="favorite-grid"></div><hr><h3>Favorit hinzufügen</h3><form id="activityForm"><div class="form-grid"><input id="activityTitle" placeholder="Aktivität" required><input id="activityXP" type="number" min="0" value="10" placeholder="XP"></div><button class="btn primary">Zu Favoriten hinzufügen</button></form></div><div class="card holo-card"><div class="holo-section-head"><div><div class="holo-kicker">SYSTEMLOG // RECENT EVENTS</div><h2>Aktivitätsprotokoll</h2></div><span class="holo-live">● LIVE-DATEN</span></div><div id="activityLog"></div></div></section><section id="ranks" class="page"><div class="holo-hero rank-hero"><div class="holo-kicker">GALAKTOGON // IDENTITÄT & STATUS</div><h1>Rangarchiv</h1><p>Verdiene XP, sammle Auszeichnungen und schalte neue Statusdesigns frei.</p><div class="holo-orbit"><span></span><i></i></div></div><div class="card holo-card"><div id="profileCosmetics"></div><div id="rankOverview"></div><h2>Auszeichnungsarchiv</h2><p class="muted">Auszeichnungen werden automatisch anhand deiner Fortschritte vergeben und nur einmal freigeschaltet.</p><div id="achievementList"></div></div><div class="card holo-card"><h2>Alle Ränge</h2><p class="muted">Jeder Rang besitzt eine XP-Grenze und ein eigenes optisches Profil.</p><div id="rankList"></div></div></section><section id="leaderboard" class="page"><div class="card"><h2>Leaderboard</h2><p class="muted">Vergleicht die gespeicherte XP-Leistung der GAP-Accounts.</p><div class="actions"><button class="btn primary" data-period="day">Tag</button><button class="btn" data-period="week">Woche</button><button class="btn" data-period="month">Monat</button><button class="btn" data-period="all">Immer</button></div><div id="leaderboardList" style="margin-top:12px"></div><div id="publicProfileModal" class="profile-modal" hidden><div class="profile-modal-backdrop" data-close-profile></div><div class="profile-modal-panel" role="dialog" aria-modal="true" aria-labelledby="publicProfileTitle"><button type="button" class="btn profile-modal-close" data-close-profile>Schließen ✕</button><div id="publicProfileContent"></div></div></div></div></section><section id="progress" class="page">
+<div class="card"><h2>Tagesplan</h2><p class="muted">Plane Aufgaben, Prüfungen, Termine und Daueraufträge für einen ausgewählten Tag. Prioritäten werden gespeichert.</p><div class="actions"><button class="btn primary" type="button" data-gap-goto="dayPlan">Tagesplan öffnen</button></div></div>
+
 <div class="card"><h2>Gesamttutorial</h2><div id="tutorialProgress"></div><div class="progress"><div id="tutorialBar" class="progress-bar"></div></div><div id="tutorialProgressMeta" class="meta"></div><div class="actions"><button class="btn primary" data-act="open-overall-tutorial">Gesamttutorial öffnen</button></div></div>
 <div class="card"><h2>XP & Rang</h2><div id="progressRank"></div><div class="progress"><div id="progressBar" class="progress-bar"></div></div><div id="progressNext" class="meta"></div><h3>Rangverlauf</h3><div id="rankHistory"></div></div><div class="card"><h2>XP-Statistik</h2><div class="grid"><div class="item"><div class="muted">HEUTE</div><div class="stat" id="xpToday">0</div></div><div class="item"><div class="muted">DIESE WOCHE</div><div class="stat" id="xpWeek">0</div></div><div class="item"><div class="muted">DIESEN MONAT</div><div class="stat" id="xpMonth">0</div></div><div class="item"><div class="muted">ERLEDIGT GESAMT</div><div class="stat" id="completedTotal">0</div></div></div><div class="meta">XP-Zeiträume werden anhand des XP-Protokolls berechnet; Wochen beginnen montags.</div></div>
 <div class="card"><h2>Persönliche Statistiken</h2><p class="muted">Deine Aktivitätsserien, erledigten Aufgaben und XP-Tagesrekorde.</p><div class="grid"><div class="item"><div class="muted">AKTUELLE SERIE</div><div class="stat" id="personalStreak">0 Tage</div></div><div class="item"><div class="muted">AKTIVE TAGE · 30 TAGE</div><div class="stat" id="personalActiveDays">0</div></div><div class="item"><div class="muted">ERLEDIGT · DIESE WOCHE</div><div class="stat" id="personalCompletedWeek">0</div></div><div class="item"><div class="muted">XP-REKORD · 30 TAGE</div><div class="stat" id="personalBestDay">0</div><div class="small muted" id="personalBestDayDate">Noch keine Daten</div></div></div></div>
@@ -470,7 +478,7 @@ function fresh(){const d={xp:0,tasks:[],exams:[],quests:[],recurring:[],appointm
 function normalize(d){
  const f=fresh(); if(!d||typeof d!=="object")return f;
  ["tasks","exams","quests","recurring","appointments","activities","activityLog","xpLog","completionLog","deleteLog","effects"].forEach(k=>{if(!Array.isArray(d[k]))d[k]=[]});
- if(typeof d.xp!=="number"||!Number.isFinite(d.xp)||d.xp<0)d.xp=0;if(!["A","B","C","D"].includes(d.trust))d.trust="A";if(typeof d.trustWeekModifier!=="number"||!Number.isFinite(d.trustWeekModifier))d.trustWeekModifier=d.trust==="A"?20:d.trust==="B"?5:d.trust==="C"?-5:-20;if(typeof d.trustWeekKey!=="string")d.trustWeekKey="";if(typeof d.tutorialDone!=="boolean")d.tutorialDone=false;if(!Array.isArray(d.achievementsUnlocked))d.achievementsUnlocked=[];if(!Array.isArray(d.rankRewardsUnlocked))d.rankRewardsUnlocked=[];if(!Array.isArray(d.tutorialSectionsDone))d.tutorialSectionsDone=[];if(!d.profileCosmetics||typeof d.profileCosmetics!=="object")d.profileCosmetics={avatar:"🚀",frame:"cadet"};if(typeof d.profileCosmetics.avatar!=="string")d.profileCosmetics.avatar="🚀";if(typeof d.profileCosmetics.frame!=="string")d.profileCosmetics.frame="cadet";
+ if(typeof d.xp!=="number"||!Number.isFinite(d.xp)||d.xp<0)d.xp=0;if(!["A","B","C","D"].includes(d.trust))d.trust="A";if(typeof d.trustWeekModifier!=="number"||!Number.isFinite(d.trustWeekModifier))d.trustWeekModifier=d.trust==="A"?20:d.trust==="B"?5:d.trust==="C"?-5:-20;if(typeof d.trustWeekKey!=="string")d.trustWeekKey="";if(typeof d.tutorialDone!=="boolean")d.tutorialDone=false;if(!Array.isArray(d.achievementsUnlocked))d.achievementsUnlocked=[];if(!Array.isArray(d.rankRewardsUnlocked))d.rankRewardsUnlocked=[];if(!Array.isArray(d.tutorialSectionsDone))d.tutorialSectionsDone=[];if(!d.dayPlanPriorities||typeof d.dayPlanPriorities!=="object"||Array.isArray(d.dayPlanPriorities))d.dayPlanPriorities={};if(!d.profileCosmetics||typeof d.profileCosmetics!=="object")d.profileCosmetics={avatar:"🚀",frame:"cadet"};if(typeof d.profileCosmetics.avatar!=="string")d.profileCosmetics.avatar="🚀";if(typeof d.profileCosmetics.frame!=="string")d.profileCosmetics.frame="cadet";
  /* Alte Aktivitäten reparieren, aber nur wenn sie noch vorhanden sind. */
  const names=["Gitarre lernen","Bewegen / draußen","Lesen","Zimmer aufräumen","Ganzes Zimmer"];
  const xp=[10,10,15,15,20];
@@ -775,7 +783,7 @@ const dockGroups={
 child:[
 {label:"Dashboard",icon:"⌂",page:"dashboard",primary:true},
 {label:"Aufgaben",icon:"☷",items:[["tasks","Sektoraufgaben"],["exams","Sektorprüfungen"],["quests","Quests"],["recurring","Daueraufträge"],["appointments","Termine"]]},
-{label:"Fortschritt",icon:"↗",items:[["progress","Fortschritt & XP"],["ranks","Ränge"],["leaderboard","Leaderboard"]]},
+{label:"Fortschritt",icon:"↗",items:[["progress","Fortschritt & XP"],["dayPlan","Tagesplan"],["ranks","Ränge"],["leaderboard","Leaderboard"]]},
 {label:"Aktivitäten",icon:"★",page:"activities"},
 {label:"Einstellungen",icon:"⚙",items:[["settings","Einstellungen"],["updates","Updates"]]}
 ],
@@ -864,6 +872,7 @@ document.addEventListener("click",e=>{
 function showPage(p,render=true,fromHistory=false){
   if(currentAccountType==="parent"&&!["parents","parentTasks","parentExams","parentQuests","parentEffects","parentLogs","parentReview","settings"].includes(p))p="parents";
   if(currentAccountType!=="parent"&&p==="parents")p="dashboard";
+  if(currentAccountType==="parent"&&p==="dayPlan")p="parentReview";
   document.querySelectorAll(".page").forEach(x=>x.classList.remove("active"));
   const target=document.getElementById(p);if(!target)return;
   if(!fromHistory){
@@ -1160,7 +1169,48 @@ function renderParents(){
 }
 function openTaskCounter(){return db.tasks.length+db.exams.length+db.quests.length+getRecurringToday().filter(r=>!r.completedToday).length}
 async function updateTaskBadge(){const s=getSettings(),sa=db.tasks.length,sp=db.exams.length,quests=db.quests.length,dauer=getRecurringToday().filter(r=>!r.completedToday).length,count=sa+sp+quests+dauer;try{if("clearAppBadge" in navigator)await navigator.clearAppBadge();if(s.taskBadge&&"setAppBadge" in navigator)await navigator.setAppBadge(count)}catch(e){console.warn("Aufgaben-Counter:",e)}if(s.taskBadge&&pushSupported()&&Notification.permission==="granted"){try{const reg=await navigator.serviceWorker.ready;await reg.showNotification("GAP – "+(sa+quests+dauer)+" offene Aufgaben",{body:"Sektoraufgaben: "+sa+"\nQuests: "+quests+"\nDaueraufträge: "+dauer,tag:"gap-open-task-counter",icon:"favicon.svg",badge:"favicon.svg",silent:true,renotify:false,requireInteraction:true,data:{type:"open-task-counter",counts:{sa,quests,dauer}}})}catch(e){console.warn("Stiller Aufgaben-Counter:",e)}}}
-function renderAll(){renderDashboard();renderTasks();renderExams();renderQuests();renderRecurring();renderAppointments();renderActivities();renderProgress();renderParents();renderWeeklyReview();renderRanks();if(document.getElementById("leaderboard").classList.contains("active"))renderLeaderboard();updateTaskBadge()}
+
+function dayPlanPriority(item){
+ const key=item.kind+":"+item.id;
+ const stored=db.dayPlanPriorities?.[key];
+ if(["1","2","3"].includes(String(stored)))return Number(stored);
+ if(item.kind==="exam")return item.date===dayPlanSelectedDate()?3:2;
+ if(item.kind==="appointment")return 3;
+ if(item.kind==="task"||item.kind==="quest"){
+  if(item.due&&item.due.slice(0,10)<dayPlanSelectedDate())return 3;
+  if(item.due&&item.due.slice(0,10)===dayPlanSelectedDate())return 3;
+ }
+ return 2;
+}
+function dayPlanSelectedDate(){return el("dayPlanDate")?.value||today()}
+function dayPlanItems(){
+ const date=dayPlanSelectedDate(),end=new Date(date+"T00:00:00");end.setDate(end.getDate()+7);const endKey=end.getFullYear()+"-"+String(end.getMonth()+1).padStart(2,"0")+"-"+String(end.getDate()).padStart(2,"0");
+ const items=[];
+ db.tasks.forEach(x=>{if(!x.due||x.due.slice(0,10)<=date)items.push({kind:"task",id:x.id,title:x.title,subject:x.subject||"Sektoraufgabe",due:x.due||"",secret:x.secret,source:x})});
+ db.quests.forEach(x=>{if(!x.due||x.due.slice(0,10)<=date)items.push({kind:"quest",id:x.id,title:x.title,subject:"Quest",due:x.due||"",secret:x.secret,source:x})});
+ db.exams.forEach(x=>{if(x.date&&x.date>=date&&x.date<endKey)items.push({kind:"exam",id:x.id,title:(x.subject?x.subject+" – ":"")+x.title,subject:x.size==="large"?"Große Sektorprüfung":"Sektorprüfung",due:x.date,secret:x.secret,source:x})});
+ const day=new Date(date+"T00:00:00").getDay();
+ db.recurring.filter(x=>x.active&&Array.isArray(x.days)&&x.days.includes(day)).forEach(x=>items.push({kind:"recurring",id:x.id,title:x.title,subject:"Dauerauftrag",due:x.due?date+"T"+x.due:"",secret:x.secret,done:(x.doneDates||[]).includes(date),source:x}));
+ db.appointments.filter(x=>x.date===date&&!x.completed).forEach(x=>items.push({kind:"appointment",id:x.id,title:x.title,subject:"Termin",due:x.date+"T"+x.time,source:x}));
+ return items;
+}
+function renderDayPlan(){
+ const list=el("dayPlanList");if(!list)return;const date=dayPlanSelectedDate();
+ const items=dayPlanItems().map(x=>({...x,priority:dayPlanPriority(x)}));
+ const sort=el("dayPlanSort")?.value||"priority";
+ items.sort((a,b)=>{if(sort==="priority"&&a.priority!==b.priority)return b.priority-a.priority;if(sort==="type")return a.subject.localeCompare(b.subject,"de");const ad=a.due||"9999",bd=b.due||"9999";if(sort==="due"&&ad!==bd)return ad.localeCompare(bd);if(sort==="priority"&&a.priority!==b.priority)return b.priority-a.priority;if(ad!==bd)return ad.localeCompare(bd);return a.title.localeCompare(b.title,"de")});
+ const labels={1:"Niedrig",2:"Normal",3:"Hoch"},types={task:"task",quest:"quest",recurring:"recurring",appointment:"appointment",exam:"exam"};
+ const stats=el("dayPlanStats");if(stats){const open=items.filter(x=>!x.done).length,high=items.filter(x=>x.priority===3&&!x.done).length,done=items.filter(x=>x.done).length;stats.innerHTML='<div class="item"><div class="muted">EINTRÄGE</div><div class="stat">'+items.length+'</div></div><div class="item"><div class="muted">HOHE PRIORITÄT</div><div class="stat">'+high+'</div></div><div class="item"><div class="muted">OFFEN</div><div class="stat">'+open+'</div></div>'}
+ list.innerHTML=items.map(x=>{const due=x.due?dateText(x.due):"Kein Termin";const overdue=x.due&&x.due.slice(0,10)<date&&!x.done;const action=x.kind==="task"?"complete-task":x.kind==="quest"?"complete-quest":x.kind==="recurring"?"complete-recurring":x.kind==="exam"?"grade":"";const done=x.done;return '<article class="item" style="border-left:4px solid '+(x.priority===3?'var(--red)':x.priority===2?'var(--accent)':'var(--muted)')+'"><div class="item-title">'+esc(x.title)+(x.secret?' <span class="tag purple">GEHEIM</span>':'')+'</div><div class="meta">'+esc(x.subject)+' · '+(overdue?'<span class="tag red">ÜBERFÄLLIG</span> ':'')+esc(due)+(done?' · <span class="tag green">ERLEDIGT</span>':'')+'</div><div class="form-grid" style="margin-top:10px"><label class="field-wrap"><span class="field-label">Priorität</span><select data-dayplan-priority="'+esc(x.kind+":"+x.id)+'"><option value="3" '+(x.priority===3?'selected':'')+'>Hoch</option><option value="2" '+(x.priority===2?'selected':'')+'>Normal</option><option value="1" '+(x.priority===1?'selected':'')+'>Niedrig</option></select></label><div class="field-wrap"><span class="field-label">Aktion</span><div class="actions" style="margin-top:0">'+(done?'<button class="btn" disabled>Heute erledigt</button>':action?'<button class="btn success" data-dayplan-complete="'+action+'" data-id="'+esc(x.id)+'">'+(x.kind==="exam"?"Note eintragen":"Erledigt")+'</button>':"")+'</div></div></div></article>'}).join("")||'<div class="empty">Für diesen Tag wurden keine passenden Einträge gefunden. Du kannst in den Aufgaben neue Einträge anlegen oder einen anderen Tag wählen.</div>';
+ list.querySelectorAll("[data-dayplan-priority]").forEach(select=>select.addEventListener("change",()=>{db.dayPlanPriorities=db.dayPlanPriorities||{};db.dayPlanPriorities[select.dataset.dayplanPriority]=Number(select.value);save();renderDayPlan()}));
+ list.querySelectorAll("[data-dayplan-complete]").forEach(button=>button.addEventListener("click",()=>{const id=button.dataset.id,act=button.dataset.dayplanComplete;if(act==="complete-task")completeTask(id);if(act==="complete-quest")completeQuest(id);if(act==="complete-recurring")completeRecurring(id);if(act==="grade")grade(id);if(act==="complete-appointment"){const a=db.appointments.find(x=>x.id===id);if(a)a.completed=true;save();renderAll()}}));
+}
+el("dayPlanDate")?.addEventListener("change",renderDayPlan);
+el("dayPlanSort")?.addEventListener("change",renderDayPlan);
+el("dayPlanTodayBtn")?.addEventListener("click",()=>{el("dayPlanDate").value=today();renderDayPlan()});
+el("dayPlanRefreshBtn")?.addEventListener("click",renderDayPlan);
+
+function renderAll(){renderDayPlan();renderDashboard();renderTasks();renderExams();renderQuests();renderRecurring();renderAppointments();renderActivities();renderProgress();renderParents();renderWeeklyReview();renderRanks();if(document.getElementById("leaderboard").classList.contains("active"))renderLeaderboard();updateTaskBadge()}
 
 function undoCompletion(logId){const i=db.completionLog.findIndex(x=>x.id===logId);if(i<0)return;const l=db.completionLog[i];if(!undoWindowOpen(l)){renderAll();return}if(!l.undoable||!l.restoreData)return;if(!confirm("Abgabe wirklich rückgängig machen?\n\n"+l.title+"\n"+l.earned+" XP werden abgezogen."))return;const amount=Math.max(0,Number(l.earned)||0);if(amount){db.xp=Math.max(0,db.xp-amount);if(l.xpLogId){const xi=db.xpLog.findIndex(x=>x.id===l.xpLogId);if(xi>=0)db.xpLog.splice(xi,1)}}if(l.type==="Sektoraufgabe")db.tasks.push(l.restoreData);else if(l.type==="Sektorprüfung")db.exams.push(l.restoreData);else if(l.type==="Quest")db.quests.push(l.restoreData);else if(l.type==="Dauerauftrag"){const r=db.recurring.find(x=>x.id===l.restoreData.id);if(r)r.doneDates=(r.doneDates||[]).filter(d=>d!==l.restoreData.doneDate)}db.completionLog.splice(i,1);save();renderAll()}
 function deleteLog(type,obj){db.deleteLog.unshift({id:uid(),type,title:obj.title||obj.name||"Eintrag",secret:Boolean(obj.secret),date:new Date().toISOString()})}
