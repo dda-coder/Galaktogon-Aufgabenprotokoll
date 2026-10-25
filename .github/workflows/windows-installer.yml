@@ -66,13 +66,10 @@ jobs:
           New-Item -ItemType Directory -Force -Path "winget" | Out-Null
           @"
           PackageIdentifier: dda-coder.GAP
+          @"
+          PackageIdentifier: dda-coder.GAP
           PackageVersion: $env:GAP_VERSION
-          PackageLocale: de-DE
-          Publisher: dda-coder
-          PackageName: GALAKTOGON Aufgabenprotokoll
-          License: MIT
-          ShortDescription: Installiert die GAP-Web-App als Windows-App mit eigenem Icon.
-          PackageUrl: https://github.com/dda-coder/Galaktogon-Aufgabenprotokoll
+          DefaultLocale: de-DE
           ManifestType: version
           ManifestVersion: 1.10.0
           "@ | Set-Content "winget/dda-coder.GAP.yaml" -Encoding utf8
@@ -94,7 +91,12 @@ jobs:
           @"
           PackageIdentifier: dda-coder.GAP
           PackageVersion: $env:GAP_VERSION
-          DefaultLocale: de-DE
+          PackageLocale: de-DE
+          Publisher: dda-coder
+          PackageName: GALAKTOGON Aufgabenprotokoll
+          License: MIT
+          ShortDescription: Installiert die GAP-Web-App als Windows-App mit eigenem Icon.
+          PackageUrl: https://github.com/dda-coder/Galaktogon-Aufgabenprotokoll
           ManifestType: defaultLocale
           ManifestVersion: 1.10.0
           "@ | Set-Content "winget/dda-coder.GAP.locale.yaml" -Encoding utf8
