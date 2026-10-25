@@ -18,7 +18,7 @@ DisableProgramGroupPage=yes
 PrivilegesRequired=lowest
 OutputDir=dist
 OutputBaseFilename=GAP-Setup-{#MyAppVersion}
-SetupIconFile=assets\gap.ico
+SetupIconFile=..\assets\gap.ico
 UninstallDisplayIcon={app}\gap.ico
 Compression=lzma2
 SolidCompression=yes
@@ -27,8 +27,8 @@ ArchitecturesInstallIn64BitMode=x64
 Uninstallable=yes
 
 [Files]
-Source: "GAP-Launcher.ps1"; DestDir: "{app}"; Flags: ignoreversion
-Source: "assets\gap.ico"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\GAP-Launcher.ps1"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\assets\gap.ico"; DestDir: "{app}"; Flags: ignoreversion
 
 [Icons]
 Name: "{autoprograms}\GALAKTOGON Aufgabenprotokoll"; Filename: "powershell.exe"; Parameters: "-NoProfile -ExecutionPolicy Bypass -WindowStyle Hidden -File ""{app}\GAP-Launcher.ps1"""; IconFilename: "{app}\gap.ico"; WorkingDir: "{app}"
