@@ -66,30 +66,6 @@ jobs:
           New-Item -ItemType Directory -Force -Path "winget" | Out-Null
           @"
           PackageIdentifier: dda-coder.GAP
-          @"
-          PackageIdentifier: dda-coder.GAP
-          PackageVersion: $env:GAP_VERSION
-          DefaultLocale: de-DE
-          ManifestType: version
-          ManifestVersion: 1.10.0
-          "@ | Set-Content "winget/dda-coder.GAP.yaml" -Encoding utf8
-          @"
-          PackageIdentifier: dda-coder.GAP
-          PackageVersion: $env:GAP_VERSION
-          InstallerType: inno
-          Scope: user
-          Installers:
-            - Architecture: x64
-              InstallerUrl: $url
-              InstallerSha256: $hash
-              AppsAndFeaturesEntries:
-                - DisplayName: GALAKTOGON Aufgabenprotokoll
-                  Publisher: dda-coder
-          ManifestType: installer
-          ManifestVersion: 1.10.0
-          "@ | Set-Content "winget/dda-coder.GAP.installer.yaml" -Encoding utf8
-          @"
-          PackageIdentifier: dda-coder.GAP
           PackageVersion: $env:GAP_VERSION
           DefaultLocale: de-DE
           ManifestType: version
