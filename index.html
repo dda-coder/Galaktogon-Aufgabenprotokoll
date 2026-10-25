@@ -105,6 +105,15 @@ body.accent-forest{--accent:#6cdaa4;--line:#315447}body.accent-ocean{--accent:#4
 .light-mode .card{box-shadow:0 5px 20px rgba(25,45,65,.055)}
 .light-mode .progress{background:#e3eaf0}
 @media(max-width:600px){.dashboard-welcome{padding:20px;min-height:135px}.welcome-orbit{right:-45px;opacity:.55}.card{border-radius:15px;padding:14px}.theme-swatches{grid-template-columns:repeat(2,minmax(0,1fr))}nav button{padding:8px 12px}}
+
+/* Tagesplan: kompaktere Einträge, damit mehr Aufgaben gleichzeitig sichtbar sind */
+#dayPlanList .item{padding:8px 10px!important;margin:5px 0!important;border-radius:10px}
+#dayPlanList .item-title{font-size:14px;line-height:1.3}
+#dayPlanList .meta{font-size:11px;line-height:1.35;margin-top:3px}
+#dayPlanList .form-grid{grid-template-columns:minmax(0,1fr) auto;gap:8px;align-items:end}
+#dayPlanList select{padding:6px 8px;min-height:34px;font-size:13px}
+#dayPlanList .btn{padding:6px 9px;min-height:34px;font-size:12px}
+@media(max-width:600px){#dayPlanList .form-grid{grid-template-columns:minmax(0,1fr)}#dayPlanList .item{padding:8px!important}#dayPlanList .actions .btn{min-height:34px}}
 @media(prefers-reduced-motion:reduce){.card,.btn,nav button{transition:none}}
 
 
