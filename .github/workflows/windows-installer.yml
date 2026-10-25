@@ -1,0 +1,119 @@
+name: Build Windows installer and Winget manifest
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Python and Pillow
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Create multi-size Windows app icon
+        shell: pwsh
+        run: |
+          python -m pip install Pillow
+          @'
+          from PIL import Image, ImageDraw
+          sizes = [16, 24, 32, 48, 64, 128, 256]
+          images = []
+          for size in sizes:
+              im = Image.new("RGBA", (size, size), (20, 30, 42, 255))
+              d = ImageDraw.Draw(im)
+              m = max(1, size // 10)
+              d.rounded_rectangle((m, m, size-m-1, size-m-1), radius=max(2, size//5), fill=(24, 48, 68, 255), outline=(119, 196, 246, 255), width=max(1, size//32))
+              # Stylized GAP checkmark / orbital mark
+              pts = [(size*.25,size*.51),(size*.42,size*.67),(size*.76,size*.31)]
+              d.line(pts, fill=(180, 229, 255, 255), width=max(2,size//9), joint="curve")
+              images.append(im)
+          images[-1].save("assets/gap.ico", format="ICO", append_images=images[:-1], sizes=[(s,s) for s in sizes])
+          '@ | Set-Content -Encoding utf8 make_icon.py
+          python make_icon.py
+
+      - name: Install Inno Setup
+        run: choco install innosetup --yes --no-progress
+
+      - name: Compile installer
+        shell: pwsh
+        run: |
+          $iss = Get-Content "installer/GAP.iss" -Raw
+          if ("$env:GITHUB_REF" -match "^refs/tags/v(.+)$") { $version = $Matches[1] } else { $version = "1.0.0" }
+          $iss = $iss.Replace('#define MyAppVersion "1.0.0"', "#define MyAppVersion `"$version`"")
+          $iss | Set-Content "installer/GAP.generated.iss" -Encoding utf8
+          & "${env:ProgramFiles(x86)}\Inno Setup 6\ISCC.exe" "installer/GAP.generated.iss"
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          "GAP_VERSION=$version" | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding utf8
+
+      - name: Generate Winget manifest
+        shell: pwsh
+        run: |
+          $installer = Get-ChildItem "installer/dist/GAP-Setup-*.exe" | Select-Object -First 1
+          $hash = (Get-FileHash $installer.FullName -Algorithm SHA256).Hash
+          $url = "https://github.com/dda-coder/Galaktogon-Aufgabenprotokoll/releases/download/v$env:GAP_VERSION/$($installer.Name)"
+          New-Item -ItemType Directory -Force -Path "winget" | Out-Null
+          @"
+          PackageIdentifier: dda-coder.GAP
+          PackageVersion: $env:GAP_VERSION
+          PackageLocale: de-DE
+          Publisher: dda-coder
+          PackageName: GALAKTOGON Aufgabenprotokoll
+          License: MIT
+          ShortDescription: Installiert die GAP-Web-App als Windows-App mit eigenem Icon.
+          PackageUrl: https://github.com/dda-coder/Galaktogon-Aufgabenprotokoll
+          ManifestType: version
+          ManifestVersion: 1.10.0
+          "@ | Set-Content "winget/dda-coder.GAP.yaml" -Encoding utf8
+          @"
+          PackageIdentifier: dda-coder.GAP
+          PackageVersion: $env:GAP_VERSION
+          InstallerType: inno
+          Scope: user
+          Installers:
+            - Architecture: x64
+              InstallerUrl: $url
+              InstallerSha256: $hash
+              AppsAndFeaturesEntries:
+                - DisplayName: GALAKTOGON Aufgabenprotokoll
+                  Publisher: dda-coder
+          ManifestType: installer
+          ManifestVersion: 1.10.0
+          "@ | Set-Content "winget/dda-coder.GAP.installer.yaml" -Encoding utf8
+          @"
+          PackageIdentifier: dda-coder.GAP
+          PackageVersion: $env:GAP_VERSION
+          DefaultLocale: de-DE
+          ManifestType: defaultLocale
+          ManifestVersion: 1.10.0
+          "@ | Set-Content "winget/dda-coder.GAP.locale.yaml" -Encoding utf8
+          Copy-Item "winget/dda-coder.GAP.yaml" "installer/dist/"
+          Copy-Item "winget/dda-coder.GAP.installer.yaml" "installer/dist/"
+          Copy-Item "winget/dda-coder.GAP.locale.yaml" "installer/dist/"
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: GAP-Windows-Installer-and-Winget
+          path: |
+            installer/dist/GAP-Setup-*.exe
+            installer/dist/dda-coder.GAP*.yaml
+
+      - name: Publish release assets for version tags
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            installer/dist/GAP-Setup-*.exe
+            installer/dist/dda-coder.GAP*.yaml
+          generate_release_notes: true
