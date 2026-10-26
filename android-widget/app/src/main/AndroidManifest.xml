@@ -1,6 +1,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <uses-permission android:name="android.permission.INTERNET" />
-    <application android:allowBackup="false" android:label="GAP Widget" android:theme="@android:style/Theme.Material.NoActionBar" android:usesCleartextTraffic="false">
+    <application
+        android:allowBackup="false"
+        android:icon="@drawable/ic_gap_launcher"
+        android:label="GAP Widget"
+        android:theme="@android:style/Theme.Material.NoActionBar"
+        android:usesCleartextTraffic="false">
         <activity android:name=".LoginActivity" android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
