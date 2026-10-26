@@ -4,10 +4,13 @@ on:
   workflow_dispatch:
     inputs:
       source_branch:
-        description: "Branch containing the Android widget prototype"
+        description: "Branch containing the Android widget source"
         required: true
         default: "feature/android-home-screen-widget"
         type: string
+  push:
+    branches:
+      - "feature/android-home-screen-widget"
 
 permissions:
   contents: read
@@ -19,7 +22,7 @@ jobs:
       - name: Check out widget source
         uses: actions/checkout@v4
         with:
-          ref: ${{ inputs.source_branch }}
+          ref: ${{ github.event_name == 'workflow_dispatch' && inputs.source_branch || github.ref_name }}
 
       - name: Set up JDK 17
         uses: actions/setup-java@v4
@@ -45,4 +48,4 @@ jobs:
           name: gap-widget-debug-apk
           path: android-widget/app/build/outputs/apk/debug/app-debug.apk
           if-no-files-found: error
-          retention-days: 7
+          retention-days: 30
