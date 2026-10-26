@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">GAP Widget</string>
+    <string name="widget_description">Zeigt offene Sektoraufgaben, Sektorprüfungen und Quests aus deinem GAP-Konto.</string>
+</resources>
