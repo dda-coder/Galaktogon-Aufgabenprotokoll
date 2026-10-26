@@ -1,7 +1,7 @@
 #define MyAppName "GALAKTOGON Aufgabenprotokoll"
-#define MyAppVersion "1.0.0"
+#define MyAppVersion "1.0.1"
 #define MyAppPublisher "dda-coder"
-#define MyAppURL "https://galaktogon-projekt.davidmayer.workers.dev/"
+#define MyAppURL "https://gap.davidmayer.workers.dev/"
 #define MyAppExeName "GAP-Launcher.ps1"
 
 [Setup]
