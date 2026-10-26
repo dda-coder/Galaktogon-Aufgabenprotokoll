@@ -1,6 +1,6 @@
-# GALAKTOGON Android Home Widget (Prototype)
+# GALAKTOGON Android Home Widget (Beta)
 
-This is an **isolated Android Studio project** for a real Android home-screen widget. It does not change the deployed GAP website.
+This is an **Android app plus a real Android home-screen widget** for Android phones (including the Google Pixel 7a). It is separate from the GAP website. The launcher icon uses a custom GAP orbital-checkmark design.
 
 ## Current scope
 
@@ -13,7 +13,7 @@ This is an **isolated Android Studio project** for a real Android home-screen wi
 
 ## Important beta limitations
 
-- This source has **not yet been built or tested on a real device**. Do not treat it as a released or verified APK.
+- The APK is a test build and has not yet been verified on a real phone. Check the login and task counts before relying on it.
 - The widget reads the signed-in user's own data row. Parent mode / selecting a linked child's data is not implemented.
 - Completion-state detection currently recognizes common fields (`completed`, `done`, `isDone`, `complete`, or `status=completed`). Before release, verify these against the exact task objects produced by GAP.
 - Android's widget refresh interval is system-controlled (configured to 30 minutes); tap ↻ for a manual refresh.
