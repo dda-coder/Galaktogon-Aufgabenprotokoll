@@ -18,6 +18,7 @@ Das Projekt ist mit HTML, CSS und JavaScript umgesetzt. Für die Anmeldung und d
 
 ## Projekt ausprobieren
 
-[Web-App öffnen](https://dda-coder.github.io/Galaktogon-Aufgabenprotokoll/)
+[Web-App öffnen](https://galaktogon-aufgabenprotokoll.davidmayer.workers.dev/?)
 
 Das GAP ist noch in Entwicklung. Funktionen und Aufbau können sich deshalb ändern.
+Es gib auch ein Update log um alle Veränderungen zu sehen.
